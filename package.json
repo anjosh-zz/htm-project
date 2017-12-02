@@ -2,8 +2,19 @@
   "name": "htm-project",
   "version": "1.0.0",
   "description": "Nuxt.js + Vuetify.js project",
-  "author": "Joshua Angelucci, Jason Suttles",
+  "author": {
+    "name":"Joshua Angelucci",
+    "email": "joshuaan1@gmail.com"
+  },
+  "contributors": [{
+    "name": "Jason Suttles",
+    "email": "jasonssuttles@gmail.com"
+  }],
   "private": true,
+  "engines": {
+    "node": ">= 6.0.0",
+    "yarn": ">= 0.18.0"
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",

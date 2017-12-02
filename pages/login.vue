@@ -1,27 +1,27 @@
 <template>
   <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
+    <v-flex xs12 md6>
       <v-card>
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
           <v-container fluid>
             <v-layout row>
-              <v-flex xs8>
+              <v-flex xs12 sm8>
                 <v-text-field
                   name="username"
                   label="Username"
-                  id="testing"
+                  id="username"
                 ></v-text-field>
               </v-flex>
             </v-layout>
             <v-layout row>
-              <v-flex xs8>
+              <v-flex xs12 sm8>
                 <v-text-field
                   name="password"
                   label="Password"
                   type="password"
-                  id="testing"
+                  id="password"
                 ></v-text-field>
               </v-flex>
             </v-layout>
