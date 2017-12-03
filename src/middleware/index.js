@@ -1,5 +1,3 @@
-const handler = require('feathers-errors/handler')
-const notFound = require('feathers-errors/not-found')
 const { render } = require('./nuxt') // <- Require the middleware
 
 module.exports = function () {
@@ -19,7 +17,4 @@ module.exports = function () {
       }
     }
   })
-
-  app.use(notFound())
-  app.use(handler())
 }

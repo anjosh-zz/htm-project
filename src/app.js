@@ -9,43 +9,35 @@ const hooks = require('feathers-hooks')
 const rest = require('feathers-rest')
 const socketio = require('feathers-socketio')
 
-const local = require('feathers-authentication-local')
-const jwt = require('feathers-authentication-jwt')
-const auth = require('feathers-authentication')
-
-const handler = require('feathers-errors/handler')
 const notFound = require('feathers-errors/not-found')
+const handler = require('feathers-errors/handler')
 
 const middleware = require('./middleware')
 const services = require('./services')
 const appHooks = require('./app.hooks')
 
 const app = feathers()
-// Load app configuration
+  // Load app configuration
   .configure(configuration())
-// Enable CORS, security, compression, favicon and body parsing
+  // Enable CORS, security, compression, favicon and body parsing
   .use(cors())
   .use(helmet())
   .use(compress())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
 
-// Set up Plugins and providers
+  // Set up Plugins and providers
   .configure(hooks())
   .configure(rest())
   .configure(socketio())
 
-// Configure other middleware (see `middleware/index.js`)
+  // Configure other middleware (see `middleware/index.js`)
   .configure(middleware)
-// Set up our services (see `services/index.js`)
+  // Set up our services (see `services/index.js`)
   .configure(services)
-// Configure a middleware for 404s and the error handler
+  // Configure a middleware for 404s and the error handler
   .use(notFound())
   .use(handler())
-  .configure(auth({ secret: 'supersecret' }))
-  .configure(local())
-  .configure(jwt())
-  .use('/users', memory())
 
   .hooks(appHooks)
 
