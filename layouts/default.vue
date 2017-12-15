@@ -26,7 +26,7 @@
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
       <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn
+      <!-- <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
       >
@@ -43,7 +43,7 @@
         @click.stop="fixed = !fixed"
       >
         <v-icon>remove</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- <v-btn
@@ -89,7 +89,8 @@
         items: [
           { icon: 'apps', title: 'Welcome', to: '/' },
           { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' },
-          { icon: 'arrow_forward', title: 'Login', to: '/login' }
+          { icon: 'arrow_forward', title: 'Login', to: '/login' },
+          { icon: 'arrow_forward', title: 'Add Guest', to: '/addguest' }
         ],
         miniVariant: false,
         right: true,

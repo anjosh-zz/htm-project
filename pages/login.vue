@@ -1,10 +1,10 @@
 <template>
-  <v-layout column justify-center align-center>
+  <v-layout row align-center justify-center>
     <v-flex xs12 md6>
       <v-card>
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
+          <p>Login to view and manage your guests.</p>
           <v-container fluid>
             <v-layout row>
               <v-flex xs12 sm8>

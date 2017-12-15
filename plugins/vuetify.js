@@ -10,7 +10,9 @@ import {
   VIcon,
   VGrid,
   VToolbar,
-  VTextField
+  VTextField,
+  VForm,
+  VMenu
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -33,6 +35,8 @@ Vue.use(Vuetify, {
     VIcon,
     VGrid,
     VToolbar,
-    VTextField
+    VTextField,
+    VForm,
+    VMenu
   }
 })
