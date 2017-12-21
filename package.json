@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Nuxt.js + Vuetify.js project",
   "author": {
-    "name":"Joshua Angelucci",
+    "name": "Joshua Angelucci",
     "email": "joshuaan1@gmail.com"
   },
-  "contributors": [{
-    "name": "Jason Suttles",
-    "email": "jasonssuttles@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Jason Suttles",
+      "email": "jasonssuttles@gmail.com"
+    }
+  ],
   "private": true,
   "engines": {
     "node": ">= 6.0.0",
@@ -24,6 +26,7 @@
   },
   "dependencies": {
     "nuxt": "^1.0.0-rc11",
+    "vuelidate": "^0.6.1",
     "vuetify": "^0.17.3"
   },
   "devDependencies": {

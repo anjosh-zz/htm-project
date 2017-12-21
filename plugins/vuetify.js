@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate'
+
 import {
   Vuetify,
   VApp,
@@ -12,7 +14,10 @@ import {
   VToolbar,
   VTextField,
   VForm,
-  VMenu
+  VMenu,
+  VDatePicker,
+  VDialog,
+  VBtnToggle
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -37,6 +42,11 @@ Vue.use(Vuetify, {
     VToolbar,
     VTextField,
     VForm,
-    VMenu
+    VMenu,
+    VDatePicker,
+    VDialog,
+    VBtnToggle
   }
 })
+
+Vue.use(Vuelidate)
