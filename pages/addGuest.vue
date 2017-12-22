@@ -31,6 +31,7 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12 sm10>
+                  <v-divider></v-divider>
                   <v-text-field
                     v-model="email"
                     label="Email"
@@ -55,6 +56,7 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12 sm10>
+                  <p>Preferred method of contact</p>
                   <v-btn-toggle mandatory v-model="preferredContactMethod">
                     <v-btn flat>
                       <v-icon>email</v-icon>
@@ -69,6 +71,7 @@
                       <span class="px-1">Text</span>
                     </v-btn>
                   </v-btn-toggle>
+                  <v-divider class="mt-2"></v-divider>
                 </v-flex>
               </v-layout>
               <v-layout row>

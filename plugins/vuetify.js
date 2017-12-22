@@ -17,7 +17,8 @@ import {
   VMenu,
   VDatePicker,
   VDialog,
-  VBtnToggle
+  VBtnToggle,
+  VDivider
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -45,7 +46,8 @@ Vue.use(Vuetify, {
     VMenu,
     VDatePicker,
     VDialog,
-    VBtnToggle
+    VBtnToggle,
+    VDivider
   }
 })
 
