@@ -152,6 +152,7 @@
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
   export default {
+    middleware: 'auth',
     mixin: [validationMixin],
     data: () => {
       return {
@@ -187,8 +188,8 @@
       emailErrors () {
         const errors = []
         if (!this.$v.email.$dirty) return errors
-        !this.$v.email.email && errors.push('Must be valid e-mail')
-        !this.$v.email.required && errors.push('E-mail is required')
+        !this.$v.email.email && errors.push('Must be valid email')
+        !this.$v.email.required && errors.push('Email is required')
         return errors
       },
       notesErrors () {

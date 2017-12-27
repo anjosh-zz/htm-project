@@ -80,23 +80,24 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     data () {
       return {
-        clipped: false,
+        clipped: true,
         drawer: false,
         fixed: false,
-        items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' },
-          { icon: 'arrow_forward', title: 'Login', to: '/login' },
-          { icon: 'arrow_forward', title: 'Add Guest', to: '/addguest' }
-        ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
         title: 'HTM Project'
       }
+    },
+    computed: {
+      ...mapGetters({
+        items: 'getSidebarItems'
+      })
     }
   }
 </script>
