@@ -48,7 +48,7 @@
 
 <script>
   import SearchApi from 'js-worker-search'
-  const toMaterialStyle = require('material-color-hash') // this module is built weirdly
+  import toMaterialStyle from 'material-color-hash'
 
   const searchApi = new SearchApi()
   let guests = []
@@ -66,7 +66,7 @@
       guests.forEach((guest, index) => {
         searchApi.indexDocument(index, guest.name)
         if (!guest.avatar) {
-          guest.colorClassName = toMaterialStyle.default(guest.name).materiaColorName.toLowerCase() // really weirdly, hence .default and materiaColorName
+          guest.colorClassName = toMaterialStyle(guest.name).materialColorName.toLowerCase()
         }
       })
 
