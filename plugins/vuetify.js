@@ -19,8 +19,7 @@ import {
   VDialog,
   VBtnToggle,
   VDivider,
-  VAvatar,
-  VSubHeader
+  VAvatar
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -50,8 +49,7 @@ Vue.use(Vuetify, {
     VDialog,
     VBtnToggle,
     VDivider,
-    VAvatar,
-    VSubHeader
+    VAvatar
   }
 })
 
