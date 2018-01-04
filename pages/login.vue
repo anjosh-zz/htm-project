@@ -6,7 +6,7 @@
         <v-card-text>
           <p>Login to view and manage your guests.</p>
           <v-form>
-            <v-container fluid>
+            <v-container fluid class="pa-0">
               <v-layout row>
                 <v-flex xs12 sm8>
                   <v-text-field

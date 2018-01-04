@@ -18,7 +18,9 @@ import {
   VDatePicker,
   VDialog,
   VBtnToggle,
-  VDivider
+  VDivider,
+  VAvatar,
+  VSubHeader
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -47,7 +49,9 @@ Vue.use(Vuetify, {
     VDatePicker,
     VDialog,
     VBtnToggle,
-    VDivider
+    VDivider,
+    VAvatar,
+    VSubHeader
   }
 })
 
