@@ -22,7 +22,7 @@
                   <template v-for="item in items">
                     <v-subheader v-if="item.header" v-text="item.header"></v-subheader>
                     <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
-                    <v-list-tile avatar v-else @click="">
+                    <v-list-tile avatar v-else @click="showProfile">
                       <v-list-tile-avatar>
                         <img v-bind:src="item.avatar" v-if="item.avatar">
                         <div v-bind:class="[item.colorClassName, 'letter']" v-else>
@@ -38,6 +38,12 @@
                 </v-list>
               </v-flex>
             </v-layout>
+            <Profile
+              :showProfile="profileIsShowing"
+              :personId="personId"
+              v-on:close="hideProfile"
+            >
+            </Profile>
           </v-container>
         </v-card-text>
       </v-card>
@@ -49,17 +55,19 @@
 <script>
   import SearchApi from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
+  import Profile from '~/components/personProfile.vue'
 
   const searchApi = new SearchApi()
   let guests = []
 
   export default {
     middleware: 'auth',
+    components: {Profile},
     created () {
       guests = [
-        { avatar: 'https://vuetifyjs.com/static/doc-images/lists/1.jpg', name: 'John Smith', importance: "It's going to be this guy's birthday" },
-        { avatar: 'https://vuetifyjs.com/static/doc-images/lists/2.jpg', name: "George O'Hara", importance: 'This guy needs to go to some event' },
-        { avatar: 'https://vuetifyjs.com/static/doc-images/lists/3.jpg', name: 'Sandra Adams', importance: 'This person is doing well' },
+        { avatar: '/images/87.jpg', name: 'Aiden Banks', importance: "It's going to be this guy's birthday" },
+        { avatar: '/images/85.jpg', name: 'Dwayne Lawson', importance: 'This guy needs to go to some event' },
+        { avatar: '/images/68.jpg', name: 'Sandra Adams', importance: 'This person is doing well' },
         { avatar: '', name: 'Ali Connors', importance: 'This person is doing well' }
       ]
 
@@ -74,10 +82,19 @@
     },
     data () {
       return {
-        items: []
+        items: [],
+        personId: 0,
+        profileIsShowing: false
       }
     },
     methods: {
+      showProfile () {
+        this.personId = 0
+        this.profileIsShowing = true
+      },
+      hideProfile () {
+        this.profileIsShowing = false
+      },
       search (input) {
         return searchApi.search(input)
           .then((results) => {

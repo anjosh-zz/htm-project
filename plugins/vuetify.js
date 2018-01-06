@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
+import isItDark from './isItDark'
 
 import {
   Vuetify,
@@ -54,3 +55,15 @@ Vue.use(Vuetify, {
 })
 
 Vue.use(Vuelidate)
+
+Vue.mixin({
+  methods: {
+    isItDark,
+    foo: function () {
+      console.log('foo')
+    },
+    conflicting: function () {
+      console.log('from mixin')
+    }
+  }
+})

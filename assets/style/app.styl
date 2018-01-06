@@ -4,6 +4,14 @@
 .page
   @extend .fade-transition
 
+.container
+  &.full-height
+    height: 100%;
+  .flex
+    &.sticky-bottom
+      position: absolute;
+      bottom: 10px;
+
 .guestPage
   .list
     &__tile
