@@ -28,18 +28,16 @@
                 </v-btn>
               </v-flex>
             </v-layout>
-            <v-layout row>
-              <v-flex xs12 class="sticky-bottom">
-                <span  v-bind:class="[imageTextColor, 'headline']">Aiden Banks</span>
-              </v-flex>
-            </v-layout>
           </v-container>
         </v-card-media>
         <v-card-title primary-title>
+          <span  v-bind:class="['headline']">Aiden Banks</span>
+        </v-card-title>
+        <v-card-text>
           <div>
             <div>Located two hours south of Sydney in the <br>Southern Highlands of New South Wales, ...</div>
           </div>
-        </v-card-title>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" flat="flat" @click.native="hideProfile">Close</v-btn>
