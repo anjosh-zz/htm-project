@@ -1,8 +1,8 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" max-width="290" transition="slide-y-transition">
+    <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly" transition="slide-y-transition">
       <v-card>
-        <v-card-media :src="profilePic" height="200px">
+        <v-card-media :src="profilePic" :height="imageHeight">
           <v-container fluid class="full-height">
             <v-layout row>
               <v-flex xs6>
@@ -58,6 +58,22 @@
       }
     },
     computed: {
+      dialogMaxWidth () {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs':
+            return null
+          default:
+            return '290px'
+        }
+      },
+      imageHeight () {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs':
+            return '300px'
+          default:
+            return '200px'
+        }
+      },
       imageTextColor () {
         return this.darkImage ? 'white--text' : 'black--text'
       }

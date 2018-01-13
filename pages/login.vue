@@ -1,5 +1,5 @@
 <template>
-  <v-layout row align-center justify-center>
+  <v-layout row align-center justify-center class="pt-3 mt-3">
     <v-flex xs12 md6>
       <v-card>
         <v-card-title class="headline">Login</v-card-title>

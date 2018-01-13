@@ -6,7 +6,7 @@
         <v-card-text>
           <p>Please fill out all the required fields (*):</p>
           <v-form>
-            <v-container fluid>
+            <v-container fluid class="pt-0">
               <v-layout row>
                 <v-flex xs12 sm10>
                   <v-text-field
@@ -24,7 +24,7 @@
                 <v-flex xs12 sm10>
                   <v-text-field
                     v-model="alias"
-                    label="Is there a name that you would like to call them by?"
+                    label="What name do they go by?"
                     id="alias"
                   ></v-text-field>
                 </v-flex>
@@ -99,6 +99,7 @@
                 <v-flex xs12 sm10>
                   <v-text-field
                     label="Place where you met"
+                    prepend-icon="place"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
