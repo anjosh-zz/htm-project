@@ -90,7 +90,10 @@
                       v-model="birthdate"
                       prepend-icon="cake"
                     ></v-text-field>
-                    <v-date-picker v-model="birthdate" scrollable autosave>
+                    <v-date-picker
+                      v-model="birthdate"
+                      scrollable
+                      autosave>
                     </v-date-picker>
                   </v-dialog>
                 </v-flex>
@@ -119,7 +122,11 @@
                       v-model="meetingDate"
                       prepend-icon="event"
                     ></v-text-field>
-                    <v-date-picker v-model="meetingDate" scrollable autosave>
+                    <v-date-picker
+                      v-model="meetingDate"
+                      scrollable
+                      autosave
+                      color="green">
                     </v-date-picker>
                   </v-dialog>
                 </v-flex>
