@@ -5,6 +5,7 @@
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Login to view and manage your guests.</p>
+          <p>Don't have an account? <a href="registration">Click here to register.</a></p>
           <v-form>
             <v-container fluid class="pa-0">
               <v-layout row>

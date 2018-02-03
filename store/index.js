@@ -4,6 +4,7 @@ const loggedInItems = [
   { icon: 'exit_to_app', title: 'Logout', to: '/logout', loggedInItem: true }
 ]
 const loggedOutItems = [
+  { icon: 'account_box', title: 'Register', to: '/registration', loggedOutItem: true },
   { icon: 'arrow_forward', title: 'Login', to: '/login', loggedOutItem: true }
 ]
 export const state = () => ({
