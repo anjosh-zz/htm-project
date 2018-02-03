@@ -11,10 +11,10 @@
                 <v-flex xs12 sm10>
                   <v-text-field
                     label="Full Name"
-                    v-model="fullName"
-                    @input="$v.fullName.$touch()"
-                    @blur="$v.fullName.$touch()"
-                    id="fullName"
+                    v-model="fullname"
+                    @input="$v.fullname.$touch()"
+                    @blur="$v.fullname.$touch()"
+                    id="fullname"
                     :error-messages="fullnameErrors"
                     required
                   ></v-text-field>
@@ -164,7 +164,7 @@
     mixin: [validationMixin],
     data: () => {
       return {
-        fullName: '',
+        fullname: '',
         alias: '',
         email: '',
         phoneNumber: '',
@@ -182,15 +182,15 @@
       }
     },
     validations: {
-      fullName: { required },
+      fullname: { required },
       email: { required, email },
       notes: { maxLength: maxLength(1000) }
     },
     computed: {
       fullnameErrors () {
         const errors = []
-        if (!this.$v.fullName.$dirty) return errors
-        !this.$v.fullName.required && errors.push('Name is required.')
+        if (!this.$v.fullname.$dirty) return errors
+        !this.$v.fullname.required && errors.push('Name is required.')
         return errors
       },
       emailErrors () {
