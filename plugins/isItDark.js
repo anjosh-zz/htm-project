@@ -1,4 +1,7 @@
 function isItDark (imageSrc) {
+  if (!imageSrc) {
+    return Promise.resolve()
+  }
   let fuzzy = 0.1
   let img = document.createElement('img')
   img.crossOrigin = 'Anonymous'

@@ -83,6 +83,9 @@
         }
       },
       imageHeight () {
+        if (!this.profilePic) {
+          return '50px'
+        }
         switch (this.$vuetify.breakpoint.name) {
           case 'xs':
             return '300px'
