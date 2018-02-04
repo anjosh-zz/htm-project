@@ -20,17 +20,17 @@
               <v-flex xs-12>
                 <v-list two-line>
                   <template v-for="item in items">
-                    <v-subheader v-if="item.header" v-text="item.header"></v-subheader>
+                    <v-subheader v-if="item.header" v-text="item.header" class="px-3"></v-subheader>
                     <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
-                    <v-list-tile avatar v-else @click="showProfile">
+                    <v-list-tile avatar v-else @click="showProfile(item)">
                       <v-list-tile-avatar>
                         <img v-bind:src="item.avatar" v-if="item.avatar">
                         <div v-bind:class="[item.colorClassName, 'letter']" v-else>
-                          <span class="white--text headline">{{item.name.charAt(0)}}</span>
+                          <span class="white--text headline">{{item.fullname.charAt(0)}}</span>
                         </div>
                       </v-list-tile-avatar>
                       <v-list-tile-content>
-                        <v-list-tile-title v-html="item.name"></v-list-tile-title>
+                        <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
                         <v-list-tile-sub-title v-html="item.importance"></v-list-tile-sub-title>
                       </v-list-tile-content>
                     </v-list-tile>
@@ -40,7 +40,7 @@
             </v-layout>
             <Profile
               :showProfile="profileIsShowing"
-              :personId="personId"
+              :person="person"
               v-on:close="hideProfile"
             >
             </Profile>
@@ -56,6 +56,7 @@
   import SearchApi from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
   import Profile from '~/components/personProfile.vue'
+  import axios from '~/plugins/axios'
 
   const searchApi = new SearchApi()
   let guests = []
@@ -63,18 +64,17 @@
   export default {
     middleware: 'auth',
     components: {Profile},
+    fetch () {
+      return axios.get('/persons/')
+        .then((response) => {
+          guests = response.data
+        })
+    },
     created () {
-      guests = [
-        { avatar: '/images/87.jpg', name: 'Aiden Banks', importance: "It's going to be this guy's birthday" },
-        { avatar: '/images/85.jpg', name: 'Dwayne Lawson', importance: 'This guy needs to go to some event' },
-        { avatar: '/images/68.jpg', name: 'Sandra Adams', importance: 'This person is doing well' },
-        { avatar: '', name: 'Ali Connors', importance: 'This person is doing well' }
-      ]
-
       guests.forEach((guest, index) => {
-        searchApi.indexDocument(index, guest.name)
+        searchApi.indexDocument(index, guest.fullname)
         if (!guest.avatar) {
-          guest.colorClassName = toMaterialStyle(guest.name).materialColorName.toLowerCase()
+          guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
         }
       })
 
@@ -83,13 +83,13 @@
     data () {
       return {
         items: [],
-        personId: 0,
+        person: {},
         profileIsShowing: false
       }
     },
     methods: {
-      showProfile () {
-        this.personId = 0
+      showProfile (item) {
+        this.person = item
         this.profileIsShowing = true
       },
       hideProfile () {

@@ -24,19 +24,33 @@
                   class="ma-0"
                   @click.native="hideProfile"
                 >
-                  <v-icon  v-bind:class="[imageTextColor]"  @click.native="hideProfile">edit</v-icon>
+                  <!-- <v-icon  v-bind:class="[imageTextColor]"  @click.native="hideProfile">edit</v-icon> -->
                 </v-btn>
               </v-flex>
             </v-layout>
           </v-container>
         </v-card-media>
         <v-card-title primary-title>
-          <span  v-bind:class="['headline']">Aiden Banks</span>
+          <span  v-bind:class="['headline']">{{person.fullname}}</span>
         </v-card-title>
         <v-card-text>
-          <div>
-            <div>Located two hours south of Sydney in the <br>Southern Highlands of New South Wales, ...</div>
-          </div>
+          <v-container fluid grid-list-xs>
+            <v-layout row justify-center v-if="person.email">
+              <v-flex xs12>
+                <p><span class="pr-2"><v-icon large>email</v-icon></span>{{person.email}}</p>
+              </v-flex>
+            </v-layout>
+            <v-layout row justify-center v-if="person.phoneNumber">
+              <v-flex xs12>
+                <p><span class="pr-2"><v-icon large>phone</v-icon></span>{{person.phoneNumber}}</p>
+              </v-flex>
+            </v-layout>
+            <v-layout row justify-center v-if="person.birthdate">
+              <v-flex xs12>
+                <p><span class="pr-2"><v-icon large>cake</v-icon></span>{{person.birthdate}}</p>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -49,15 +63,17 @@
 
 <script>
   export default {
-    props: ['showProfile', 'personId'],
+    props: ['showProfile', 'person'],
     data () {
       return {
         dialog: false,
-        profilePic: '/images/87.jpg',
         darkImage: false
       }
     },
     computed: {
+      profilePic () {
+        return this.person.avatar
+      },
       dialogMaxWidth () {
         switch (this.$vuetify.breakpoint.name) {
           case 'xs':
@@ -92,7 +108,7 @@
       showProfile (showProfile) {
         let profilePicCheck = Promise.resolve()
         if (showProfile) {
-          profilePicCheck = this.isItDark('/images/87.jpg')
+          profilePicCheck = this.isItDark(this.profilePic)
             .then((isDark) => {
               this.darkImage = isDark
             })

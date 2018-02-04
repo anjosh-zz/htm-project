@@ -9,6 +9,16 @@
             <v-container fluid class="pt-0">
               <v-layout row>
                 <v-flex xs12 sm10>
+                  <v-avatar
+                    class="grey"
+                  >
+                    <img :src="avatarSrc" alt="avatar" v-if="avatarSrc">
+                  </v-avatar>
+                  <v-btn color="primary" @click="showSnapshot">{{avatarSrc ? 'Change picture' : 'Add picture'}}</v-btn>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12 sm10>
                   <v-text-field
                     label="Full Name"
                     v-model="fullname"
@@ -58,15 +68,15 @@
                 <v-flex xs12 sm10>
                   <p>Preferred method of contact</p>
                   <v-btn-toggle mandatory v-model="preferredContactMethod">
-                    <v-btn flat>
+                    <v-btn flat value="email">
                       <v-icon>email</v-icon>
                       <span class="px-1">Email</span>
                     </v-btn>
-                    <v-btn flat>
+                    <v-btn flat value="phone">
                       <v-icon>phone</v-icon>
                       <span class="px-1">Phone</span>
                     </v-btn>
-                    <v-btn flat>
+                    <v-btn flat value="text">
                       <v-icon>textsms</v-icon>
                       <span class="px-1">Text</span>
                     </v-btn>
@@ -151,6 +161,12 @@
           <v-spacer></v-spacer>
           <v-btn color="primary" flat large @click="submit">Add</v-btn>
         </v-card-actions>
+        <Snapshot
+          :showSnapshot="snapshotIsShowing"
+          v-on:close="hideSnapshot"
+          v-on:addImage="addImage"
+        >
+        </Snapshot>
       </v-card>
     </v-flex>
   </v-layout>
@@ -159,8 +175,13 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
+  import axios from '~/plugins/axios'
+
+  import Snapshot from '~/components/snapshot.vue'
+
   export default {
     middleware: 'auth',
+    components: {Snapshot},
     mixin: [validationMixin],
     data: () => {
       return {
@@ -173,12 +194,37 @@
         birthdateModal: false,
         meetingDate: null,
         meetingDateModal: false,
-        preferredContactMethod: 0
+        preferredContactMethod: 'email',
+        snapshotIsShowing: false,
+        avatarSrc: ''
       }
     },
     methods: {
+      addImage (avatarSrc) {
+        this.avatarSrc = avatarSrc
+      },
+      showSnapshot () {
+        this.snapshotIsShowing = true
+      },
+      hideSnapshot () {
+        this.snapshotIsShowing = false
+      },
       submit () {
         this.$v.$touch()
+        if (!this.$v.$invalid) {
+          axios.post('/persons/create', {
+            avatar: this.avatarSrc,
+            fullname: this.fullname,
+            alias: this.alias,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            preferredContactMethod: this.preferredContactMethod,
+            birthdate: this.birthdate
+          }).then((response) => {
+            console.log(response)
+            this.$router.push('/listguests')
+          })
+        }
       }
     },
     validations: {

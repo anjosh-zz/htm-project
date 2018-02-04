@@ -1,6 +1,9 @@
 const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3001'
+  },
   /*
   ** Headers of the page
   */
@@ -17,7 +20,10 @@ module.exports = {
     ]
   },
   plugins: [
-    '~/plugins/vuetify.js'
+    '~/plugins/vuetify.js',
+    '~/plugins/globals.js',
+    '~/plugins/smallplugins.js',
+    { src: '~/plugins/nonssrplugins.js', ssr: false }
   ],
   css: [
     '~/assets/style/app.styl'

@@ -1,6 +1,4 @@
 import Vue from 'vue'
-import Vuelidate from 'vuelidate'
-import isItDark from './isItDark'
 
 import {
   Vuetify,
@@ -20,16 +18,17 @@ import {
   VDialog,
   VBtnToggle,
   VDivider,
-  VAvatar
+  VAvatar,
+  VSubheader
 } from 'vuetify'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: '#9c27b0',
-    accent: '#ce93d8',
-    secondary: '#424242',
+    primary: '#9C27B0',
+    accent: '#CE93D8',
+    secondary: '#607D8B',
     info: '#0D47A1',
-    warning: '#ffb300',
+    warning: '#FFB300',
     error: '#B71C1C',
     success: '#2E7D32'
   },
@@ -50,20 +49,7 @@ Vue.use(Vuetify, {
     VDialog,
     VBtnToggle,
     VDivider,
-    VAvatar
-  }
-})
-
-Vue.use(Vuelidate)
-
-Vue.mixin({
-  methods: {
-    isItDark,
-    foo: function () {
-      console.log('foo')
-    },
-    conflicting: function () {
-      console.log('from mixin')
-    }
+    VAvatar,
+    VSubheader
   }
 })
