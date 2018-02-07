@@ -110,12 +110,12 @@
       },
       showProfile (showProfile) {
         let profilePicCheck = Promise.resolve()
-        if (showProfile) {
-          profilePicCheck = this.isItDark(this.profilePic)
-            .then((isDark) => {
-              this.darkImage = isDark
-            })
-        }
+        // if (showProfile) {
+        //   profilePicCheck = this.isItDark(this.profilePic)
+        //     .then((isDark) => {
+        //       this.darkImage = isDark
+        //     })
+        // }
         profilePicCheck
           .then(() => {
             this.dialog = showProfile

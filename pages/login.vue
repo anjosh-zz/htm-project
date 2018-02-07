@@ -147,14 +147,3 @@
     // functional: false
   }
 </script>
-
-<style>
-.fb-signin-button {
-  /* This is where you control how the button looks. Be creative! */
-  padding: 4px 8px;
-  border-radius: 3px;
-  background-color: #4267b2;
-  color: #fff;
-  cursor: pointer;
-}
-</style>
