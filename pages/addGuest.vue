@@ -112,6 +112,7 @@
                 <v-flex xs12 sm10>
                   <v-text-field
                     label="Place where you met"
+                    v-model="firstMeetingLocation"
                     prepend-icon="place"
                   ></v-text-field>
                 </v-flex>
@@ -196,6 +197,7 @@
         meetingDateModal: false,
         preferredContactMethod: 'email',
         snapshotIsShowing: false,
+        firstMeetingLocation: '',
         avatarSrc: ''
       }
     },
@@ -219,7 +221,9 @@
             email: this.email,
             phoneNumber: this.phoneNumber,
             preferredContactMethod: this.preferredContactMethod,
-            birthdate: this.birthdate
+            birthdate: this.birthdate,
+            timeMet: this.meetingDate,
+            firstMeetingLocation: this.firstMeetingLocation
           }).then((response) => {
             console.log(response)
             this.$router.push('/listguests')

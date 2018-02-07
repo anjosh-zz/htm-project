@@ -5,7 +5,7 @@
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Login to view and manage your guests.</p>
-          <p>Don't have an account? <a href="registration">Click here to register.</a></p>
+          <!-- <p>Don't have an account? <a href="registration">Click here to register.</a></p>
           <v-form>
             <v-container fluid class="pa-0">
               <v-layout row>
@@ -38,11 +38,17 @@
                 </v-flex>
               </v-layout>
             </v-container>
-          </v-form>
+          </v-form> -->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="submit">Login</v-btn>
+          <!-- <v-btn color="primary" flat @click="submit">Login</v-btn> -->
+          <fb-signin-button
+            :params="fbSignInParams"
+            @success="onSignInSuccess"
+            @error="onSignInError">
+            Sign in with Facebook
+          </fb-signin-button>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -52,18 +58,40 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required } from 'vuelidate/lib/validators'
+  import axios from '~/plugins/axios'
   export default {
     // Options / Data
+    fetch () {
+      return this.loadFB
+    },
     data () {
       return {
         email: '',
-        password: ''
+        password: '',
+        fbSignInParams: {
+          scope: 'public_profile,email',
+          return_scopes: true
+        }
       }
     },
     // props: [],
     // propsData: {},
     // computed: {},
     methods: {
+      onSignInSuccess (response) {
+        console.log(response)
+        axios.post('/auth/facebook/token', {
+          access_token: response.authResponse.accessToken
+        }).then((response) => {
+          this.$store.commit('toggleLoggedIn')
+          this.$router.push('/listguests')
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
+      onSignInError (error) {
+        console.log('OH NOES', error)
+      },
       submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
@@ -119,3 +147,14 @@
     // functional: false
   }
 </script>
+
+<style>
+.fb-signin-button {
+  /* This is where you control how the button looks. Be creative! */
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #4267b2;
+  color: #fff;
+  cursor: pointer;
+}
+</style>

@@ -72,7 +72,7 @@
     },
     computed: {
       profilePic () {
-        return this.person.avatar
+        return this.person.avatar || this.person.avatarURL
       },
       dialogMaxWidth () {
         switch (this.$vuetify.breakpoint.name) {

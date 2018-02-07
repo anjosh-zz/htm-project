@@ -25,6 +25,7 @@
                     <v-list-tile avatar v-else @click="showProfile(item)">
                       <v-list-tile-avatar>
                         <img v-bind:src="item.avatar" v-if="item.avatar">
+                        <img v-bind:src="item.avatarURL" v-else-if="item.avatarURL">
                         <div v-bind:class="[item.colorClassName, 'letter']" v-else>
                           <span class="white--text headline">{{item.fullname.charAt(0)}}</span>
                         </div>
