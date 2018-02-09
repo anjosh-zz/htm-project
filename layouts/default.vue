@@ -44,7 +44,11 @@
       >
         <v-icon>remove</v-icon>
       </v-btn> -->
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title><v-avatar
+        class="white"
+      >
+        <img src="/logo1.png" alt="avatar">
+      </v-avatar><span class="ml-2">{{title}}</span></v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- <v-btn
         icon

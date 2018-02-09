@@ -1,6 +1,6 @@
 <template>
   <v-layout row class="guestPage pa-0">
-    <v-flex xs12 sm6 offset-sm3>
+    <v-flex xs12 sm5 offset-sm3>
       <v-card>
         <v-card-title class="headline pb-2">Guests</v-card-title>
         <v-card-text class="pa-0">
@@ -107,7 +107,7 @@
         if (guestsToDisplay.length) {
           guestsToDisplay.forEach((guest, index) => {
             if (index > 0) {
-              this.items.push({ divider: true, inset: true })
+              this.items.push({ divider: true, inset: false })
             }
             this.items.push(guest)
           })

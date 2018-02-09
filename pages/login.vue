@@ -1,15 +1,15 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
-    <v-flex xs12 md6>
+    <v-flex xs12 md4>
       <v-card>
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Login to view and manage your guests.</p>
-          <!-- <p>Don't have an account? <a href="registration">Click here to register.</a></p>
+          <p>Don't have an account? <router-link to="registration">Click here to register.</router-link></p>
           <v-form>
             <v-container fluid class="pa-0">
               <v-layout row>
-                <v-flex xs12 sm8>
+                <v-flex xs12>
                   <v-text-field
                     name="email"
                     label="Email"
@@ -23,7 +23,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm8>
+                <v-flex xs12>
                   <v-text-field
                     name="password"
                     label="Password"
@@ -38,17 +38,17 @@
                 </v-flex>
               </v-layout>
             </v-container>
-          </v-form> -->
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <!-- <v-btn color="primary" flat @click="submit">Login</v-btn> -->
-          <fb-signin-button
+          <v-btn color="primary" flat @click="submit">Login</v-btn>
+          <!-- <fb-signin-button
             :params="fbSignInParams"
             @success="onSignInSuccess"
             @error="onSignInError">
             Sign in with Facebook
-          </fb-signin-button>
+          </fb-signin-button> -->
         </v-card-actions>
       </v-card>
     </v-flex>

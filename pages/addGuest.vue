@@ -1,6 +1,6 @@
 <template>
   <v-layout row align-center justify-center>
-    <v-flex xs12 sm6>
+    <v-flex xs12 sm5>
       <v-card>
         <v-card-title class="headline">Add Guest</v-card-title>
         <v-card-text>
@@ -8,17 +8,17 @@
           <v-form>
             <v-container fluid class="pt-0">
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-avatar
                     class="grey"
                   >
                     <img :src="avatarSrc" alt="avatar" v-if="avatarSrc">
                   </v-avatar>
-                  <v-btn color="primary" @click="showSnapshot">{{avatarSrc ? 'Change picture' : 'Add picture'}}</v-btn>
+                  <v-btn color="secondary" @click="showSnapshot">{{avatarSrc ? 'Change picture' : 'Add picture'}}</v-btn>
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     label="Full Name"
                     v-model="fullname"
@@ -31,7 +31,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     v-model="alias"
                     label="What name do they go by?"
@@ -40,7 +40,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-divider></v-divider>
                   <v-text-field
                     v-model="email"
@@ -55,7 +55,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     v-model="phoneNumber"
                     label="Phone Number"
@@ -65,7 +65,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <p>Preferred method of contact</p>
                   <v-btn-toggle mandatory v-model="preferredContactMethod">
                     <v-btn flat value="email">
@@ -85,7 +85,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10 mt-2>
+                <v-flex xs12 mt-2>
                   <v-dialog
                     v-model="birthdateModal"
                     lazy
@@ -109,7 +109,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     label="Place where you met"
                     v-model="firstMeetingLocation"
@@ -118,7 +118,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-dialog
                     v-model="meetingDateModal"
                     lazy
@@ -143,7 +143,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     label="Notes"
                     v-model="notes"
@@ -160,7 +160,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat large @click="submit">Add</v-btn>
+          <v-btn color="primary" @click="submit">Add</v-btn>
         </v-card-actions>
         <Snapshot
           :showSnapshot="snapshotIsShowing"

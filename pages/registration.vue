@@ -1,6 +1,6 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
-    <v-flex xs12 md6>
+    <v-flex xs12 md4>
       <v-card>
         <v-card-title class="headline">Registration</v-card-title>
         <v-card-text>
@@ -8,7 +8,7 @@
           <v-form>
             <v-container fluid class="pa-0">
               <v-layout row>
-                <v-flex xs12 sm10>
+                <v-flex xs12>
                   <v-text-field
                     label="Full Name"
                     v-model="fullname"
@@ -21,7 +21,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm10 mt-2>
+                <v-flex xs12 mt-2>
                   <v-dialog
                     v-model="birthdateModal"
                     lazy
@@ -48,7 +48,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm8>
+                <v-flex xs12>
                   <v-text-field
                     name="email"
                     label="Email"
@@ -63,7 +63,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm8>
+                <v-flex xs12>
                   <v-text-field
                     name="password"
                     label="Password"
@@ -79,7 +79,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row>
-                <v-flex xs12 sm8>
+                <v-flex xs12>
                   <v-text-field
                     name="confirmPassword"
                     label="Confirm Password"
@@ -109,6 +109,7 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, email, sameAs, minLength } from 'vuelidate/lib/validators'
+  import axios from '~/plugins/axios'
 
   export default {
     // Options / Data
@@ -129,8 +130,17 @@
       submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
-          this.$store.commit('toggleLoggedIn')
-          this.$router.push('/listguests')
+          axios.post('/users/', {
+            email: this.email,
+            password: this.password,
+            birthdate: this.birthdate,
+            fullname: this.fullname
+          }).then((response) => {
+            this.$store.commit('toggleLoggedIn')
+            this.$router.push('/listguests')
+          }).catch((error) => {
+            console.log(error)
+          })
         }
       }
     },
