@@ -42,7 +42,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="submit">Login</v-btn>
+          <v-btn color="primary" @click="submit">Login</v-btn>
           <!-- <fb-signin-button
             :params="fbSignInParams"
             @success="onSignInSuccess"
