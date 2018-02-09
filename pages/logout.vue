@@ -1,6 +1,6 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
-    <v-flex xs12 md5>
+    <v-flex xs12 md4>
       <v-card>
         <v-card-title class="headline">Logout</v-card-title>
         <v-card-text>
@@ -8,7 +8,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="submit">Log out</v-btn>
+          <v-btn color="primary" @click="submit">Log out</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>

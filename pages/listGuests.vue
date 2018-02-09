@@ -1,6 +1,6 @@
 <template>
-  <v-layout row class="guestPage pa-0">
-    <v-flex xs12 sm5 offset-sm3>
+  <v-layout row align-center justify-center class="guestPage pa-0">
+    <v-flex xs12 sm5>
       <v-card>
         <v-card-title class="headline pb-2">Guests</v-card-title>
         <v-card-text class="pa-0">

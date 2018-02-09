@@ -1,7 +1,7 @@
 <template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <v-card class="mt-3">
+  <v-layout column justify-center align-center class="pt-3 mt-3">
+    <v-flex xs12 sm4>
+      <v-card>
         <div class="text-xs-center pt-3">
           <img src="/logo1.png" alt="Vuetify.js" class="mb-1" width="20%"/>
         </div>
@@ -11,7 +11,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat nuxt to="/login" v-if="!this.$store.state.loggedIn">login</v-btn>
+          <v-btn color="primary" nuxt to="/login" v-if="!this.$store.state.loggedIn">login</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>

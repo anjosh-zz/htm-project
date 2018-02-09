@@ -78,7 +78,7 @@
       </v-list>
     </v-navigation-drawer> -->
     <v-footer :fixed="fixed" app>
-      <span>&copy; HTM Project 2017</span>
+      <span>&copy; MyTribe 2017</span>
     </v-footer>
   </v-app>
 </template>
@@ -95,7 +95,7 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'HTM Project'
+        title: 'MyTribe'
       }
     },
     computed: {
