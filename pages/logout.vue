@@ -15,13 +15,21 @@
   </v-layout>
 </template>
 
+
 <script>
+  import axios from '~/plugins/axios'
+
   export default {
     middleware: 'auth',
     methods: {
       submit () {
-        this.$store.commit('toggleLoggedIn')
-        this.$router.push('/')
+        axios.post('/auth/logout')
+          .then(() => {
+            this.$store.commit('toggleLoggedIn')
+            this.$router.push('/')
+          }).catch((error) => {
+            console.log(error)
+          })
       }
     }
   }

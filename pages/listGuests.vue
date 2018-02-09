@@ -66,7 +66,7 @@
     middleware: 'auth',
     components: {Profile},
     fetch () {
-      return axios.get('/persons/')
+      return axios.get('/persons/guests')
         .then((response) => {
           guests = response.data
         })

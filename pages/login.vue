@@ -95,8 +95,16 @@
       submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
-          this.$store.commit('toggleLoggedIn')
-          this.$router.push('/listguests')
+          axios.post('/auth/local/', {
+            email: this.email,
+            password: this.password
+          })
+            .then((response) => {
+              this.$store.commit('toggleLoggedIn')
+              this.$router.push('/listguests')
+            }).catch((error) => {
+              console.log(error)
+            })
         }
       }
     },
