@@ -1,6 +1,6 @@
 <template>
   <ChangePerson
-    :editing="false"
+    :editing="true"
     v-on:submit="submit"
   >
   </ChangePerson>
@@ -15,7 +15,8 @@
     components: {ChangePerson},
     methods: {
       submit (person) {
-        axios.post('/persons/create', person)
+        let personId = this.$route.params.personId
+        axios.post(`/persons/${personId}`, person)
           .then((response) => {
             console.log(response)
             this.$router.push('/listguests')

@@ -1,7 +1,7 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
     <v-flex xs12 md4>
-      <v-card>
+      <v-card v-if="loginCheck">
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Login to view and manage your guests.</p>
@@ -64,8 +64,19 @@
     fetch () {
       return this.loadFB
     },
+    created () {
+      return axios.get('/auth/isLoggedIn')
+        .then((response) => {
+          if (response.data) {
+            this.loggedIn()
+          } else {
+            this.loginCheck = true
+          }
+        })
+    },
     data () {
       return {
+        loginCheck: false,
         email: '',
         password: '',
         fbSignInParams: {
@@ -78,13 +89,16 @@
     // propsData: {},
     // computed: {},
     methods: {
+      loggedIn () {
+        this.$store.commit('toggleLoggedIn')
+        this.$router.push('/listguests')
+      },
       onSignInSuccess (response) {
         console.log(response)
         axios.post('/auth/facebook/token', {
           access_token: response.authResponse.accessToken
         }).then((response) => {
-          this.$store.commit('toggleLoggedIn')
-          this.$router.push('/listguests')
+          this.loggedIn()
         }).catch((error) => {
           console.log(error)
         })
@@ -100,8 +114,7 @@
             password: this.password
           })
             .then((response) => {
-              this.$store.commit('toggleLoggedIn')
-              this.$router.push('/listguests')
+              this.loggedIn()
             }).catch((error) => {
               console.log(error)
             })

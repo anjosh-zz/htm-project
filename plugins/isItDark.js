@@ -1,13 +1,9 @@
-function isItDark (imageSrc) {
-  if (!imageSrc) {
+function isItDark (imageSelector) {
+  if (!imageSelector) {
     return Promise.resolve()
   }
   let fuzzy = 0.1
-  let img = document.createElement('img')
-  img.crossOrigin = 'Anonymous'
-  img.src = imageSrc
-  img.style.display = 'none'
-  document.body.appendChild(img)
+  let img = document.querySelector(imageSelector)
 
   return new Promise((resolve) => {
     img.onload = function () {

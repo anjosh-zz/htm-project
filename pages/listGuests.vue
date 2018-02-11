@@ -43,6 +43,7 @@
               :showProfile="profileIsShowing"
               :person="person"
               v-on:close="hideProfile"
+              v-on:edit="editProfile"
             >
             </Profile>
           </v-container>
@@ -95,6 +96,15 @@
       },
       hideProfile () {
         this.profileIsShowing = false
+      },
+      editProfile (personId) {
+        this.hideProfile()
+        this.$router.push({
+          name: 'editGuest',
+          params: {
+            personId: personId
+          }
+        })
       },
       search (input) {
         return searchApi.search(input)

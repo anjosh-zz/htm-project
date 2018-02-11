@@ -2,29 +2,27 @@
   <v-layout row justify-center>
     <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly" transition="slide-y-transition">
       <v-card>
-        <v-card-media :src="profilePic" :height="imageHeight">
+        <v-card-media :src="profilePic" :height="imageHeight" id="profileImageContainer">
           <v-container fluid class="full-height">
             <v-layout row>
               <v-flex xs6>
                 <v-btn
-                  flat
                   icon
                   color="grey"
-                  class="ma-0"
+                  class="ma-0 opaque"
                   @click.native="hideProfile"
                 >
-                  <v-icon  v-bind:class="[imageTextColor]">arrow_back</v-icon>
+                  <v-icon class="black--text">arrow_back</v-icon>
                 </v-btn>
               </v-flex>
               <v-flex xs6 class="text-xs-right">
                 <v-btn
-                  flat
                   icon
                   color="grey"
-                  class="ma-0"
-                  @click.native="hideProfile"
+                  class="ma-0 opaque"
+                  @click.native="openEditPage"
                 >
-                  <!-- <v-icon  v-bind:class="[imageTextColor]"  @click.native="hideProfile">edit</v-icon> -->
+                  <v-icon class="black--text">edit</v-icon>
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -94,12 +92,15 @@
         }
       },
       imageTextColor () {
-        return this.darkImage ? 'white--text' : 'black--text'
+        return 'black--text'
       }
     },
     methods: {
       hideProfile () {
         this.$emit('close')
+      },
+      openEditPage () {
+        this.$emit('edit', this.person.id)
       }
     },
     watch: {
@@ -109,17 +110,7 @@
         }
       },
       showProfile (showProfile) {
-        let profilePicCheck = Promise.resolve()
-        // if (showProfile) {
-        //   profilePicCheck = this.isItDark(this.profilePic)
-        //     .then((isDark) => {
-        //       this.darkImage = isDark
-        //     })
-        // }
-        profilePicCheck
-          .then(() => {
-            this.dialog = showProfile
-          })
+        this.dialog = showProfile
       }
     }
   }
