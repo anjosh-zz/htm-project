@@ -36,6 +36,7 @@
                       v-model="birthdate"
                       @input="$v.birthdate.$touch()"
                       @blur="$v.birthdate.$touch()"
+                      @focus="openBirthDateModal"
                       :error-messages="birthdateErrors"
                       required
                     ></v-text-field>
@@ -127,6 +128,9 @@
     // propsData: {},
     // computed: {},
     methods: {
+      openBirthDateModal () {
+        this.birthdateModal = true
+      },
       submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {

@@ -1,6 +1,7 @@
 const loggedInItems = [
   { icon: 'list', title: 'My Guest List', to: '/listguests', loggedInItem: true },
   { icon: 'add', title: 'Add Guest', to: '/addguest', loggedInItem: true },
+  { icon: 'file_upload', title: 'Import Guests', to: '/importGuests', loggedInItem: true },
   { icon: 'exit_to_app', title: 'Logout', to: '/logout', loggedInItem: true }
 ]
 const loggedOutItems = [

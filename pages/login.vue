@@ -17,6 +17,7 @@
                     v-model="email"
                     @input="$v.email.$touch()"
                     @blur="$v.email.$touch()"
+                    @focus="onInputClick"
                     @keyup.enter="submit"
                     :error-messages="emailErrors"
                   ></v-text-field>
@@ -31,6 +32,7 @@
                     v-model="password"
                     @input="$v.password.$touch()"
                     @blur="$v.password.$touch()"
+                    @focus="onInputClick"
                     @keyup.enter="submit"
                     :error-messages="passwordErrors"
                     id="password"
@@ -79,6 +81,9 @@
         loginCheck: false,
         email: '',
         password: '',
+        incorrect: false,
+        incorrectemail: false,
+        incorrectpassword: false,
         fbSignInParams: {
           scope: 'public_profile,email',
           return_scopes: true
@@ -89,6 +94,12 @@
     // propsData: {},
     // computed: {},
     methods: {
+      onInputClick () {
+        if (this.incorrect) {
+          this.incorrect = false
+          this.$v.$reset()
+        }
+      },
       loggedIn () {
         this.$store.commit('toggleLoggedIn')
         this.$router.push('/listguests')
@@ -116,6 +127,18 @@
             .then((response) => {
               this.loggedIn()
             }).catch((error) => {
+              if (error.response) {
+                switch (error.response.status) {
+                  case this.$g('HTTP_ERROR_CODES').UNAUTHORIZED:
+                    console.log('UNAUTHORIZED')
+                    this.incorrectemail = true
+                    this.incorrectpassword = true
+                    this.incorrect = true
+                    break
+                  default:
+                    console.log(error)
+                }
+              }
               console.log(error)
             })
         }
@@ -130,12 +153,20 @@
         const errors = []
         if (!this.$v.email.$dirty) return errors
         !this.$v.email.required && errors.push('Email is required')
+        if (this.incorrectemail) {
+          errors.push('Incorrect email/password')
+          this.incorrectemail = false
+        }
         return errors
       },
       passwordErrors () {
         const errors = []
         if (!this.$v.password.$dirty) return errors
         !this.$v.password.required && errors.push('Password is required')
+        if (this.incorrectpassword) {
+          errors.push('')
+          this.incorrectpassword = false
+        }
         return errors
       }
     },
