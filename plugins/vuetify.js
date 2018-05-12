@@ -20,7 +20,8 @@ import {
   VDivider,
   VAvatar,
   VSubheader,
-  VCheckbox
+  VCheckbox,
+  VSelect,
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -52,6 +53,7 @@ Vue.use(Vuetify, {
     VDivider,
     VAvatar,
     VSubheader,
-    VCheckbox
+    VCheckbox,
+    VSelect,
   }
 })
