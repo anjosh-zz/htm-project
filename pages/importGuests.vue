@@ -98,69 +98,37 @@
 </template>
 
 <script>
-  import axios from '~/plugins/axios'
-  import XLSX from 'xlsx'
+  import HeaderAttributeManager from '~/plugins/headerAttributeManager'
 
   export default {
     middleware: 'auth',
     beforeMount () {
+      this.headerAttributeManager = new HeaderAttributeManager()
       this.setHTMGuestAttributes()
     },
     data: () => {
       return {
+        headerAttributeManager: null,
         htmGuestAttributes: [],
-        headers: [],
         availableHeaders: [],
-        currentlyUsedMappings: [],
-        currentlyUsedHeaders: [],
         attributeSelectErrorMessages: [],
         headerSelectErrorMessages: [],
-        sheetdata: null,
         selectedGuestAttribute: null,
         selectedHeader: null,
         imported: false
       }
     },
+    computed: {
+      currentlyUsedMappings () {
+        return this.headerAttributeManager.getCurrentlyUsedMappings()
+      }
+    },
     methods: {
       setHTMGuestAttributes () {
-        let links = new Set()
-        this.htmGuestAttributes = [
-          {value: 'fullname', text: 'Full name', linkedTo: ['firstname', 'lastname']},
-          {value: 'firstname', text: 'First name', linkedTo: ['fullname']},
-          {value: 'lastname', text: 'Last name', linkedTo: ['fullname']},
-          {value: 'alias', text: 'Name they go by'},
-          {value: 'email', text: 'Email'},
-          {value: 'phoneNumber', text: 'Phone number'},
-          {value: 'birthdate', text: 'Birthdate'},
-          {value: 'preferredContactMethod', text: 'Preferred contact method'}
-          // TODO implement the below options
-          // {value: 'firstMeetingLocation', text: 'Meeting location'},
-          // {value: 'timeMet', text: 'Date met'},
-          // {value: 'notes', text: 'Notes'}
-        ].filter(attribute => {
-          let isUsed = this.currentlyUsedMappings.find(mapping => mapping.attribute === attribute.value)
-          if (isUsed && attribute.linkedTo) {
-            attribute.linkedTo.forEach(link => links.add(link))
-          }
-          return !isUsed
-        }).filter(attribute => {
-          return !links.has(attribute.value)
-        })
+        this.htmGuestAttributes = this.headerAttributeManager.getAvailableAttributes()
       },
       setAvailableHeaders () {
-        this.availableHeaders = this.headers.map((header) => ({
-          value: header,
-          text: header
-        })).filter(header => !this.currentlyUsedMappings.find(mapping => mapping.header === header.value))
-      },
-      removeMapping (index) {
-        this.currentlyUsedMappings.splice(index, 1)
-        this.setHTMGuestAttributes()
-        this.setAvailableHeaders()
-      },
-      clearSelectErrorMessages () {
-        this.headerSelectErrorMessages = []
-        this.attributeSelectErrorMessages = []
+        this.availableHeaders = this.headerAttributeManager.getAvailableHeaders()
       },
       addMapping () {
         if (!this.selectedGuestAttribute || !this.selectedHeader) {
@@ -168,64 +136,39 @@
           !this.selectedGuestAttribute && this.attributeSelectErrorMessages.push('Please select an option')
           return
         }
-        let selectedHeaderObject = this.availableHeaders.find(item => item.value === this.selectedHeader)
-        let selectedGuestAttributeObject = this.htmGuestAttributes.find(item => item.value === this.selectedGuestAttribute)
-        if (selectedGuestAttributeObject && selectedHeaderObject) {
-          this.currentlyUsedMappings.push({
-            attribute: selectedGuestAttributeObject.value,
-            attributeText: selectedGuestAttributeObject.text,
-            header: selectedHeaderObject.value,
-            headerText: selectedHeaderObject.text
-          })
-          this.setHTMGuestAttributes()
-          this.setAvailableHeaders()
-          this.selectedGuestAttribute = null
-          this.selectedHeader = null
-        }
+        this.headerAttributeManager.selected(this.selectedHeader, this.selectedGuestAttribute)
+
+        this.setHTMGuestAttributes()
+        this.setAvailableHeaders()
+        this.selectedGuestAttribute = null
+        this.selectedHeader = null
+      },
+      removeMapping (index) {
+        this.headerAttributeManager.removeMapping(index)
+        this.setHTMGuestAttributes()
+        this.setAvailableHeaders()
+      },
+      clearSelectErrorMessages () {
+        this.headerSelectErrorMessages = []
+        this.attributeSelectErrorMessages = []
       },
       openFileInput () {
         this.$refs.upload.click()
       },
-      upload () {
+      async upload () {
         const files = this.$refs.upload.files
         const file = files[0]
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          let data = new Uint8Array(e.target.result)
-          let workbook = XLSX.read(data, {type: 'array'})
-          this.sheetdata = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1})
-          this.headers = this.sheetdata[0]
-          this.setAvailableHeaders()
-          this.imported = true
-        }
-        reader.readAsArrayBuffer(file)
+        await this.headerAttributeManager.upload(file)
+
+        this.imported = true
+
+        this.setHTMGuestAttributes()
+        this.setAvailableHeaders()
       },
-      submit () {
-        let keys = this.headers.map((header) => {
-          let mapping = this.currentlyUsedMappings.find(mapping => mapping.header === header)
-          if (mapping) {
-            return mapping.attribute
-          }
-        })
-        let persons = this.sheetdata.slice(1).map((row) => {
-          let person = keys.reduce((person, key, index) => {
-            if (key) {
-              person[key] = row[index]
-            }
-            return person
-          }, {})
-          if (keys.includes('firstname') || keys.includes('lastname')) {
-            person.fullname = (person.firstname ? `${person.firstname} ` : '') + person.lastname
-            delete person.firstname
-            delete person.lastname
-          }
-          return person
-        })
-        axios.post('/persons/bulkCreate', persons)
-          .then((response) => {
-            console.log(response)
-            this.$router.push('/listguests')
-          })
+      async submit () {
+        await this.headerAttributeManager.submit()
+
+        this.$router.push('/listguests')
       }
     }
   }
