@@ -108,38 +108,10 @@
                   </v-dialog>
                 </v-flex>
               </v-layout>
-              <v-layout row>
-                <v-flex xs12>
-                  <v-text-field
-                    label="Place where you met"
-                    v-model="firstMeetingLocation"
-                    prepend-icon="place"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs12>
-                  <v-dialog
-                    v-model="timeMetModal"
-                    lazy
-                    full-width
-                    width="290px"
-                  >
-                    <v-text-field
-                      slot="activator"
-                      label="Date when you met"
-                      name="timeMet"
-                      id="timeMet"
-                      v-model="timeMet"
-                      prepend-icon="event"
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="timeMet"
-                      scrollable
-                      autosave
-                      color="green">
-                    </v-date-picker>
-                  </v-dialog>
+              <v-layout row wrap>
+                <p>Blessing Steps Completed</p>
+                <v-flex xs12 v-for="step in blessingSteps" :key="step.name">
+                  <v-checkbox v-model="step.selected" :label="step.name" hide-details></v-checkbox>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -160,7 +132,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="submit">{{this.editing ? 'Save': 'Add'}}</v-btn>
+          <v-btn v-if=!this.editing color="primary" @click="submit">
+            {{this.editing ? 'Save': 'Add'}}
+          </v-btn>
         </v-card-actions>
         <Snapshot
           :showSnapshot="snapshotIsShowing"
@@ -193,6 +167,11 @@
               let person = response.data
               Object.assign(this, person)
               this.avatarSrc = person.avatar || person.avatarURL
+
+              const actions = person.Subject.concat(person.Object)
+              actions.forEach(action => {
+                this.blessingSteps[action.ActionTypeId].selected = true
+              })
             }
           })
       }
@@ -211,7 +190,37 @@
         preferredContactMethod: 'email',
         snapshotIsShowing: false,
         firstMeetingLocation: '',
-        avatarSrc: ''
+        avatarSrc: '',
+        blessingSteps: {
+          1: {
+            'name': 'Holy Wine',
+            'selected': false
+          },
+          2: {
+            'name': 'Benediction Prayer',
+            'selected': false
+          },
+          3: {
+            'name': 'Indemnity Stick',
+            'selected': false
+          },
+          4: {
+            'name': 'Education',
+            'selected': false
+          },
+          5: {
+            'name': 'Donation',
+            'selected': false
+          },
+          6: {
+            'name': '40 day',
+            'selected': false
+          },
+          7: {
+            'name': '3 day',
+            'selected': false
+          }
+        }
       }
     },
     methods: {
@@ -237,7 +246,8 @@
             birthdate: this.birthdate,
             timeMet: this.timeMet,
             firstMeetingLocation: this.firstMeetingLocation,
-            notes: this.notes
+            notes: this.notes,
+            blessingSteps: this.blessingSteps
           }
           if (this.avatarURL && this.avatarURL === person.avatar) {
             delete person.avatar

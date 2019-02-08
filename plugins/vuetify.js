@@ -19,7 +19,8 @@ import {
   VBtnToggle,
   VDivider,
   VAvatar,
-  VSubheader
+  VSubheader,
+  VCheckbox
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -50,6 +51,7 @@ Vue.use(Vuetify, {
     VBtnToggle,
     VDivider,
     VAvatar,
-    VSubheader
+    VSubheader,
+    VCheckbox
   }
 })
