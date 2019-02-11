@@ -9,6 +9,9 @@ const smartmap = [
   { keyword: 'birth', value: 'birthdate' }
 ]
 
+const COLUMNS_TO_EXCLUDE = 4
+const HEADERS_TO_EXCLUDE = 1
+
 export default class HeaderAttributeManager {
   constructor () {
     this.headers = []
@@ -25,7 +28,7 @@ export default class HeaderAttributeManager {
         let data = new Uint8Array(e.target.result)
         let workbook = XLSX.read(data, {type: 'array'})
         this.sheetdata = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1})
-        this.headers = this.sheetdata[0]
+        this.headers = this.sheetdata[HEADERS_TO_EXCLUDE].slice(COLUMNS_TO_EXCLUDE, 28)
 
         this.setHeaders(this.headers)
         this.getAvailableAttributes()
@@ -195,20 +198,27 @@ export default class HeaderAttributeManager {
         return mapping.attribute
       }
     })
-    let persons = this.sheetdata.slice(1).map((row) => {
+    let persons = this.sheetdata.slice(HEADERS_TO_EXCLUDE + 1).map((row) => {
       let person = keys.reduce((person, key, index) => {
         if (key) {
-          person[key] = row[index]
+          person[key] = row[index + COLUMNS_TO_EXCLUDE]
         }
         return person
       }, {})
       if (keys.includes('firstname') || keys.includes('lastname')) {
-        person.fullname = (person.firstname ? `${person.firstname} ` : '') + person.lastname
+        person.fullname = ''
+        if (person.firstname) {
+          person.fullname += `${person.firstname} `
+        }
+        if (person.lastname) {
+          person.fullname += person.lastname
+        }
+        person.fullname.trim()
         delete person.firstname
         delete person.lastname
       }
       return person
-    })
+    }).filter(person => !!person.fullname)
     return axios.post('/persons/bulkCreate', persons)
       .then((response) => {
         console.log(response)
