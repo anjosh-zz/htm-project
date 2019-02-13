@@ -34,11 +34,6 @@
                       name="birthdate"
                       id="birthdate"
                       v-model="birthdate"
-                      @input="$v.birthdate.$touch()"
-                      @blur="$v.birthdate.$touch()"
-                      @focus="openBirthDateModal"
-                      :error-messages="birthdateErrors"
-                      required
                     ></v-text-field>
                     <v-date-picker
                       v-model="birthdate"
@@ -152,8 +147,7 @@
       fullname: { required },
       email: { required, email },
       password: { required, minLength: minLength(6) },
-      confirmPassword: { sameAsPassword: sameAs('password'), required },
-      birthdate: { required }
+      confirmPassword: { sameAsPassword: sameAs('password'), required }
     },
     computed: {
       fullnameErrors () {
@@ -181,12 +175,6 @@
         if (!this.$v.confirmPassword.$dirty) return errors
         !this.$v.confirmPassword.sameAsPassword && errors.push('Must match password')
         !this.$v.confirmPassword.required && errors.push('Confirm password is required')
-        return errors
-      },
-      birthdateErrors () {
-        const errors = []
-        if (!this.$v.birthdate.$dirty) return errors
-        !this.$v.birthdate.required && errors.push('Birthdate is required')
         return errors
       }
     },

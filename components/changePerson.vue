@@ -49,7 +49,6 @@
                     @blur="$v.email.$touch()"
                     :error-messages="emailErrors"
                     id="email"
-                    required
                     prepend-icon="email"
                   ></v-text-field>
                 </v-flex>
@@ -233,7 +232,7 @@
     },
     validations: {
       fullname: { required },
-      email: { required, email },
+      email: { email },
       notes: { maxLength: maxLength(1000) }
     },
     computed: {
@@ -247,7 +246,6 @@
         const errors = []
         if (!this.$v.email.$dirty) return errors
         !this.$v.email.email && errors.push('Must be valid email')
-        !this.$v.email.required && errors.push('Email is required')
         return errors
       },
       notesErrors () {
