@@ -159,7 +159,9 @@
     middleware: 'auth',
     components: {Snapshot},
     mixin: [validationMixin],
-    created () {
+    async created () {
+      const blessingSteps = await axios.get('/actionTypes')
+      this.blessingSteps = blessingSteps.data.map(step => ({...step, selected: false}))
       if (this.$route.params.personId) {
         return axios.get('/persons/' + this.$route.params.personId)
           .then((response) => {
@@ -169,8 +171,10 @@
               this.avatarSrc = person.avatar || person.avatarURL
 
               const actions = person.Subject.concat(person.Object)
-              actions.forEach(action => {
-                this.blessingSteps[action.ActionTypeId].selected = true
+              this.blessingSteps.forEach(step => {
+                if (actions.some(action => step.id === action.ActionTypeId)) {
+                  step.selected = true
+                }
               })
             }
           })
@@ -191,36 +195,7 @@
         snapshotIsShowing: false,
         firstMeetingLocation: '',
         avatarSrc: '',
-        blessingSteps: {
-          1: {
-            'name': 'Holy Wine',
-            'selected': false
-          },
-          2: {
-            'name': 'Benediction Prayer',
-            'selected': false
-          },
-          3: {
-            'name': 'Indemnity Stick',
-            'selected': false
-          },
-          4: {
-            'name': 'Education',
-            'selected': false
-          },
-          5: {
-            'name': 'Donation',
-            'selected': false
-          },
-          6: {
-            'name': '40 day',
-            'selected': false
-          },
-          7: {
-            'name': '3 day',
-            'selected': false
-          }
-        }
+        blessingSteps: []
       }
     },
     methods: {
