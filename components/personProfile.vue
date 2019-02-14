@@ -82,7 +82,7 @@
       },
       imageHeight () {
         if (!this.profilePic) {
-          return '50px'
+          return 'auto'
         }
         switch (this.$vuetify.breakpoint.name) {
           case 'xs':
@@ -90,9 +90,6 @@
           default:
             return '200px'
         }
-      },
-      imageTextColor () {
-        return 'black--text'
       }
     },
     methods: {
