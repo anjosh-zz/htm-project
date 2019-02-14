@@ -2,7 +2,7 @@
   <v-layout row align-center justify-center>
     <v-flex xs12 sm5>
       <v-card>
-        <v-card-title class="headline">{{this.editing ? 'Edit Guest': 'Add Guest'}}</v-card-title>
+        <v-card-title class="headline">{{editing ? 'Edit Guest': 'Add Guest'}}</v-card-title>
         <v-card-text>
           <p>Please fill out all the required fields (*):</p>
           <v-form>
@@ -107,10 +107,10 @@
                   </v-dialog>
                 </v-flex>
               </v-layout>
-              <v-layout row wrap>
-                <p>Blessing Steps Completed</p>
+              <v-layout row wrap >
+                <p>Blessing Steps Completed{{editing ? " (These cannot be updated yet.)" : ''}}</p>
                 <v-flex xs12 v-for="step in blessingSteps" :key="step.name">
-                  <v-checkbox v-model="step.selected" :label="step.name" hide-details></v-checkbox>
+                  <v-checkbox :disabled="editing" v-model="step.selected" :label="step.name" hide-details></v-checkbox>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -131,8 +131,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if=!this.editing color="primary" @click="submit">
-            {{this.editing ? 'Save': 'Add'}}
+          <v-btn color="primary" @click="submit">
+            {{editing ? 'Save': 'Add'}}
           </v-btn>
         </v-card-actions>
         <Snapshot
@@ -179,7 +179,7 @@
           })
       }
     },
-    data: () => {
+    data () {
       return {
         fullname: '',
         alias: '',
@@ -194,7 +194,8 @@
         snapshotIsShowing: false,
         firstMeetingLocation: '',
         avatarSrc: '',
-        blessingSteps: []
+        blessingSteps: [],
+        Actions: []
       }
     },
     methods: {
@@ -221,7 +222,8 @@
             timeMet: this.timeMet,
             firstMeetingLocation: this.firstMeetingLocation,
             notes: this.notes,
-            blessingSteps: this.blessingSteps
+            blessingSteps: this.blessingSteps,
+            Actions: this.Actions
           }
           if (this.avatarURL && this.avatarURL === person.avatar) {
             delete person.avatar
