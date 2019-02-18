@@ -48,7 +48,6 @@
                 </v-flex>
               </v-layout>
             </v-container>
-            <!-- <v-btn color="green darken-1" flat="flat" @click.native="startCamera" v-if="!cameraRunning">Camera</v-btn> -->
 
           </div>
 
@@ -162,7 +161,7 @@
 
         // Not showing vendor prefixes or code that works cross-browser.
         navigator.getUserMedia({video: true}, (stream) => {
-          video.src = window.URL.createObjectURL(stream)
+          video.srcObject = stream
           this.localMediaStream = stream
         }, (err) => {
           console.log(err)
