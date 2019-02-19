@@ -22,7 +22,8 @@ import {
   VSubheader,
   VCheckbox,
   VSelect,
-  VTooltip
+  VTooltip,
+  VImg
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -56,6 +57,7 @@ Vue.use(Vuetify, {
     VSubheader,
     VCheckbox,
     VSelect,
-    VTooltip
+    VTooltip,
+    VImg
   }
 })

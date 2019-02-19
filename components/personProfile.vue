@@ -1,35 +1,43 @@
 <template>
-  <v-layout row justify-center>
+  <v-layout
+    align-center
+    justify-space-around
+    wrap>
     <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly" transition="slide-y-transition">
       <v-card>
-        <v-card-media :src="profilePic" :height="imageHeight" id="profileImageContainer">
-          <v-container fluid class="full-height">
-            <v-layout row>
-              <v-flex xs6>
-                <v-btn
-                  icon
-                  color="grey"
-                  class="ma-0 opaque"
-                  @click.native="hideProfile"
+        <v-container fluid class="full-height">
+          <v-layout row>
+            <v-flex xs6>
+              <v-btn
+                icon
+                @click.native="hideProfile"
                 >
-                  <v-icon class="black--text">arrow_back</v-icon>
-                </v-btn>
-              </v-flex>
-              <v-flex xs6 class="text-xs-right">
-                <v-btn
-                  icon
-                  color="grey"
-                  class="ma-0 opaque"
-                  @click.native="openEditPage"
+                <v-icon class="black--text">arrow_back</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs6 class="text-xs-right">
+              <v-btn
+                icon
+                @click.native="openEditPage"
                 >
-                  <v-icon class="black--text">edit</v-icon>
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card-media>
-        <v-card-title primary-title>
-          <span  v-bind:class="['headline']">{{person.fullname}}</span>
+                <v-icon class="black--text">edit</v-icon>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+
+        <v-layout
+          align-center
+          justify-space-around
+          wrap
+          >
+          <v-avatar :color="person.colorClassName" :size="60">
+            <Avatar :person="person"/>
+          </v-avatar>
+
+        </v-layout>
+        <v-card-title class="justify-center" primary-title>
+          <span v-bind:class="['headline']">{{person.fullname}}</span>
         </v-card-title>
         <v-card-text>
           <v-container fluid grid-list-xs>
@@ -50,17 +58,16 @@
             </v-layout>
           </v-container>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click.native="hideProfile">Close</v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-layout>
 </template>
 
 <script>
+  import Avatar from '~/components/personAvatar.vue'
+
   export default {
+    components: {Avatar},
     props: ['showProfile', 'person'],
     data () {
       return {
