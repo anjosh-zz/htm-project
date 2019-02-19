@@ -1,45 +1,56 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
-    <v-flex xs12 sm8 md4>
-      <v-card v-if="loginCheck" class="elevation-12">
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>Login</v-toolbar-title>
-        </v-toolbar>
+    <v-flex xs12 md4>
+      <v-card v-if="loginCheck">
+        <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
+          <p>Login to view and manage your guests.</p>
+          <p>Don't have an account? <router-link to="registration">Click here to register.</router-link></p>
           <v-form>
-            <v-text-field
-                name="email"
-                label="Email"
-                id="email"
-                v-model="email"
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
-                @focus="onInputClick"
-                @keyup.enter="submit"
-                :error-messages="emailErrors"
-                prepend-icon="person"
-            />
-            <v-text-field
-                name="password"
-                label="Password"
-                type="password"
-                v-model="password"
-                @input="$v.password.$touch()"
-                @blur="$v.password.$touch()"
-                @focus="onInputClick"
-                @keyup.enter="submit"
-                :error-messages="passwordErrors"
-                id="password"
-                prepend-icon="lock"
-            />
+            <v-container fluid class="pa-0">
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    name="email"
+                    label="Email"
+                    id="email"
+                    v-model="email"
+                    @input="$v.email.$touch()"
+                    @blur="$v.email.$touch()"
+                    @focus="onInputClick"
+                    @keyup.enter="submit"
+                    :error-messages="emailErrors"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    name="password"
+                    label="Password"
+                    type="password"
+                    v-model="password"
+                    @input="$v.password.$touch()"
+                    @blur="$v.password.$touch()"
+                    @focus="onInputClick"
+                    @keyup.enter="submit"
+                    :error-messages="passwordErrors"
+                    id="password"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
           </v-form>
-          <p>Don't have an account?
-            <router-link to="registration">Click here to register.</router-link>
-          </p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="submit">Login</v-btn>
+          <!-- <fb-signin-button
+            :params="fbSignInParams"
+            @success="onSignInSuccess"
+            @error="onSignInError">
+            Sign in with Facebook
+          </fb-signin-button> -->
         </v-card-actions>
       </v-card>
     </v-flex>
