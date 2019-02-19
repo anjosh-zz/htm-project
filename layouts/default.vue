@@ -6,6 +6,7 @@
       v-model="drawer"
       fixed
       app
+      v-if="this.$store.state.loggedIn"
     >
       <v-list>
         <v-list-tile
@@ -25,7 +26,10 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
-      <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon
+          v-if="this.$store.state.loggedIn"
+          @click="drawer = !drawer"
+      />
       <!-- <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
