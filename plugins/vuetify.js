@@ -23,7 +23,8 @@ import {
   VCheckbox,
   VSelect,
   VTooltip,
-  VImg
+  VImg,
+  VTextarea
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -58,6 +59,7 @@ Vue.use(Vuetify, {
     VCheckbox,
     VSelect,
     VTooltip,
-    VImg
+    VImg,
+    VTextarea
   }
 })
