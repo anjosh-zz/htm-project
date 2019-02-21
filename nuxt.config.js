@@ -28,7 +28,8 @@ module.exports = {
     { src: '~/plugins/nonssrplugins.js', ssr: false }
   ],
   css: [
-    '~/assets/style/app.styl'
+    '~/assets/style/app.styl',
+    { src: '@fortawesome/fontawesome-free/css/all.css', lang: 'css' }
   ],
   /*
   ** Customize the progress bar color

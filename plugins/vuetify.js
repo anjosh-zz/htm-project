@@ -61,5 +61,6 @@ Vue.use(Vuetify, {
     VTooltip,
     VImg,
     VTextarea
-  }
+  },
+  iconfont: 'fa'
 })
