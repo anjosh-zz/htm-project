@@ -36,28 +36,24 @@
           </v-avatar>
 
         </v-layout>
+
         <v-card-title class="justify-center" primary-title>
           <span v-bind:class="['headline']">{{person.fullname}}</span>
         </v-card-title>
-        <v-card-text>
-          <v-container fluid grid-list-xs>
-            <v-layout row justify-center v-if="person.email">
-              <v-flex xs12>
-                <p><span class="pr-2"><v-icon large>email</v-icon></span>{{person.email}}</p>
-              </v-flex>
-            </v-layout>
-            <v-layout row justify-center v-if="person.phoneNumber">
-              <v-flex xs12>
-                <p><span class="pr-2"><v-icon large>phone</v-icon></span>{{person.phoneNumber}}</p>
-              </v-flex>
-            </v-layout>
-            <v-layout row justify-center v-if="person.birthdate">
-              <v-flex xs12>
-                <p><span class="pr-2"><v-icon large>cake</v-icon></span>{{person.birthdate}}</p>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card-text>
+
+        <v-list>
+          <div v-for="item in profileInfo" v-if="person[item.personFieldName]">
+            <v-divider></v-divider>
+            <v-list-tile>
+              <v-list-tile-action>
+                  <v-icon>{{item.icon}}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>{{person[item.personFieldName]}}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </div>
+        </v-list>
       </v-card>
     </v-dialog>
   </v-layout>
@@ -72,7 +68,21 @@
     data () {
       return {
         dialog: false,
-        darkImage: false
+        darkImage: false,
+        profileInfo: [
+          {
+            personFieldName: 'email',
+            icon: 'email'
+          },
+          {
+            personFieldName: 'phoneNumber',
+            icon: 'phone'
+          },
+          {
+            personFieldName: 'birthdate',
+            icon: 'cake'
+          }
+        ]
       }
     },
     computed: {
