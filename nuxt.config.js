@@ -45,6 +45,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    cssSourceMap: false,
     babel: {
       plugins: [
         ['transform-imports', {
@@ -62,8 +63,8 @@ module.exports = {
     /*
     ** Run ESLint on save
     */
-    extend (config, ctx) {
-      if (ctx.dev && ctx.isClient) {
+    extend (config, { isDev, isClient, isServer }) {
+      if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
@@ -71,7 +72,7 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
-      if (ctx.isServer) {
+      if (isServer) {
         config.externals = [
           nodeExternals({
             whitelist: [/^vuetify/]

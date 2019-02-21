@@ -115,7 +115,7 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12>
-                  <v-text-field
+                  <v-textarea
                     label="Notes"
                     v-model="notes"
                     @input="$v.notes.$touch()"
@@ -123,7 +123,7 @@
                     :error-messages="notesErrors"
                     multi-line
                     :counter="1000"
-                  ></v-text-field>
+                  ></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>

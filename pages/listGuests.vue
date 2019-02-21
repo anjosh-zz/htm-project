@@ -23,12 +23,8 @@
                     <v-subheader v-if="item.header" v-text="item.header" class="px-3"></v-subheader>
                     <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
                     <v-list-tile avatar v-else @click="showProfile(item)">
-                      <v-list-tile-avatar>
-                        <img v-bind:src="item.avatar" v-if="item.avatar">
-                        <img v-bind:src="item.avatarURL" v-else-if="item.avatarURL">
-                        <div v-bind:class="[item.colorClassName, 'letter']" v-else>
-                          <span class="white--text headline">{{item.fullname.charAt(0)}}</span>
-                        </div>
+                      <v-list-tile-avatar :color="item.colorClassName">
+                        <Avatar :person="item"/>
                       </v-list-tile-avatar>
                       <v-list-tile-content>
                         <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
@@ -58,6 +54,7 @@
   import SearchApi from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
   import Profile from '~/components/personProfile.vue'
+  import Avatar from '~/components/personAvatar.vue'
   import axios from '~/plugins/axios'
 
   const searchApi = new SearchApi()
@@ -65,7 +62,7 @@
 
   export default {
     middleware: 'auth',
-    components: {Profile},
+    components: {Profile, Avatar},
     fetch () {
       return axios.get('/persons/guests')
         .then((response) => {
@@ -77,6 +74,7 @@
         searchApi.indexDocument(index, guest.fullname)
         if (!guest.avatar) {
           guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
+          guest.firstLetter = guest.fullname.charAt(0)
         }
       })
 

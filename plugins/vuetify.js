@@ -22,7 +22,9 @@ import {
   VSubheader,
   VCheckbox,
   VSelect,
-  VTooltip
+  VTooltip,
+  VImg,
+  VTextarea
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -56,7 +58,9 @@ Vue.use(Vuetify, {
     VSubheader,
     VCheckbox,
     VSelect,
-    VTooltip
+    VTooltip,
+    VImg,
+    VTextarea
   },
   iconfont: 'fa'
 })
