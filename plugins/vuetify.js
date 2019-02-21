@@ -57,5 +57,6 @@ Vue.use(Vuetify, {
     VCheckbox,
     VSelect,
     VTooltip
-  }
+  },
+  iconfont: 'fa'
 })
