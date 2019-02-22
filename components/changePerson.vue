@@ -66,7 +66,7 @@
               <v-layout row>
                 <v-flex xs12>
                   <p>Preferred method of contact</p>
-                  <v-btn-toggle mandatory v-model="preferredContactMethod">
+                  <v-btn-toggle style="width: 100%" mandatory v-model="preferredContactMethod">
                     <v-btn flat value="email">
                       <v-icon>email</v-icon>
                       <span class="px-1">Email</span>
@@ -85,32 +85,30 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12 mt-2>
-                  <v-dialog
-                    v-model="birthdateModal"
-                    lazy
-                    full-width
-                    width="290px"
-                  >
-                    <v-text-field
-                      slot="activator"
-                      label="Birthday"
-                      name="birthdate"
-                      id="birthdate"
-                      v-model="birthdate"
-                      prepend-icon="cake"
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="birthdate"
-                      scrollable
-                      autosave>
-                    </v-date-picker>
-                  </v-dialog>
+                  <v-text-field
+                    label="Birthday"
+                    name="birthdate"
+                    id="birthdate"
+                    mask="date"
+                    :placeholder="birthdateFormat"
+                    v-model="birthdate"
+                    @input="$v.birthdate.$touch()"
+                    @blur="$v.birthdate.$touch()"
+                    :error-messages="birthdateErrors"
+                    :return-masked-value="true"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row wrap >
                 <p>Blessing Steps Completed{{editing ? " (These cannot be updated yet.)" : ''}}</p>
                 <v-flex xs12 v-for="step in blessingSteps" :key="step.name">
-                  <v-checkbox :disabled="editing" v-model="step.selected" :label="step.name" hide-details></v-checkbox>
+                  <v-checkbox
+                      class="mt-0"
+                      :disabled="editing"
+                      v-model="step.selected"
+                      :label="step.name"
+                      hide-details>
+                  </v-checkbox>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -150,6 +148,7 @@
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
   import axios from '~/plugins/axios'
+  import moment from 'moment'
 
   import Snapshot from '~/components/snapshot.vue'
 
@@ -162,21 +161,20 @@
       const blessingSteps = await axios.get('/actionTypes')
       this.blessingSteps = blessingSteps.data.map(step => ({...step, selected: false}))
       if (this.$route.params.personId) {
-        return axios.get('/persons/' + this.$route.params.personId)
-          .then((response) => {
-            if (response.data) {
-              let person = response.data
-              Object.assign(this, person)
-              this.avatarSrc = person.avatar || person.avatarURL
+        const response = await axios.get('/persons/' + this.$route.params.personId)
+        if (response.data) {
+          let person = response.data
+          person.birthdate = moment(person.birthdate).format(this.birthdateFormat)
+          Object.assign(this, person)
+          this.avatarSrc = person.avatar || person.avatarURL
 
-              const actions = person.Subject.concat(person.Object)
-              this.blessingSteps.forEach(step => {
-                if (actions.some(action => step.id === action.ActionTypeId)) {
-                  step.selected = true
-                }
-              })
+          const actions = person.Subject.concat(person.Object)
+          this.blessingSteps.forEach(step => {
+            if (actions.some(action => step.id === action.ActionTypeId)) {
+              step.selected = true
             }
           })
+        }
       }
     },
     data () {
@@ -186,10 +184,9 @@
         email: '',
         phoneNumber: '',
         notes: '',
-        birthdate: null,
-        birthdateModal: false,
+        birthdate: this.birthdateFormat,
+        birthdateFormat: 'MM/DD/YYYY',
         timeMet: null,
-        timeMetModal: false,
         preferredContactMethod: 'email',
         snapshotIsShowing: false,
         firstMeetingLocation: '',
@@ -235,7 +232,10 @@
     validations: {
       fullname: { required },
       email: { email },
-      notes: { maxLength: maxLength(1000) }
+      notes: { maxLength: maxLength(1000) },
+      birthdate: {
+        isDate: (date) => moment(date, this.birthdateFormat, true).isValid()
+      }
     },
     computed: {
       fullnameErrors () {
@@ -254,6 +254,12 @@
         const errors = []
         if (!this.$v.notes.$dirty) return errors
         !this.$v.notes.maxLength && errors.push('Notes must be at most 1000 characters long')
+        return errors
+      },
+      birthdateErrors () {
+        const errors = []
+        if (!this.$v.birthdate.$dirty) return errors
+        !this.$v.birthdate.isDate && errors.push('Enter a valid birthday')
         return errors
       }
     }

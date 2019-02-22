@@ -31,7 +31,7 @@
                 :disable-click-to-choose="true"
                 :disable-drag-and-drop="true"
                 :show-loading="true"
-                :zoom-speed="8"
+                :zoom-speed="5"
             >
             </croppa>
           </div>

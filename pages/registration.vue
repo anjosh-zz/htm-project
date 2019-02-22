@@ -5,7 +5,7 @@
         <v-card-title class="headline">Registration</v-card-title>
         <v-card-text>
           <p>Fill in this form to register:</p>
-          <v-form>
+          <v-form :lazy-validation="true">
             <v-container fluid class="pa-0">
               <v-layout row>
                 <v-flex xs12>
@@ -22,25 +22,18 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12 mt-2>
-                  <v-dialog
-                    v-model="birthdateModal"
-                    lazy
-                    full-width
-                    width="290px"
-                  >
-                    <v-text-field
-                      slot="activator"
-                      label="Birthday"
-                      name="birthdate"
-                      id="birthdate"
-                      v-model="birthdate"
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="birthdate"
-                      scrollable
-                      autosave>
-                    </v-date-picker>
-                  </v-dialog>
+                  <v-text-field
+                    label="Birthday"
+                    name="birthdate"
+                    id="birthdate"
+                    mask="date"
+                    :placeholder="birthdateFormat"
+                    v-model="birthdate"
+                    @input="$v.birthdate.$touch()"
+                    @blur="$v.birthdate.$touch()"
+                    :error-messages="birthdateErrors"
+                    :return-masked-value="true"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -50,7 +43,6 @@
                     label="Email"
                     id="email"
                     v-model="email"
-                    @input="$v.email.$touch()"
                     @blur="$v.email.$touch()"
                     @keyup.enter="submit"
                     :error-messages="emailErrors"
@@ -65,12 +57,14 @@
                     label="Password"
                     type="password"
                     v-model="password"
-                    @input="$v.password.$touch()"
                     @blur="$v.password.$touch()"
                     @keyup.enter="submit"
                     :error-messages="passwordErrors"
                     id="password"
                     required
+                    :append-icon="showPassword ? 'visibility_off' : 'visibility'"
+                    :type="showPassword ? 'text' : 'password'"
+                    @click:append="showPassword = !showPassword"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -81,12 +75,14 @@
                     label="Confirm Password"
                     type="password"
                     v-model="confirmPassword"
-                    @input="$v.confirmPassword.$touch()"
                     @blur="$v.confirmPassword.$touch()"
                     @keyup.enter="submit"
                     :error-messages="confirmPasswordErrors"
                     id="confirmPassword"
                     required
+                    :append-icon="showConfirmPassword ? 'visibility_off' : 'visibility'"
+                    :type="showConfirmPassword ? 'text' : 'password'"
+                    @click:append="showConfirmPassword = !showConfirmPassword"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -103,29 +99,25 @@
 </template>
 
 <script>
-  import { validationMixin } from 'vuelidate'
-  import { required, email, sameAs, minLength } from 'vuelidate/lib/validators'
+  import {validationMixin} from 'vuelidate'
+  import {email, minLength, required, sameAs} from 'vuelidate/lib/validators'
   import axios from '~/plugins/axios'
+  import moment from 'moment'
 
   export default {
-    // Options / Data
     data () {
       return {
         email: '',
         password: '',
         confirmPassword: '',
+        showPassword: false,
+        showConfirmPassword: false,
         fullname: '',
-        birthdate: null,
-        birthdateModal: false
+        birthdate: this.birthdateFormat,
+        birthdateFormat: 'MM/DD/YYYY'
       }
     },
-    // props: [],
-    // propsData: {},
-    // computed: {},
     methods: {
-      openBirthDateModal () {
-        this.birthdateModal = true
-      },
       submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
@@ -147,7 +139,10 @@
       fullname: { required },
       email: { required, email },
       password: { required, minLength: minLength(6) },
-      confirmPassword: { sameAsPassword: sameAs('password'), required }
+      confirmPassword: { sameAsPassword: sameAs('password'), required },
+      birthdate: {
+        isDate: (date) => moment(date, this.birthdateFormat, true).isValid()
+      }
     },
     computed: {
       fullnameErrors () {
@@ -176,34 +171,14 @@
         !this.$v.confirmPassword.sameAsPassword && errors.push('Must match password')
         !this.$v.confirmPassword.required && errors.push('Confirm password is required')
         return errors
+      },
+      birthdateErrors () {
+        const errors = []
+        if (!this.$v.birthdate.$dirty) return errors
+        !this.$v.birthdate.isDate && errors.push('Enter a valid birthday')
+        return errors
       }
     },
-    // watch: {},
-    // Options / DOM
-    // el () {},
-    // template: '',
-    // render () {},
-    // Options / Lifecycle Hooks
-    // beforeCreate () {},
-    // created () {},
-    // beforeMount () {},
-    // mounted () {},
-    // beforeUpdate () {},
-    // updated () {},
-    // activated () {},
-    // deactivated () {},
-    // beforeDestroy () {},
-    // destroyed () {},
-    // Options / Assets
-    // directives: {},
-    // filters: {},
-    // components: {},
-    // Options / Misc
-    // parent: null,
     mixins: [ validationMixin ]
-    // name: '',
-    // extends: {},
-    // delimiters: [ '{{', '}}' ],
-    // functional: false
   }
 </script>

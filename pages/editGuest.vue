@@ -18,7 +18,6 @@
         let personId = this.$route.params.personId
         axios.post(`/persons/${personId}`, person)
           .then((response) => {
-            console.log(response)
             this.$router.push('/listguests')
           })
       }
