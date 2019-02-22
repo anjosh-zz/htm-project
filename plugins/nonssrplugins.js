@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import VueCroppie from 'vue-croppie'
+import Croppa from 'vue-croppa'
 
-Vue.use(VueCroppie)
+Vue.use(Croppa)

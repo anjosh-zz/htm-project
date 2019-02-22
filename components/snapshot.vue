@@ -17,13 +17,23 @@
 
             <canvas ref="canvas" v-show="false"></canvas>
           </div>
-          <div v-show="snapshotTaken">
-            <vue-croppie
-              ref=croppieRef
-              :enableResize="false"
-              :enableOrientation="true"
-              :viewport="{ width: 256, height: 256, type: 'square' }">
-            </vue-croppie>
+          <div v-show="snapshotTaken" class="text-xs-center">
+            <croppa
+                ref="croppa"
+                @file-choose="handleCroppaFileChoose"
+                placeholder="Loading picture..."
+                :placeholder-font-size="16"
+                :height="imageHeight"
+                :width="imageHeight"
+                :initial-image="imageSrc"
+                :show-remove-button="false"
+                :prevent-white-space="true"
+                :disable-click-to-choose="true"
+                :disable-drag-and-drop="true"
+                :show-loading="true"
+                :zoom-speed="8"
+            >
+            </croppa>
           </div>
           <div v-if="!cameraRunning && !snapshotTaken">
             <v-container fluid class="pt-0 text-xs-center">
@@ -35,15 +45,9 @@
                   <p>Take picture</p>
                 </v-flex>
                 <v-flex xs6>
-                  <v-btn fab dark large color="secondary" @click.native="openFileInput">
+                  <v-btn fab dark large color="secondary" @click.native="$refs.croppa.chooseFile()">
                     <v-icon dark>photo</v-icon>
                   </v-btn>
-                  <input
-                    ref="image"
-                    type="file"
-                    accept=".jpg, .jpeg, .png"
-                    @change="setImage"
-                  >
                   <p>Upload</p>
                 </v-flex>
               </v-layout>
@@ -89,9 +93,9 @@
       imageHeight () {
         switch (this.$vuetify.breakpoint.name) {
           case 'xs':
-            return '300px'
+            return 300
           default:
-            return '200px'
+            return 400
         }
       }
     },
@@ -101,28 +105,21 @@
         this.snapshotTaken = false
         this.localMediaStream = null
         this.imageSrc = ''
+        this.$refs.croppa.remove()
       },
-      setImage () {
-        const files = this.$refs.image.files
-        this.setupCroppie(window.URL.createObjectURL(files[0]))
-      },
-      openFileInput () {
-        this.$refs.image.click()
-      },
-      setupCroppie (imageSrc) {
-        this.imageSrc = imageSrc
+      handleCroppaFileChoose () {
         this.cameraRunning = false
         this.snapshotTaken = true
-        this.$refs.croppieRef.bind({
-          url: imageSrc
-        })
+      },
+      setupCroppa (imageSrc) {
+        this.imageSrc = imageSrc
+        this.$refs.croppa.refresh()
+        this.cameraRunning = false
+        this.snapshotTaken = true
       },
       crop () {
-        this.$refs.croppieRef.result({}, (output) => {
-          this.imageSrc = output
-          this.addImage()
-          this.hideSnapshot()
-        })
+        this.addImage()
+        this.hideSnapshot()
       },
       stopCamera () {
         if (this.localMediaStream) {
@@ -151,7 +148,7 @@
           // Grab the image from the video
           ctx.drawImage(video, 0, 0, w, h)
           this.stopCamera()
-          this.setupCroppie(canvas.toDataURL('image/png'))
+          this.setupCroppa(canvas.toDataURL('image/png'))
         }
       },
       startCamera () {
@@ -168,7 +165,7 @@
         })
       },
       addImage () {
-        this.$emit('addImage', this.imageSrc)
+        this.$emit('addImage', this.$refs.croppa.generateDataUrl())
         this.imageSrc = ''
       },
       hideSnapshot () {

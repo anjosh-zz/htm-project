@@ -29,7 +29,8 @@ module.exports = {
   ],
   css: [
     '~/assets/style/app.styl',
-    { src: '@fortawesome/fontawesome-free/css/all.css', lang: 'css' }
+    { src: '@fortawesome/fontawesome-free/css/all.css', lang: 'css' },
+    { src: 'vue-croppa/dist/vue-croppa.css', lange: 'css' }
   ],
   /*
   ** Customize the progress bar color
