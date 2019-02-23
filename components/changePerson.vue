@@ -66,7 +66,7 @@
               <v-layout row>
                 <v-flex xs12>
                   <p>Preferred method of contact</p>
-                  <v-btn-toggle style="width: 100%" mandatory v-model="preferredContactMethod">
+                  <v-btn-toggle class="full-width" mandatory v-model="preferredContactMethod">
                     <v-btn flat value="email">
                       <v-icon>email</v-icon>
                       <span class="px-1">Email</span>
@@ -265,3 +265,9 @@
     }
   }
 </script>
+
+<style>
+ .full-width {
+    width: 100%
+ }
+</style>
