@@ -234,7 +234,8 @@
       email: { email },
       notes: { maxLength: maxLength(1000) },
       birthdate: {
-        isDate: (date) => moment(date, this.birthdateFormat, true).isValid()
+        isDate: (date) =>
+          date ? moment(date, this.birthdateFormat, true).isValid() : true
       }
     },
     computed: {

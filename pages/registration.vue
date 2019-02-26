@@ -141,7 +141,8 @@
       password: { required, minLength: minLength(6) },
       confirmPassword: { sameAsPassword: sameAs('password'), required },
       birthdate: {
-        isDate: (date) => moment(date, this.birthdateFormat, true).isValid()
+        isDate: (date) =>
+          date ? moment(date, this.birthdateFormat, true).isValid() : true
       }
     },
     computed: {
