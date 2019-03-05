@@ -1,9 +1,3 @@
-<style lang="" scoped>
-  video {
-    width: 100%;
-  }
-</style>
-
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly" transition="slide-y-transition">
@@ -18,22 +12,24 @@
             <canvas ref="canvas" v-show="false"></canvas>
           </div>
           <div v-show="snapshotTaken" class="text-xs-center">
-            <croppa
-                ref="croppa"
-                @file-choose="handleCroppaFileChoose"
-                placeholder="Loading picture..."
-                :placeholder-font-size="16"
-                :height="imageHeight"
-                :width="imageHeight"
-                :initial-image="imageSrc"
-                :show-remove-button="false"
-                :prevent-white-space="true"
-                :disable-click-to-choose="true"
-                :disable-drag-and-drop="true"
-                :show-loading="true"
-                :zoom-speed="5"
-            >
-            </croppa>
+              <no-ssr>
+                <croppa
+                  ref="croppa"
+                  @file-choose="handleCroppaFileChoose"
+                  placeholder="Loading picture..."
+                  :placeholder-font-size="16"
+                  :height="imageHeight"
+                  :width="imageHeight"
+                  :initial-image="imageSrc"
+                  :show-remove-button="false"
+                  :prevent-white-space="true"
+                  :disable-click-to-choose="true"
+                  :disable-drag-and-drop="true"
+                  :show-loading="true"
+                  :zoom-speed="5"
+              >
+              </croppa>
+            </no-ssr>
           </div>
           <div v-if="!cameraRunning && !snapshotTaken">
             <v-container fluid class="pt-0 text-xs-center">
@@ -187,3 +183,9 @@
     }
   }
 </script>
+
+<style lang="" scoped>
+  video {
+    width: 100%;
+  }
+</style>

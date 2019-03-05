@@ -37,11 +37,35 @@ module.exports = {
   */
   loading: { color: '#3B8070' },
   modules: [
-    // Simple usage
     ['@nuxtjs/google-analytics', {
       id: 'UA-134598965-1'
-    }]
+    }],
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+  router: {
+    middleware: ['auth']
+  },
+  auth: {
+    redirect: {
+      logout: '/',
+      home: '/addguest'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/local' },
+          logout: { url: '/auth/logout' },
+          user: { url: '/auth/user' }
+        }
+      }
+    }
+  },
+  axios: {
+    host: 'localhost',
+    port: 3001,
+    credentials: true
+  },
   /*
   ** Build configuration
   */

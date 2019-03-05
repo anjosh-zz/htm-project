@@ -17,19 +17,14 @@
 
 
 <script>
-  import axios from '~/plugins/axios'
-
   export default {
-    middleware: 'auth',
     methods: {
-      submit () {
-        axios.post('/auth/logout')
-          .then(() => {
-            this.$store.commit('toggleLoggedIn')
-            this.$router.push('/')
-          }).catch((error) => {
-            console.log(error)
-          })
+      async submit () {
+        try {
+          await this.$auth.logout()
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
   }

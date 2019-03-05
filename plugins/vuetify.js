@@ -24,7 +24,8 @@ import {
   VSelect,
   VTooltip,
   VImg,
-  VTextarea
+  VTextarea,
+  VWindow
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -60,7 +61,8 @@ Vue.use(Vuetify, {
     VSelect,
     VTooltip,
     VImg,
-    VTextarea
+    VTextarea,
+    VWindow
   },
   iconfont: 'fa'
 })

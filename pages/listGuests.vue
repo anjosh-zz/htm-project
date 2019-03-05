@@ -55,22 +55,17 @@
   import toMaterialStyle from 'material-color-hash'
   import Profile from '~/components/personProfile.vue'
   import Avatar from '~/components/personAvatar.vue'
-  import axios from '~/plugins/axios'
 
   const searchApi = new SearchApi()
-  let guests = []
 
   export default {
-    middleware: 'auth',
     components: {Profile, Avatar},
-    fetch () {
-      return axios.get('/persons/guests')
-        .then((response) => {
-          guests = response.data
-        })
+    async asyncData ({ $axios }) {
+      const response = await $axios.$get('/persons/guests')
+      return { guests: response }
     },
     created () {
-      guests.forEach((guest, index) => {
+      this.guests.forEach((guest, index) => {
         searchApi.indexDocument(index, guest.fullname)
         if (!guest.avatar) {
           guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
@@ -78,7 +73,7 @@
         }
       })
 
-      this.getItems(guests.slice(0))
+      this.getItems(this.guests.slice(0))
     },
     data () {
       return {
@@ -107,7 +102,7 @@
       search (input) {
         return searchApi.search(input)
           .then((results) => {
-            return this.getItems(results.map(index => guests[index]))
+            return this.getItems(results.map(index => this.guests[index]))
           })
       },
       getItems (guestsToDisplay) {

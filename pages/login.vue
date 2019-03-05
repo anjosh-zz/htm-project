@@ -1,11 +1,10 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
     <v-flex xs12 md4>
-      <v-card v-if="loginCheck">
+      <v-card>
         <v-card-title class="headline">Login</v-card-title>
         <v-card-text>
           <p>Login to view and manage your guests.</p>
-          <p>Don't have an account? <router-link to="registration">Click here to register.</router-link></p>
           <v-form>
             <v-container fluid class="pa-0">
               <v-layout row>
@@ -39,18 +38,13 @@
                   ></v-text-field>
                 </v-flex>
               </v-layout>
+              <p>Don't have an account? <router-link to="registration">Click here to register.</router-link></p>
             </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="submit">Login</v-btn>
-          <!-- <fb-signin-button
-            :params="fbSignInParams"
-            @success="onSignInSuccess"
-            @error="onSignInError">
-            Sign in with Facebook
-          </fb-signin-button> -->
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -60,25 +54,12 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required } from 'vuelidate/lib/validators'
-  import axios from '~/plugins/axios'
   export default {
-    // Options / Data
     fetch () {
       return this.loadFB
     },
-    created () {
-      return axios.get('/auth/isLoggedIn')
-        .then((response) => {
-          if (response.data) {
-            this.loggedIn()
-          } else {
-            this.loginCheck = true
-          }
-        })
-    },
     data () {
       return {
-        loginCheck: false,
         email: '',
         password: '',
         incorrect: false,
@@ -90,9 +71,6 @@
         }
       }
     },
-    // props: [],
-    // propsData: {},
-    // computed: {},
     methods: {
       onInputClick () {
         if (this.incorrect) {
@@ -100,47 +78,30 @@
           this.$v.$reset()
         }
       },
-      loggedIn () {
-        this.$store.commit('toggleLoggedIn')
-        this.$router.push('/listguests')
-      },
-      onSignInSuccess (response) {
-        console.log(response)
-        axios.post('/auth/facebook/token', {
-          access_token: response.authResponse.accessToken
-        }).then((response) => {
-          this.loggedIn()
-        }).catch((error) => {
-          console.log(error)
-        })
-      },
-      onSignInError (error) {
-        console.log('OH NOES', error)
-      },
-      submit () {
+      async submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
-          axios.post('/auth/local/', {
-            email: this.email,
-            password: this.password
-          })
-            .then((response) => {
-              this.loggedIn()
-            }).catch((error) => {
-              if (error.response) {
-                switch (error.response.status) {
-                  case this.$g('HTTP_ERROR_CODES').UNAUTHORIZED:
-                    console.log('UNAUTHORIZED')
-                    this.incorrectemail = true
-                    this.incorrectpassword = true
-                    this.incorrect = true
-                    break
-                  default:
-                    console.log(error)
-                }
+          try {
+            await this.$auth.loginWith('local', {
+              data: {
+                email: this.email,
+                password: this.password
               }
-              console.log(error)
             })
+          } catch (error) {
+            if (error.response) {
+              switch (error.response.status) {
+                case this.$g('HTTP_ERROR_CODES').UNAUTHORIZED:
+                  console.log('UNAUTHORIZED')
+                  this.incorrectemail = true
+                  this.incorrectpassword = true
+                  this.incorrect = true
+                  break
+                default:
+                  console.log(error)
+              }
+            }
+          }
         }
       }
     },
@@ -170,32 +131,6 @@
         return errors
       }
     },
-    // watch: {},
-    // Options / DOM
-    // el () {},
-    // template: '',
-    // render () {},
-    // Options / Lifecycle Hooks
-    // beforeCreate () {},
-    // created () {},
-    // beforeMount () {},
-    // mounted () {},
-    // beforeUpdate () {},
-    // updated () {},
-    // activated () {},
-    // deactivated () {},
-    // beforeDestroy () {},
-    // destroyed () {},
-    // Options / Assets
-    // directives: {},
-    // filters: {},
-    // components: {},
-    // Options / Misc
-    // parent: null,
     mixins: [ validationMixin ]
-    // name: '',
-    // extends: {},
-    // delimiters: [ '{{', '}}' ],
-    // functional: false
   }
 </script>

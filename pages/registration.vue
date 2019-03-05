@@ -101,10 +101,10 @@
 <script>
   import {validationMixin} from 'vuelidate'
   import {email, minLength, required, sameAs} from 'vuelidate/lib/validators'
-  import axios from '~/plugins/axios'
   import moment from 'moment'
 
   export default {
+    auth: false,
     data () {
       return {
         email: '',
@@ -118,20 +118,26 @@
       }
     },
     methods: {
-      submit () {
+      async submit () {
         this.$v.$touch()
         if (!this.$v.$invalid) {
-          axios.post('/users/', {
-            email: this.email,
-            password: this.password,
-            birthdate: this.birthdate,
-            fullname: this.fullname
-          }).then((response) => {
-            this.$store.commit('toggleLoggedIn')
+          try {
+            await this.$axios.$post('/users/', {
+              email: this.email,
+              password: this.password,
+              birthdate: this.birthdate,
+              fullname: this.fullname
+            })
+            await this.$auth.loginWith('local', {
+              data: {
+                email: this.email,
+                password: this.password
+              }
+            })
             this.$router.push('/listguests')
-          }).catch((error) => {
+          } catch (error) {
             console.log(error)
-          })
+          }
         }
       }
     },

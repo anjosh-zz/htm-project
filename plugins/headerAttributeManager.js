@@ -1,4 +1,3 @@
-import axios from '~/plugins/axios'
 import XLSX from 'xlsx'
 const smartmap = [
   { keyword: 'first', value: 'firstname' },
@@ -219,7 +218,7 @@ export default class HeaderAttributeManager {
       }
       return person
     }).filter(person => !!person.fullname)
-    return axios.post('/persons/bulkCreate', persons)
+    return this.$axios.$post('/persons/bulkCreate', persons)
       .then((response) => {
         console.log(response)
       })

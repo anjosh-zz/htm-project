@@ -4,7 +4,6 @@
       <v-card>
         <v-card-title class="headline">{{editing ? 'Edit Guest': 'Add Guest'}}</v-card-title>
         <v-card-text>
-          <p>Please fill out all the required fields (*):</p>
           <v-form>
             <v-container fluid class="pt-0">
               <v-layout row>
@@ -33,19 +32,8 @@
               <v-layout row>
                 <v-flex xs12>
                   <v-text-field
-                    v-model="alias"
-                    label="What name do they go by?"
-                    id="alias"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs12>
-                  <v-divider></v-divider>
-                  <v-text-field
                     v-model="email"
                     label="Email"
-                    @input="$v.email.$touch()"
                     @blur="$v.email.$touch()"
                     :error-messages="emailErrors"
                     id="email"
@@ -58,6 +46,7 @@
                   <v-text-field
                     v-model="phoneNumber"
                     label="Phone Number"
+                    mask="phone"
                     id="phoneNumber"
                     prepend-icon="phone"
                   ></v-text-field>
@@ -65,7 +54,7 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12>
-                  <p>Preferred method of contact</p>
+                  <p>Preferred method of contact:</p>
                   <v-btn-toggle class="full-width" mandatory v-model="preferredContactMethod">
                     <v-btn flat value="email">
                       <v-icon>email</v-icon>
@@ -80,7 +69,6 @@
                       <span class="px-1">Text</span>
                     </v-btn>
                   </v-btn-toggle>
-                  <v-divider class="mt-2"></v-divider>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -96,19 +84,8 @@
                     @blur="$v.birthdate.$touch()"
                     :error-messages="birthdateErrors"
                     :return-masked-value="true"
+                    prepend-icon="cake"
                   ></v-text-field>
-                </v-flex>
-              </v-layout>
-              <v-layout row wrap >
-                <p>Blessing Steps Completed{{editing ? " (These cannot be updated yet.)" : ''}}</p>
-                <v-flex xs12 v-for="step in blessingSteps" :key="step.name">
-                  <v-checkbox
-                      class="mt-0"
-                      :disabled="editing"
-                      v-model="step.selected"
-                      :label="step.name"
-                      hide-details>
-                  </v-checkbox>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -129,6 +106,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn v-if="!editing && step === 1" color="secondary" @click="addAnotherPerson">
+            Add Spouse
+          </v-btn>
           <v-btn color="primary" @click="submit">
             {{editing ? 'Save': 'Add'}}
           </v-btn>
@@ -147,33 +127,23 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
-  import axios from '~/plugins/axios'
   import moment from 'moment'
 
   import Snapshot from '~/components/snapshot.vue'
 
   export default {
-    props: ['editing'],
-    middleware: 'auth',
+    props: ['editing', 'step'],
     components: {Snapshot},
     mixin: [validationMixin],
     async created () {
-      const blessingSteps = await axios.get('/actionTypes')
-      this.blessingSteps = blessingSteps.data.map(step => ({...step, selected: false}))
       if (this.$route.params.personId) {
-        const response = await axios.get('/persons/' + this.$route.params.personId)
-        if (response.data) {
-          let person = response.data
+        const response = await this.$axios.$get('/persons/' + this.$route.params.personId)
+        if (response) {
+          let person = response
           person.birthdate = moment(person.birthdate).format(this.birthdateFormat)
           Object.assign(this, person)
           this.avatarSrc = person.avatar || person.avatarURL
-
-          const actions = person.Subject.concat(person.Object)
-          this.blessingSteps.forEach(step => {
-            if (actions.some(action => step.id === action.ActionTypeId)) {
-              step.selected = true
-            }
-          })
+          this.actions = person.Subject.concat(person.Object)
         }
       }
     },
@@ -191,8 +161,7 @@
         snapshotIsShowing: false,
         firstMeetingLocation: '',
         avatarSrc: '',
-        blessingSteps: [],
-        Actions: []
+        actions: []
       }
     },
     methods: {
@@ -205,7 +174,7 @@
       hideSnapshot () {
         this.snapshotIsShowing = false
       },
-      submit () {
+      submit (event, addAnother) {
         this.$v.$touch()
         if (!this.$v.$invalid) {
           let person = {
@@ -218,15 +187,16 @@
             birthdate: this.birthdate,
             timeMet: this.timeMet,
             firstMeetingLocation: this.firstMeetingLocation,
-            notes: this.notes,
-            blessingSteps: this.blessingSteps,
-            Actions: this.Actions
+            notes: this.notes
           }
           if (this.avatarURL && this.avatarURL === person.avatar) {
             delete person.avatar
           }
-          this.$emit('submit', person)
+          this.$emit('submit', person, addAnother)
         }
+      },
+      addAnotherPerson (event) {
+        this.submit(event, true)
       }
     },
     validations: {
