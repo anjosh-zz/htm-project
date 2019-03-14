@@ -1,25 +1,26 @@
 <template>
   <v-layout
-    align-center
-    justify-space-around
-    wrap>
-    <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly" transition="slide-y-transition">
+      align-center
+      justify-space-around
+      wrap>
+    <v-dialog v-model="dialog" :max-width="dialogMaxWidth" :fullscreen="$vuetify.breakpoint.xsOnly"
+              transition="slide-y-transition">
       <v-card>
         <v-container fluid class="full-height">
           <v-layout row>
             <v-flex xs6>
               <v-btn
-                icon
-                @click.native="hideProfile"
-                >
+                  icon
+                  @click.native="hideProfile"
+              >
                 <v-icon class="black--text">arrow_back</v-icon>
               </v-btn>
             </v-flex>
             <v-flex xs6 class="text-xs-right">
               <v-btn
-                icon
-                @click.native="openEditPage"
-                >
+                  icon
+                  @click.native="openEditPage"
+              >
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
             </v-flex>
@@ -27,10 +28,10 @@
         </v-container>
 
         <v-layout
-          align-center
-          justify-space-around
-          wrap
-          >
+            align-center
+            justify-space-around
+            wrap
+        >
           <v-avatar :color="person.colorClassName" :size="60">
             <Avatar :person="person"/>
           </v-avatar>
@@ -42,14 +43,16 @@
         </v-card-title>
 
         <v-list>
-          <div v-for="item in profileInfo" v-if="person[item.personFieldName]">
+          <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
             <v-list-tile :href="item.href" target="_blank">
               <v-list-tile-action>
-                  <v-icon>{{item.icon}}</v-icon>
+                <v-layout align-center justify-space-around>
+                  <v-icon class="mr-4">{{item.icon}}</v-icon>
+                </v-layout>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>{{person[item.personFieldName]}}</v-list-tile-title>
+                <v-list-tile-title>{{item.value}}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </div>
@@ -69,27 +72,58 @@
       return {
         dialog: false,
         darkImage: false,
-        emailSubject: 'Congratulations on receiving The Marriage Blessing'
+        emailSubject: 'Congratulations on receiving The Marriage Blessing',
+        blessingStepsIconMap: {
+          1: 'fa-wine-glass',
+          2: 'fa-praying-hands',
+          3: 'fa-magic',
+          4: 'fa-hand-holding-usd',
+          5: 'fa-book',
+          6: 'fa-heart',
+          7: 'fa-heart solid'
+        }
       }
     },
     computed: {
       profileInfo () {
-        return [
-          {
-            personFieldName: 'email',
+        let result = []
+        if (this.person.email) {
+          result.push({
+            value: this.person.email,
             icon: 'email',
             href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`
-          },
-          {
-            personFieldName: 'phoneNumber',
+          })
+        }
+        if (this.person.phoneNumber) {
+          result.push({
+            value: this.person.phoneNumber,
             icon: 'phone',
             href: `tel:${this.person.phoneNumber}`
-          },
-          {
-            personFieldName: 'birthdate',
+          })
+        }
+        if (this.person.birthdate) {
+          result.push({
+            value: this.person.birthdate,
             icon: 'cake'
-          }
-        ]
+          })
+        }
+        if (this.person.Subject) {
+          this.person.Subject.forEach(step => {
+            result.push({
+              value: step.ActionType.name,
+              icon: this.blessingStepsIconMap[step.ActionTypeId]
+            })
+          })
+        }
+        if (this.person.Object) {
+          this.person.Object.forEach(step => {
+            result.push({
+              value: step.ActionType.name,
+              icon: this.blessingStepsIconMap[step.ActionTypeId]
+            })
+          })
+        }
+        return result
       },
       firstName () {
         return this.person.fullname ? this.person.fullname.split(' ')[0] : ''
