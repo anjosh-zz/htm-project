@@ -41,7 +41,8 @@ module.exports = {
       id: 'UA-134598965-1'
     }],
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    '@nuxtjs/pwa'
   ],
   router: {
     middleware: ['auth']
