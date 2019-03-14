@@ -54,6 +54,9 @@
               <v-list-tile-content>
                 <v-list-tile-title>{{item.value}}</v-list-tile-title>
               </v-list-tile-content>
+              <v-list-tile-action class="grey--text" v-if="item.timestamp">
+                {{item.timestamp}}
+              </v-list-tile-action>
             </v-list-tile>
           </div>
         </v-list>
@@ -63,6 +66,7 @@
 </template>
 
 <script>
+  import moment from 'moment'
   import Avatar from '~/components/personAvatar.vue'
 
   export default {
@@ -111,7 +115,8 @@
           this.person.Subject.forEach(step => {
             result.push({
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId]
+              icon: this.blessingStepsIconMap[step.ActionTypeId],
+              timestamp: moment(step.timestamp).format('MMM Do, YYYY')
             })
           })
         }
@@ -119,7 +124,8 @@
           this.person.Object.forEach(step => {
             result.push({
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId]
+              icon: this.blessingStepsIconMap[step.ActionTypeId],
+              timestamp: moment(step.timestamp).format('MMM Do, YYYY')
             })
           })
         }
