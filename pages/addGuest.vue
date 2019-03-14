@@ -27,7 +27,6 @@
                   <BlessingSteps
                       :editing="false"
                       :blessingSteps=blessingSteps
-                      :actions=[]
                   >
                   </BlessingSteps>
                 </v-container>
@@ -45,24 +44,35 @@
 </template>
 
 <script>
+  import moment from 'moment'
+
   import ChangePerson from '~/components/changePerson.vue'
   import BlessingSteps from '~/components/blessingSteps'
 
   export default {
     components: {BlessingSteps, ChangePerson},
+    async created () {
+      const blessingSteps = await this.$axios.$get('/actionTypes')
+      this.blessingSteps = blessingSteps.map(step => ({
+        ...step,
+        selected: false,
+        date: moment().format(this.dateFormat)
+      }))
+    },
     data () {
       return {
         step: 1,
         subjectId: null,
         objectId: null,
-        coupleName: '',
-        blessingSteps: []
+        blessingSteps: [],
+        dateFormat: 'MM/DD/YYYY'
       }
     },
     methods: {
       async submit (person, addAnother) {
         const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
-        const { id, fullname } = await this.$axios.$post('/persons/create', person)
+        const { id } = await this.$axios.$post('/persons/create', person)
+        window.scrollTo(0, 0)
         if (this.step === 1) {
           this.subjectId = id
         } else if (this.step === 2) {
@@ -75,10 +85,8 @@
         }
 
         if (addAnother) {
-          this.coupleName = `${fullname.split(' ')[0]} & `
           this.step = 2
         } else {
-          this.coupleName += fullname.split(' ')[0]
           this.step = 3
         }
       },
@@ -87,7 +95,8 @@
           .forEach(async (step) => {
             await this.$axios.$post('actions', {
               personIds: [this.objectId, this.subjectId],
-              actionTypeId: step.id
+              actionTypeId: step.id,
+              date: step.date
             })
           })
 

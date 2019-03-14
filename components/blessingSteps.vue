@@ -1,27 +1,37 @@
 <template>
-  <v-layout row wrap>
-    <v-flex xs12>
-      <v-checkbox v-for="step in this.blessingSteps" :key="step.name"
-          v-model="step.selected"
-          :label="step.name"
-          hide-details>
-      </v-checkbox>
-    </v-flex>
-  </v-layout>
+  <v-container>
+    <v-layout row wrap mb-3>
+      <v-flex xs8>
+        <h4>Select Step Completed</h4>
+      </v-flex>
+      <v-flex xs4 v-if="blessingSteps.some(step => step.selected)">
+        <h4>Set Date Occurred</h4>
+      </v-flex>
+    </v-layout>
+    <v-divider></v-divider>
+    <v-layout row wrap v-for="step in blessingSteps" :key="step.name">
+      <v-flex xs8>
+        <v-checkbox v-model="step.selected"
+                    :label="step.name"
+                    hide-details>
+        </v-checkbox>
+      </v-flex>
+      <v-flex xs4>
+        <v-text-field class="pt-2"
+            v-if="step.selected"
+            mask="date"
+            append-outer-icon="date_range"
+            v-model="step.date"
+            return-masked-value
+            hide-details
+        ></v-text-field>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
   export default {
-    props: ['actions', 'blessingSteps'],
-    async created () {
-      const blessingSteps = await this.$axios.$get('/actionTypes')
-      blessingSteps.map(step => ({...step, selected: false}))
-        .forEach(step => {
-          if (this.actions.some(action => step.id === action.ActionTypeId)) {
-            step.selected = true
-          }
-          this.blessingSteps.push(step)
-        })
-    }
+    props: ['blessingSteps']
   }
 </script>
