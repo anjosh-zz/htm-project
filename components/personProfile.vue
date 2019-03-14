@@ -44,7 +44,7 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="person[item.personFieldName]">
             <v-divider></v-divider>
-            <v-list-tile>
+            <v-list-tile :href="item.href" target="_blank">
               <v-list-tile-action>
                   <v-icon>{{item.icon}}</v-icon>
               </v-list-tile-action>
@@ -69,23 +69,38 @@
       return {
         dialog: false,
         darkImage: false,
-        profileInfo: [
+        emailSubject: 'Congratulations on receiving The Marriage Blessing'
+      }
+    },
+    computed: {
+      profileInfo () {
+        return [
           {
             personFieldName: 'email',
-            icon: 'email'
+            icon: 'email',
+            href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`
           },
           {
             personFieldName: 'phoneNumber',
-            icon: 'phone'
+            icon: 'phone',
+            href: `tel:${this.person.phoneNumber}`
           },
           {
             personFieldName: 'birthdate',
             icon: 'cake'
           }
         ]
-      }
-    },
-    computed: {
+      },
+      emailBody () {
+        return encodeURI(`Hello ${this.person.fullname},\n
+Big congratulations on receiving The Marriage Blessing!\n
+Because this is such an important occasion I wanted to share a very short video series that explains how the
+Blessing can be a foundation for a happy and lasting marriage.\n
+Here is the link:
+https://ym426-617b2e.pages.infusionsoft.net\n
+The videos are only 1-2 minutes and the whole thing can be viewed in 10 minutes.\n
+Sincerely,`)
+      },
       profilePic () {
         return this.person.avatar || this.person.avatarURL
       },
