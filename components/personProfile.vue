@@ -91,8 +91,11 @@
           }
         ]
       },
+      firstName () {
+        return this.person.fullname ? this.person.fullname.split(' ')[0] : ''
+      },
       emailBody () {
-        return encodeURI(`Hello ${this.person.fullname},\n
+        return encodeURI(`Hello ${this.firstName},\n
 Big congratulations on receiving The Marriage Blessing!\n
 Because this is such an important occasion I wanted to share a very short video series that explains how the
 Blessing can be a foundation for a happy and lasting marriage.\n
