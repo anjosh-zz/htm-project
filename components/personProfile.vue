@@ -81,10 +81,10 @@
           1: 'fa-wine-glass',
           2: 'fa-praying-hands',
           3: 'fa-magic',
-          4: 'fa-hand-holding-usd',
-          5: 'fa-book',
-          6: 'fa-heart',
-          7: 'fa-heart solid'
+          4: 'fa-book',
+          5: 'fa-hand-holding-usd',
+          6: 'far fa-heart',
+          7: 'fas fa-heart'
         }
       }
     },
@@ -107,28 +107,26 @@
         }
         if (this.person.birthdate) {
           result.push({
-            value: this.person.birthdate,
+            value: moment(this.person.birthdate).format('MM/DD/YYYY'),
             icon: 'cake'
           })
         }
-        if (this.person.Subject) {
-          this.person.Subject.forEach(step => {
-            result.push({
-              value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId],
-              timestamp: moment(step.timestamp).format('MMM Do, YYYY')
-            })
-          })
-        }
+
+        let actions = []
         if (this.person.Object) {
-          this.person.Object.forEach(step => {
+          this.person.Object.forEach((action) => actions.push(action))
+        }
+        if (this.person.Subject) {
+          this.person.Subject.forEach((action) => actions.push(action))
+        }
+        actions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
+          .forEach(step => {
             result.push({
               value: step.ActionType.name,
               icon: this.blessingStepsIconMap[step.ActionTypeId],
               timestamp: moment(step.timestamp).format('MMM Do, YYYY')
             })
           })
-        }
         return result
       },
       firstName () {
@@ -152,7 +150,7 @@ Sincerely,`)
           case 'xs':
             return null
           default:
-            return '290px'
+            return '360px'
         }
       },
       imageHeight () {

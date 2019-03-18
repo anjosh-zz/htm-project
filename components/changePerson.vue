@@ -29,6 +29,22 @@
                   ></v-text-field>
                 </v-flex>
               </v-layout>
+              <v-layout>
+                <v-flex xs12>
+                  <v-radio-group class="mt-0" v-model="gender" row hide-details>
+                    <v-radio
+                        label="Male"
+                        value="true"
+                    >
+                    </v-radio>
+                    <v-radio
+                        label="Female"
+                        value="false"
+                    >
+                    </v-radio>
+                  </v-radio-group>
+                </v-flex>
+              </v-layout>
               <v-layout row>
                 <v-flex xs12>
                   <v-text-field
@@ -143,7 +159,6 @@
           person.birthdate = moment(person.birthdate).format(this.birthdateFormat)
           Object.assign(this, person)
           this.avatarSrc = person.avatar || person.avatarURL
-          this.actions = person.Subject.concat(person.Object)
         }
       }
     },
@@ -161,7 +176,7 @@
         snapshotIsShowing: false,
         firstMeetingLocation: '',
         avatarSrc: '',
-        actions: []
+        gender: ''
       }
     },
     methods: {
@@ -187,7 +202,8 @@
             birthdate: this.birthdate,
             timeMet: this.timeMet,
             firstMeetingLocation: this.firstMeetingLocation,
-            notes: this.notes
+            notes: this.notes,
+            gender: this.gender
           }
           if (this.avatarURL && this.avatarURL === person.avatar) {
             delete person.avatar

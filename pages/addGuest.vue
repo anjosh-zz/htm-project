@@ -1,5 +1,5 @@
 <template>
-  <v-window v-model="step">
+  <v-window v-model="step" touchless>
     <v-window-item :value="1">
       <ChangePerson
           :editing="false"
@@ -18,7 +18,7 @@
     </v-window-item>
     <v-window-item :value="3">
       <v-layout row align-center justify-center>
-        <v-flex xs12 sm5>
+        <v-flex xs12 sm6>
           <v-card>
             <v-card-title class="headline">Blessing Steps Completed</v-card-title>
             <v-card-text>

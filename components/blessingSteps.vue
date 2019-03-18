@@ -20,7 +20,6 @@
         <v-text-field class="pt-2"
             v-if="step.selected"
             mask="date"
-            append-outer-icon="date_range"
             v-model="step.date"
             return-masked-value
             hide-details

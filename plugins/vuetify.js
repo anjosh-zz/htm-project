@@ -25,7 +25,8 @@ import {
   VTooltip,
   VImg,
   VTextarea,
-  VWindow
+  VWindow,
+  VRadioGroup
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -62,7 +63,8 @@ Vue.use(Vuetify, {
     VTooltip,
     VImg,
     VTextarea,
-    VWindow
+    VWindow,
+    VRadioGroup
   },
   iconfont: 'fa'
 })
