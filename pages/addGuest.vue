@@ -78,9 +78,9 @@
         } else if (this.step === 2) {
           this.objectId = id
           await this.$axios.$post('relationships', {
-            subjectId: this.subjectId,
-            objectId: this.objectId,
-            relationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID
+            SubjectId: this.subjectId,
+            ObjectId: this.objectId,
+            RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID
           })
         }
 

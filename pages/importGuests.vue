@@ -7,7 +7,10 @@
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
-                <p>Upload an Excel Spreadsheet (.xlsx) or a Comma Separated document (.csv).</p>
+                <p>Upload your filled out Blessing Tracker Excel Spreadsheet.
+                  You can download a the Blessing Tracker template
+                  <a href="http://dpdojo.com/wp-content/uploads/2016/03/Blessing-Tracker-6-23-17.xlsx">here</a>.
+                </p>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -26,70 +29,13 @@
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
-                <p>Match your table headers to the MyTribe Database:</p>
-              </v-flex>
-
-            </v-layout>
-            <v-layout row>
-
-              <v-flex xs5>
-                <v-select
-                  :items="availableHeaders"
-                  v-model="selectedHeader"
-                  :error-messages="headerSelectErrorMessages"
-                  @change="clearSelectErrorMessages"
-                  label="Headers"
-                  single-line
-                ></v-select>
-              </v-flex>
-              <v-flex xs1 text-xs-center pt-4>
-                <v-icon>arrow_forward</v-icon>
-              </v-flex>
-              <v-flex xs5>
-                <v-select
-                  :items="htmGuestAttributes"
-                  v-model="selectedGuestAttribute"
-                  :error-messages="attributeSelectErrorMessages"
-                  @change="clearSelectErrorMessages"
-                  label="Attributes"
-                  single-line
-                ></v-select>
-              </v-flex>
-
-              <v-flex xs1 text-xs-center pt-2>
-                <v-btn flat icon color="green" @click="addMapping">
-                  <v-icon>playlist_add</v-icon>
-                </v-btn>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <p v-if="currentlyUsedMappings.length">Added mappings:</p>
-                <p v-else>Please add mappings by clicking the green button above.</p>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <v-list>
-                  <template v-for="(item, index) in currentlyUsedMappings">
-                    <v-list-tile>
-                      <v-list-tile-content>
-                        <v-list-tile-title>{{item.headerText}} <v-icon>arrow_forward</v-icon> {{item.attributeText}}</v-list-tile-title>
-                      </v-list-tile-content>
-                      <v-list-tile-action>
-                        <v-btn flat icon color="red" @click="removeMapping(index)">
-                          <v-icon>remove_circle</v-icon>
-                        </v-btn>
-                      </v-list-tile-action>
-                    </v-list-tile>
-                  </template>
-                </v-list>
+                <p>Are you sure you want to import {{couples.length}} couple(s)?</p>
               </v-flex>
             </v-layout>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="submit" :disabled="!currentlyUsedMappings.length">Import</v-btn>
+            <v-btn color="primary" @click="submit">Import</v-btn>
           </v-card-actions>
         </div>
       </v-card>
@@ -98,75 +44,188 @@
 </template>
 
 <script>
-  import HeaderAttributeManager from '~/plugins/headerAttributeManager'
+  import XLSX from 'xlsx'
+  import moment from 'moment'
+
+  const EXPECTED_HEADERS = {
+    1: 'Details',
+    3: 'Spiritual Parent',
+    5: 'New Blessed Couple\'s Names',
+    9: 'Demographics',
+    13: 'Contact Info',
+    23: 'Blessing Steps Completed (Enter Date)',
+    31: 'Children'
+  }
+
+  const SPREADSHEET_FIELDS_POSITIONS = {
+    husband: {
+      firstName: 5,
+      birthdate: 9,
+      cellPhone: 13,
+      email: 16,
+      notes: 29
+    },
+    wife: {
+      firstName: 7,
+      birthdate: 11,
+      cellPhone: 14,
+      email: 17,
+      notes: 29
+    }
+  }
+
+  const BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID = [
+    [23, 5],
+    [24, 1],
+    [25, 2],
+    [26, 3],
+    [27, 6],
+    [28, 7]
+  ]
 
   export default {
-    middleware: 'auth',
-    beforeMount () {
-      this.headerAttributeManager = new HeaderAttributeManager()
-      this.setHTMGuestAttributes()
-    },
     data: () => {
       return {
-        headerAttributeManager: null,
-        htmGuestAttributes: [],
-        availableHeaders: [],
-        attributeSelectErrorMessages: [],
-        headerSelectErrorMessages: [],
-        selectedGuestAttribute: null,
-        selectedHeader: null,
-        imported: false
-      }
-    },
-    computed: {
-      currentlyUsedMappings () {
-        return this.headerAttributeManager.getCurrentlyUsedMappings()
+        imported: false,
+        couples: [],
+        headersMatch: true,
+        sheetdata: [],
+        people: [],
+        actions: []
       }
     },
     methods: {
-      setHTMGuestAttributes () {
-        this.htmGuestAttributes = this.headerAttributeManager.getAvailableAttributes()
-      },
-      setAvailableHeaders () {
-        this.availableHeaders = this.headerAttributeManager.getAvailableHeaders()
-      },
-      addMapping () {
-        if (!this.selectedGuestAttribute || !this.selectedHeader) {
-          !this.selectedHeader && this.headerSelectErrorMessages.push('Please select an option')
-          !this.selectedGuestAttribute && this.attributeSelectErrorMessages.push('Please select an option')
-          return
-        }
-        this.headerAttributeManager.selected(this.selectedHeader, this.selectedGuestAttribute)
-
-        this.setHTMGuestAttributes()
-        this.setAvailableHeaders()
-        this.selectedGuestAttribute = null
-        this.selectedHeader = null
-      },
-      removeMapping (index) {
-        this.headerAttributeManager.removeMapping(index)
-        this.setHTMGuestAttributes()
-        this.setAvailableHeaders()
-      },
-      clearSelectErrorMessages () {
-        this.headerSelectErrorMessages = []
-        this.attributeSelectErrorMessages = []
-      },
       openFileInput () {
         this.$refs.upload.click()
       },
       async upload () {
         const files = this.$refs.upload.files
-        const file = files[0]
-        await this.headerAttributeManager.upload(file)
+        await this.readFile(files[0])
+
+        const NUMBER_OF_HEADER_ROWS = 2
+
+        const createPerson = (row, isHusband) => {
+          const fieldsPositions = isHusband ? SPREADSHEET_FIELDS_POSITIONS.husband
+            : SPREADSHEET_FIELDS_POSITIONS.wife
+
+          const person = { gender: isHusband }
+
+          person.fullname = ''
+          if (row[fieldsPositions.firstName]) {
+            person.fullname += `${row[fieldsPositions.firstName]} `
+          }
+          // get lastname
+          if (row[fieldsPositions.firstName + 1]) {
+            person.fullname += row[fieldsPositions.firstName + 1]
+          }
+
+          if (row[fieldsPositions.birthdate]) {
+            person.birthdate = row[fieldsPositions.birthdate]
+          }
+
+          if (row[fieldsPositions.email]) {
+            person.email = row[fieldsPositions.email]
+          }
+
+          if (row[fieldsPositions.cellPhone]) {
+            person.phoneNumber = row[fieldsPositions.cellPhone]
+          }
+
+          if (row[fieldsPositions.notes]) {
+            person.notes = row[fieldsPositions.notes]
+          }
+
+          return person
+        }
+
+        const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
+
+        for (const row of this.sheetdata.slice(NUMBER_OF_HEADER_ROWS)) {
+          const husband = createPerson(row, true)
+          const wife = createPerson(row, false)
+          const couple = { RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID }
+          if (husband.fullname || husband.fullname.length > 0) {
+            couple.subjectIndex = this.people.push(husband) - 1
+          }
+          if (wife.fullname || wife.fullname.length > 0) {
+            couple.objectIndex = this.people.push(wife) - 1
+          }
+
+          // at least one person in the couple exists
+          if ('objectIndex' in couple || 'subjectIndex' in couple) {
+            couple.actions = []
+            for (const [fieldPosition, actionTypeId]
+              of BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID) {
+              if (row[fieldPosition]) {
+                if (row[fieldPosition] === 'Yes' || moment(row[fieldPosition]).isValid()) {
+                  const action = {}
+                  action.ActionTypeId = actionTypeId
+                  if (moment(row[fieldPosition]).isValid()) {
+                    action.timestamp = moment(row[fieldPosition])
+                  }
+                  couple.actions.push(action)
+                }
+              }
+            }
+
+            this.couples.push(couple)
+          }
+        }
 
         this.imported = true
+      },
+      readFile (file) {
+        const reader = new FileReader()
+        return new Promise((resolve) => {
+          reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result)
+            const workbook = XLSX.read(data, {type: 'array'})
+            this.sheetdata = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1})
+            const headersMatchExpected = Object.keys(EXPECTED_HEADERS)
+              .every(index => this.sheetdata[0][index] === EXPECTED_HEADERS[index])
+            if (!headersMatchExpected) {
+              this.headersMatch = false
+            }
+            resolve()
+          }
 
-        this.setHTMGuestAttributes()
-        this.setAvailableHeaders()
+          reader.readAsArrayBuffer(file)
+        })
       },
       async submit () {
-        await this.headerAttributeManager.submit()
+        const createdPeople = await this.$axios.$post('/persons/bulkCreate', this.people)
+        console.log(createdPeople)
+
+        const relationships = []
+        const actions = []
+        for (const couple of this.couples) {
+          if ('subjectIndex' in couple) {
+            couple.SubjectId = createdPeople[couple.subjectIndex].id
+          }
+          if ('objectIndex' in couple) {
+            couple.ObjectId = createdPeople[couple.objectIndex].id
+          }
+          if ('objectIndex' in couple && 'subjectIndex' in couple) {
+            relationships.push(couple)
+          }
+
+          couple.actions.forEach(action => {
+            action.personIds = []
+            if ('SubjectId' in couple) {
+              action.personIds.push(couple.SubjectId)
+            }
+            if ('ObjectId' in couple) {
+              action.personIds.push(couple.ObjectId)
+            }
+            actions.push(action)
+          })
+        }
+
+        const createdRelationships = await this.$axios.$post('relationships', relationships)
+        console.log(createdRelationships)
+
+        const createdActions = await this.$axios.$post('actions', actions)
+        console.log(createdActions)
 
         this.$router.push('/listguests')
       }
