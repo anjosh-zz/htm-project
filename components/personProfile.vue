@@ -111,6 +111,15 @@
             icon: 'cake'
           })
         }
+        if (this.person.Relationship) {
+          const spouse = this.person.Relationship.find(r => r.RelationshipTypeId === 1)
+          if (spouse) {
+            result.push({
+              value: spouse.Person.fullname,
+              icon: 'wc'
+            })
+          }
+        }
 
         let actions = []
         if (this.person.Object) {
@@ -121,11 +130,14 @@
         }
         actions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
           .forEach(step => {
-            result.push({
+            const item = {
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId],
-              timestamp: moment(step.timestamp).format('MMM Do, YYYY')
-            })
+              icon: this.blessingStepsIconMap[step.ActionTypeId]
+            }
+            if (step.timestamp) {
+              item.timestamp = moment(step.timestamp).format('MMM Do, YYYY')
+            }
+            result.push(item)
           })
         return result
       },

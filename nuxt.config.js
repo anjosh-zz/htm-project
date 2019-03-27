@@ -59,6 +59,10 @@ module.exports = {
           logout: { url: '/auth/logout' },
           user: { url: '/auth/user' }
         }
+      },
+      auth0: {
+        domain: 'mytribe.auth0.com',
+        client_id: 'vaNm-JJMod59JX2Eo2jTtmzYxVFilcTy'
       }
     }
   },

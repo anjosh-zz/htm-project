@@ -8,7 +8,7 @@
             <v-layout row>
               <v-flex xs12>
                 <p>Upload your filled out Blessing Tracker Excel Spreadsheet.
-                  You can download a the Blessing Tracker template
+                  You can download the Blessing Tracker template
                   <a href="http://dpdojo.com/wp-content/uploads/2016/03/Blessing-Tracker-6-23-17.xlsx">here</a>.
                 </p>
               </v-flex>
