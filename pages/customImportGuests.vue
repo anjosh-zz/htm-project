@@ -114,7 +114,7 @@
         headerSelectErrorMessages: [],
         selectedGuestAttribute: null,
         selectedHeader: null,
-        imported: false
+        uploaded: false
       }
     },
     computed: {

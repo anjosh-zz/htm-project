@@ -3,7 +3,7 @@
     <v-flex xs12 md4>
       <v-card>
         <v-card-title class="headline">Import Guests</v-card-title>
-        <div v-if="!imported">
+        <div v-if="!uploaded">
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
@@ -25,7 +25,7 @@
             >
           </v-card-actions>
         </div>
-        <div v-else>
+        <div v-else-if="this.headersMatch">
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
@@ -35,7 +35,30 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="submit">Import</v-btn>
+            <v-btn color="primary" :loading=loading @click="submit">Import</v-btn>
+          </v-card-actions>
+        </div>
+        <div v-else>
+          <v-card-text>
+            <v-layout row>
+              <v-flex xs12>
+                <p>Your Spreadsheet did not match the Blessing Tracker template.
+                  Please download the Blessing Tracker template
+                  <a href="http://dpdojo.com/wp-content/uploads/2016/03/Blessing-Tracker-6-23-17.xlsx">here</a>
+                  and fill it out.
+                </p>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" @click="openFileInput">Upload</v-btn>
+            <input
+                ref="upload"
+                type="file"
+                accept=".csv, .xls, .xlsx"
+                @change="upload"
+            >
           </v-card-actions>
         </div>
       </v-card>
@@ -86,7 +109,8 @@
   export default {
     data: () => {
       return {
-        imported: false,
+        uploaded: false,
+        loading: false,
         couples: [],
         headersMatch: true,
         sheetdata: [],
@@ -102,79 +126,82 @@
         const files = this.$refs.upload.files
         await this.readFile(files[0])
 
-        const NUMBER_OF_HEADER_ROWS = 2
+        if (this.headersMatch) {
+          const NUMBER_OF_HEADER_ROWS = 2
 
-        const createPerson = (row, isHusband) => {
-          const fieldsPositions = isHusband ? SPREADSHEET_FIELDS_POSITIONS.husband
-            : SPREADSHEET_FIELDS_POSITIONS.wife
+          const createPerson = (row, isHusband) => {
+            const fieldsPositions = isHusband ? SPREADSHEET_FIELDS_POSITIONS.husband
+              : SPREADSHEET_FIELDS_POSITIONS.wife
 
-          const person = { gender: isHusband }
+            const person = {gender: isHusband}
 
-          person.fullname = ''
-          if (row[fieldsPositions.firstName]) {
-            person.fullname += `${row[fieldsPositions.firstName]} `
-          }
-          // get lastname
-          if (row[fieldsPositions.firstName + 1]) {
-            person.fullname += row[fieldsPositions.firstName + 1]
-          }
-
-          if (row[fieldsPositions.birthdate]) {
-            person.birthdate = row[fieldsPositions.birthdate]
-          }
-
-          if (row[fieldsPositions.email]) {
-            person.email = row[fieldsPositions.email]
-          }
-
-          if (row[fieldsPositions.cellPhone]) {
-            person.phoneNumber = row[fieldsPositions.cellPhone]
-          }
-
-          if (row[fieldsPositions.notes]) {
-            person.notes = row[fieldsPositions.notes]
-          }
-
-          return person
-        }
-
-        const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
-
-        for (const row of this.sheetdata.slice(NUMBER_OF_HEADER_ROWS)) {
-          const husband = createPerson(row, true)
-          const wife = createPerson(row, false)
-          const couple = { RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID }
-          if (husband.fullname || husband.fullname.length > 0) {
-            couple.subjectIndex = this.people.push(husband) - 1
-          }
-          if (wife.fullname || wife.fullname.length > 0) {
-            couple.objectIndex = this.people.push(wife) - 1
-          }
-
-          // at least one person in the couple exists
-          if ('objectIndex' in couple || 'subjectIndex' in couple) {
-            couple.actions = []
-            for (const [fieldPosition, actionTypeId]
-              of BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID) {
-              if (row[fieldPosition]) {
-                if (row[fieldPosition] === 'Yes' || moment(row[fieldPosition]).isValid()) {
-                  const action = {}
-                  action.ActionTypeId = actionTypeId
-                  if (moment(row[fieldPosition]).isValid()) {
-                    action.timestamp = moment(row[fieldPosition])
-                  }
-                  couple.actions.push(action)
-                }
-              }
+            person.fullname = ''
+            if (row[fieldsPositions.firstName]) {
+              person.fullname += `${row[fieldsPositions.firstName]} `
+            }
+            // get lastname
+            if (row[fieldsPositions.firstName + 1]) {
+              person.fullname += row[fieldsPositions.firstName + 1]
             }
 
-            this.couples.push(couple)
+            if (row[fieldsPositions.birthdate]) {
+              person.birthdate = row[fieldsPositions.birthdate]
+            }
+
+            if (row[fieldsPositions.email]) {
+              person.email = row[fieldsPositions.email]
+            }
+
+            if (row[fieldsPositions.cellPhone]) {
+              person.phoneNumber = row[fieldsPositions.cellPhone]
+            }
+
+            if (row[fieldsPositions.notes]) {
+              person.notes = row[fieldsPositions.notes]
+            }
+
+            return person
+          }
+
+          const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
+
+          for (const row of this.sheetdata.slice(NUMBER_OF_HEADER_ROWS)) {
+            const husband = createPerson(row, true)
+            const wife = createPerson(row, false)
+            const couple = {RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID}
+            if (husband.fullname || husband.fullname.length > 0) {
+              couple.subjectIndex = this.people.push(husband) - 1
+            }
+            if (wife.fullname || wife.fullname.length > 0) {
+              couple.objectIndex = this.people.push(wife) - 1
+            }
+
+            // at least one person in the couple exists
+            if ('objectIndex' in couple || 'subjectIndex' in couple) {
+              couple.actions = []
+              for (const [fieldPosition, actionTypeId]
+                of BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID) {
+                if (row[fieldPosition]) {
+                  if (row[fieldPosition] === 'Yes' || moment(row[fieldPosition]).isValid()) {
+                    const action = {}
+                    action.ActionTypeId = actionTypeId
+                    if (moment(row[fieldPosition]).isValid()) {
+                      action.timestamp = moment(row[fieldPosition])
+                    }
+                    couple.actions.push(action)
+                  }
+                }
+              }
+
+              this.couples.push(couple)
+            }
           }
         }
 
-        this.imported = true
+        this.uploaded = true
       },
       readFile (file) {
+        this.headersMatch = true
         const reader = new FileReader()
         return new Promise((resolve) => {
           reader.onload = (e) => {
@@ -193,8 +220,8 @@
         })
       },
       async submit () {
+        this.loading = true
         const createdPeople = await this.$axios.$post('/persons/bulkCreate', this.people)
-        console.log(createdPeople)
 
         const relationships = []
         const actions = []
@@ -221,11 +248,11 @@
           })
         }
 
-        const createdRelationships = await this.$axios.$post('relationships', relationships)
-        console.log(createdRelationships)
+        await this.$axios.$post('relationships', relationships)
 
-        const createdActions = await this.$axios.$post('actions', actions)
-        console.log(createdActions)
+        await this.$axios.$post('actions', actions)
+
+        this.loading = false
 
         this.$router.push('/listguests')
       }
