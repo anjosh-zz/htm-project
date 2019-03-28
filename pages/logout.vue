@@ -33,7 +33,7 @@
           const {domain, client_id: clientId} = this.$auth.strategies.auth0.options
           const opts = {
             client_id: clientId,
-            redirect_uri: window.location.origin + this.$auth.options.redirect.logout
+            returnTo: window.location.origin + this.$auth.options.redirect.logout
           }
           window.location = `https://${domain}/v2/logout` + '?' + encodeQuery(opts)
           await this.$auth.logout()
