@@ -50,10 +50,7 @@
     { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
-  const loggedOutItems = [
-    { icon: 'account_box', title: 'Register', to: '/registration' },
-    { icon: 'arrow_forward', title: 'Login', to: '/login' }
-  ]
+  const loggedOutItems = []
   const sidebarItems = [
     { icon: 'apps', title: 'Welcome', to: '/' }
   ]

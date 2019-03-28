@@ -49,6 +49,8 @@ module.exports = {
   },
   auth: {
     redirect: {
+      callback: '/',
+      login: '/',
       logout: '/',
       home: '/addguest'
     },

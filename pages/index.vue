@@ -11,7 +11,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" nuxt to="/login" v-if="!this.$auth.loggedIn">login</v-btn>
+          <v-btn color="primary" @click="submit" v-if="!this.$auth.loggedIn">login</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -20,6 +20,11 @@
 
 <script>
   export default {
-    auth: false
+    auth: false,
+    methods: {
+      submit () {
+        this.$auth.loginWith('auth0')
+      }
+    }
   }
 </script>
