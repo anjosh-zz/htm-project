@@ -35,7 +35,7 @@
             client_id: clientId,
             returnTo: window.location.origin + this.$auth.options.redirect.logout
           }
-          window.location = `https://${domain}/v2/logout` + '?' + encodeQuery(opts)
+          window.location = `https://${domain}/v2/logout?` + encodeQuery(opts)
           await this.$auth.logout()
         } catch (error) {
           console.log(error)

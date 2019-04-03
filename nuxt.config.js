@@ -64,7 +64,9 @@ module.exports = {
       },
       auth0: {
         domain: 'mytribe.auth0.com',
-        client_id: 'vaNm-JJMod59JX2Eo2jTtmzYxVFilcTy'
+        client_id: 'vaNm-JJMod59JX2Eo2jTtmzYxVFilcTy',
+        client_secret: '0_VjxE4ZBE4CgWG8768GV98d4omU8qQY0N4gYiL3GCOJTqBk7LTEY2L7jcKpxwZ7',
+        issuer: 'https://mytribe.auth0.com/'
       }
     }
   },
