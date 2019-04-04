@@ -26,7 +26,8 @@ import {
   VImg,
   VTextarea,
   VWindow,
-  VRadioGroup
+  VRadioGroup,
+  VHover
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -64,7 +65,8 @@ Vue.use(Vuetify, {
     VImg,
     VTextarea,
     VWindow,
-    VRadioGroup
+    VRadioGroup,
+    VHover
   },
   iconfont: 'fa'
 })

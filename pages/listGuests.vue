@@ -22,15 +22,27 @@
                   <template v-for="item in items">
                     <v-subheader v-if="item.header" v-text="item.header" class="px-3"></v-subheader>
                     <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
-                    <v-list-tile avatar v-else @click="showProfile(item)">
-                      <v-list-tile-avatar :color="item.colorClassName">
-                        <Avatar :person="item"/>
-                      </v-list-tile-avatar>
-                      <v-list-tile-content>
-                        <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
-                        <v-list-tile-sub-title v-html="item.importance"></v-list-tile-sub-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
+                    <v-hover v-else>
+                      <v-list-tile avatar @click="showProfile(item)" slot-scope="{ hover }">
+                        <v-list-tile-avatar :color="item.colorClassName">
+                          <Avatar :person="item"/>
+                        </v-list-tile-avatar>
+                        <v-list-tile-content>
+                          <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
+                          <v-list-tile-sub-title v-html="item.importance"></v-list-tile-sub-title>
+                        </v-list-tile-content>
+                        <v-list-tile-action v-show="hover">
+                          <v-btn icon @click.stop="showDeleteDialog(item)">
+                            <v-icon color="grey">delete</v-icon>
+                          </v-btn>
+                        </v-list-tile-action>
+                          <v-list-tile-action v-show="hover">
+                            <v-btn icon @click.stop="editProfile(item.id)">
+                              <v-icon color="grey">edit</v-icon>
+                            </v-btn>
+                          </v-list-tile-action>
+                      </v-list-tile>
+                    </v-hover>
                   </template>
                 </v-list>
               </v-flex>
@@ -40,8 +52,25 @@
               :person="person"
               v-on:close="hideProfile"
               v-on:edit="editProfile"
+              v-on:delete="showDeleteDialog"
             >
             </Profile>
+            <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
+              <v-card>
+                <v-card-title primary-title class="title">
+                  Delete this contact?
+                </v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn @click="hideDeleteDialog" flat>
+                    Cancel
+                  </v-btn>
+                  <v-btn @click="deleteProfile" flat color="red">
+                    Delete
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-container>
         </v-card-text>
       </v-card>
@@ -58,28 +87,25 @@
 
   const searchApi = new SearchApi()
 
+  async function getGuests (axios) {
+    const response = await axios.$get('/persons/guests')
+    return { guests: response }
+  }
+
   export default {
     components: {Profile, Avatar},
     async asyncData ({ $axios }) {
-      const response = await $axios.$get('/persons/guests')
-      return { guests: response }
+      return getGuests($axios)
     },
     created () {
-      this.guests.forEach((guest, index) => {
-        searchApi.indexDocument(index, guest.fullname)
-        if (!guest.avatar) {
-          guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
-          guest.firstLetter = guest.fullname.charAt(0)
-        }
-      })
-
-      this.getItems(this.guests.slice(0))
+      this.indexGuests()
     },
     data () {
       return {
         items: [],
         person: {},
-        profileIsShowing: false
+        profileIsShowing: false,
+        deleteDialogIsShowing: false
       }
     },
     methods: {
@@ -117,6 +143,32 @@
         } else {
           this.items.push({ header: 'No guests to display' })
         }
+      },
+      indexGuests () {
+        this.guests.forEach((guest, index) => {
+          searchApi.indexDocument(index, guest.fullname)
+          if (!guest.avatar) {
+            guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
+            guest.firstLetter = guest.fullname.charAt(0)
+          }
+        })
+
+        this.getItems(this.guests.slice(0))
+      },
+      showDeleteDialog (item) {
+        this.person = item
+        this.deleteDialogIsShowing = true
+      },
+      hideDeleteDialog () {
+        this.deleteDialogIsShowing = false
+      },
+      async deleteProfile () {
+        await this.$axios.$delete('/persons/' + this.person.id)
+        this.hideDeleteDialog()
+        this.hideProfile()
+        const { guests } = await getGuests(this.$axios)
+        this.guests = guests
+        this.indexGuests()
       }
     }
   }

@@ -9,18 +9,15 @@
         <v-container fluid class="full-height">
           <v-layout row>
             <v-flex xs6>
-              <v-btn
-                  icon
-                  @click.native="hideProfile"
-              >
+              <v-btn icon @click.native="hideProfile">
                 <v-icon class="black--text">arrow_back</v-icon>
               </v-btn>
             </v-flex>
             <v-flex xs6 class="text-xs-right">
-              <v-btn
-                  icon
-                  @click.native="openEditPage"
-              >
+              <v-btn icon @click="showDeleteDialog">
+                <v-icon color="black--text">delete</v-icon>
+              </v-btn>
+              <v-btn icon @click.native="openEditPage">
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
             </v-flex>
@@ -183,6 +180,9 @@ Sincerely,`)
       },
       openEditPage () {
         this.$emit('edit', this.person.id)
+      },
+      showDeleteDialog () {
+        this.$emit('delete', this.person)
       }
     },
     watch: {
