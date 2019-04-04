@@ -143,9 +143,9 @@
             if (row[fieldsPositions.firstName + 1]) {
               person.fullname += row[fieldsPositions.firstName + 1]
             }
-
-            if (row[fieldsPositions.birthdate]) {
-              person.birthdate = row[fieldsPositions.birthdate]
+            const birthdate = row[fieldsPositions.birthdate]
+            if (birthdate && moment(birthdate).isValid()) {
+              person.birthdate = moment(row[fieldsPositions.birthdate])
             }
 
             if (row[fieldsPositions.email]) {
