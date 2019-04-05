@@ -1,9 +1,31 @@
 <template>
   <v-layout row align-center justify-center class="pt-3 mt-3">
     <v-flex xs12 md4>
+      <v-alert
+          v-model="showError"
+          type="error"
+          transition="slide-y-transition"
+          dismissible
+      >
+        Your Spreadsheet did not match the Blessing Tracker template format.
+        Please download the Blessing Tracker template and fill it out.
+      </v-alert>
       <v-card>
         <v-card-title class="headline">Import Guests</v-card-title>
-        <div v-if="!uploaded">
+        <div v-if="this.headersMatch && this.uploaded">
+          <v-card-text>
+            <v-layout row>
+              <v-flex xs12>
+                <p>Are you sure you want to import {{couples.length}} couple(s)?</p>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" :loading=loading @click="submit">Import</v-btn>
+          </v-card-actions>
+        </div>
+        <div v-else>
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
@@ -22,42 +44,6 @@
               type="file"
               accept=".csv, .xls, .xlsx"
               @change="upload"
-            >
-          </v-card-actions>
-        </div>
-        <div v-else-if="this.headersMatch">
-          <v-card-text>
-            <v-layout row>
-              <v-flex xs12>
-                <p>Are you sure you want to import {{couples.length}} couple(s)?</p>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" :loading=loading @click="submit">Import</v-btn>
-          </v-card-actions>
-        </div>
-        <div v-else>
-          <v-card-text>
-            <v-layout row>
-              <v-flex xs12>
-                <p>Your Spreadsheet did not match the Blessing Tracker template.
-                  Please download the Blessing Tracker template
-                  <a href="http://dpdojo.com/wp-content/uploads/2016/03/Blessing-Tracker-6-23-17.xlsx">here</a>
-                  and fill it out.
-                </p>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="openFileInput">Upload</v-btn>
-            <input
-                ref="upload"
-                type="file"
-                accept=".csv, .xls, .xlsx"
-                @change="upload"
             >
           </v-card-actions>
         </div>
@@ -113,6 +99,7 @@
         loading: false,
         couples: [],
         headersMatch: true,
+        showError: false,
         sheetdata: [],
         people: [],
         actions: []
@@ -199,9 +186,11 @@
         }
 
         this.uploaded = true
+        this.$refs.upload.value = null
       },
       readFile (file) {
         this.headersMatch = true
+        this.showError = false
         const reader = new FileReader()
         return new Promise((resolve) => {
           reader.onload = (e) => {
@@ -212,6 +201,7 @@
               .every(index => this.sheetdata[0][index] === EXPECTED_HEADERS[index])
             if (!headersMatchExpected) {
               this.headersMatch = false
+              this.showError = true
             }
             resolve()
           }

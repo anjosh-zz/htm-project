@@ -27,7 +27,8 @@ import {
   VTextarea,
   VWindow,
   VRadioGroup,
-  VHover
+  VHover,
+  VAlert
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -66,7 +67,8 @@ Vue.use(Vuetify, {
     VTextarea,
     VWindow,
     VRadioGroup,
-    VHover
+    VHover,
+    VAlert
   },
   iconfont: 'fa'
 })
