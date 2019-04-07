@@ -108,12 +108,15 @@
             icon: 'cake'
           })
         }
-        if (this.person.Relationship) {
-          const spouse = this.person.Relationship.find(r => r.RelationshipTypeId === 1)
-          if (spouse) {
+        if (this.person.RelationshipObject || this.person.RealtionshipSubject) {
+          const relationships = this.person.RelationshipObject.concat(this.person.RealtionshipSubject)
+          const spouseRelationship = relationships.find(r => r.RelationshipTypeId === 1)
+          if (spouseRelationship) {
+            const spouse = spouseRelationship.Object ? spouseRelationship.Object : spouseRelationship.Subject
             result.push({
-              value: spouse.Person.fullname,
-              icon: 'wc'
+              value: spouse.fullname,
+              icon: 'wc',
+              handleClick: () => (this.person = spouse)
             })
           }
         }
