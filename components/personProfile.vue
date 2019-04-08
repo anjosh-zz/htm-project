@@ -42,19 +42,27 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-list-tile :href="item.href" target="_blank">
-              <v-list-tile-action>
-                <v-layout align-center justify-space-around>
-                  <v-icon class="mr-4">{{item.icon}}</v-icon>
-                </v-layout>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{item.value}}</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action class="grey--text" v-if="item.timestamp">
-                {{item.timestamp}}
-              </v-list-tile-action>
-            </v-list-tile>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-list-tile v-on="on" :href="item.href" target="_blank">
+                  <v-list-tile-action>
+                    <v-layout align-center justify-space-around>
+                      <v-icon class="mr-4">{{item.icon}}</v-icon>
+                    </v-layout>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    <v-list-tile-title>{{item.value}}</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action class="grey--text" v-if="item.timestamp">
+                    {{item.timestamp}}
+                  </v-list-tile-action>
+                  <v-list-tile-action v-else-if="item.actionIcon">
+                    <v-icon>{{item.actionIcon}}</v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </template>
+              <span>{{item.tooltip}}</span>
+            </v-tooltip>
           </div>
         </v-list>
       </v-card>
@@ -92,14 +100,17 @@
           result.push({
             value: this.person.email,
             icon: 'email',
-            href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`
+            actionIcon: 'send',
+            href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`,
+            tooltip: 'Click to send a congratulatory email'
           })
         }
         if (this.person.phoneNumber) {
           result.push({
             value: this.person.phoneNumber,
             icon: 'phone',
-            href: `tel:${this.person.phoneNumber}`
+            href: `tel:${this.person.phoneNumber}`,
+            tooltip: 'Click to call'
           })
         }
         if (this.person.birthdate) {

@@ -1,6 +1,19 @@
 <template>
   <v-layout row align-center justify-center class="guestPage pa-0">
     <v-flex xs12 sm5>
+      <v-btn
+          fixed
+          dark
+          fab
+          bottom
+          right
+          color="primary"
+          class="mb-5 mr-2"
+          nuxt
+          to="/addguest"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
       <v-card>
         <v-card-title class="headline pb-2">Guests</v-card-title>
         <v-card-text class="pa-0">

@@ -52,7 +52,7 @@ module.exports = {
       callback: '/',
       login: '/',
       logout: '/',
-      home: '/addguest'
+      home: '/listguests'
     },
     strategies: {
       local: {
