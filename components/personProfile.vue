@@ -121,7 +121,7 @@
         }
         if (this.person.RelationshipObject || this.person.RealtionshipSubject) {
           const relationships = this.person.RelationshipObject.concat(this.person.RealtionshipSubject)
-          const spouseRelationship = relationships.find(r => r.RelationshipTypeId === 1)
+          const spouseRelationship = relationships.find(r => r && r.RelationshipTypeId === 1)
           if (spouseRelationship) {
             const spouse = spouseRelationship.Object ? spouseRelationship.Object : spouseRelationship.Subject
             result.push({
