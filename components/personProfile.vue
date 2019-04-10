@@ -72,7 +72,11 @@
 
 <script>
   import moment from 'moment'
+  import googlePhoneNumberLib from 'google-libphonenumber'
   import Avatar from '~/components/personAvatar.vue'
+
+  const phoneUtil = googlePhoneNumberLib.PhoneNumberUtil.getInstance()
+  const PNF = googlePhoneNumberLib.PhoneNumberFormat
 
   export default {
     components: {Avatar},
@@ -106,8 +110,9 @@
           })
         }
         if (this.person.phoneNumber) {
+          const number = phoneUtil.parseAndKeepRawInput(this.person.phoneNumber, 'US')
           result.push({
-            value: this.person.phoneNumber,
+            value: phoneUtil.format(number, PNF.NATIONAL),
             icon: 'phone',
             href: `tel:${this.person.phoneNumber}`,
             tooltip: 'Click to call'

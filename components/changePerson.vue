@@ -144,8 +144,11 @@
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
   import moment from 'moment'
+  import googlePhoneNumberLib from 'google-libphonenumber'
 
   import Snapshot from '~/components/snapshot.vue'
+
+  const phoneUtil = googlePhoneNumberLib.PhoneNumberUtil.getInstance()
 
   export default {
     props: ['editing', 'step'],
@@ -157,6 +160,13 @@
         if (response) {
           let person = response
           person.birthdate = moment(person.birthdate).format(this.birthdateFormat)
+          if (person.phoneNumber) {
+            const number = phoneUtil.parseAndKeepRawInput(person.phoneNumber, 'US')
+            person.phoneNumber = number.getNationalNumber()
+          }
+          if (person.gender !== undefined) {
+            person.gender = person.gender.toString()
+          }
           Object.assign(this, person)
           this.avatarSrc = person.avatar || person.avatarURL
         }
