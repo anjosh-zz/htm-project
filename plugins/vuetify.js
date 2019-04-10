@@ -28,7 +28,9 @@ import {
   VWindow,
   VRadioGroup,
   VHover,
-  VAlert
+  VAlert,
+  VProgressCircular,
+  VProgressLinear
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -68,7 +70,9 @@ Vue.use(Vuetify, {
     VWindow,
     VRadioGroup,
     VHover,
-    VAlert
+    VAlert,
+    VProgressCircular,
+    VProgressLinear
   },
   iconfont: 'fa'
 })
