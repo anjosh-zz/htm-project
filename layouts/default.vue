@@ -52,7 +52,8 @@
   ]
   const loggedOutItems = []
   const sidebarItems = [
-    { icon: 'apps', title: 'Welcome', to: '/' }
+    { icon: 'apps', title: 'Welcome', to: '/' },
+    { icon: 'feedback', title: 'Feedback', to: '/feedback' }
   ]
 
   export default {
