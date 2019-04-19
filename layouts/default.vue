@@ -48,12 +48,12 @@
     { icon: 'list', title: 'My Guest List', to: '/listguests' },
     { icon: 'add', title: 'Add Guest', to: '/addguest' },
     { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },
+    { icon: 'feedback', title: 'Feedback', to: '/feedback' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
   const loggedOutItems = []
   const sidebarItems = [
-    { icon: 'apps', title: 'Welcome', to: '/' },
-    { icon: 'feedback', title: 'Feedback', to: '/feedback' }
+    { icon: 'apps', title: 'Welcome', to: '/' }
   ]
 
   export default {
