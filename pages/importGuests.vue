@@ -56,42 +56,6 @@
   import XLSX from 'xlsx'
   import moment from 'moment'
 
-  const EXPECTED_HEADERS = {
-    1: 'Details',
-    3: 'Spiritual Parent',
-    5: 'New Blessed Couple\'s Names',
-    9: 'Demographics',
-    13: 'Contact Info',
-    23: 'Blessing Steps Completed (Enter Date)',
-    31: 'Children'
-  }
-
-  const SPREADSHEET_FIELDS_POSITIONS = {
-    husband: {
-      firstName: 5,
-      birthdate: 9,
-      cellPhone: 13,
-      email: 16,
-      notes: 29
-    },
-    wife: {
-      firstName: 7,
-      birthdate: 11,
-      cellPhone: 14,
-      email: 17,
-      notes: 29
-    }
-  }
-
-  const BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID = [
-    [23, 5],
-    [24, 1],
-    [25, 2],
-    [26, 3],
-    [27, 6],
-    [28, 7]
-  ]
-
   export default {
     data: () => {
       return {
@@ -102,7 +66,68 @@
         showError: false,
         sheetdata: [],
         people: [],
-        actions: []
+        actions: [],
+        headersOffset: false
+      }
+    },
+    computed: {
+      expectedHeaders () {
+        let result = {
+          0: 'Details',
+          2: 'Spiritual Parent',
+          4: 'New Blessed Couple\'s Names',
+          8: 'Demographics',
+          12: 'Contact Info',
+          22: 'Blessing Steps Completed (Enter Date)',
+          30: 'Children'
+        }
+        if (this.headersOffset) {
+          Object.keys(result).forEach(key => {
+            result[parseInt(key) + 1] = result[key]
+            delete result[key]
+          })
+        }
+        return result
+      },
+      spreadsheetFieldsPositions () {
+        let result = {
+          husband: {
+            firstName: 4,
+            birthdate: 8,
+            cellPhone: 12,
+            email: 15,
+            notes: 28
+          },
+          wife: {
+            firstName: 6,
+            birthdate: 10,
+            cellPhone: 13,
+            email: 16,
+            notes: 28
+          }
+        }
+        if (this.headersOffset) {
+          for (const key in result) {
+            for (const spouse in result[key]) {
+              result[key][spouse]++
+            }
+          }
+        }
+        return result
+      },
+      blessingStepsFieldsPositionToActionTypeId () {
+        let result = [
+          [24, 5],
+          [25, 1],
+          [26, 2],
+          [27, 3],
+          [28, 6],
+          [29, 7]
+        ]
+        if (this.headersOffset) {
+          result.forEach(map => map[0]++)
+        }
+        return result
       }
     },
     methods: {
@@ -117,8 +142,8 @@
           const NUMBER_OF_HEADER_ROWS = 2
 
           const createPerson = (row, isHusband) => {
-            const fieldsPositions = isHusband ? SPREADSHEET_FIELDS_POSITIONS.husband
-              : SPREADSHEET_FIELDS_POSITIONS.wife
+            const fieldsPositions = isHusband ? this.spreadsheetFieldsPositions.husband
+              : this.spreadsheetFieldsPositions.wife
 
             const person = {gender: isHusband}
 
@@ -167,7 +192,7 @@
             if ('objectIndex' in couple || 'subjectIndex' in couple) {
               couple.actions = []
               for (const [fieldPosition, actionTypeId]
-                of BLESSING_STEPS_FIELDS_POSITION_TO_ACTION_TYPE_ID) {
+                of this.blessingStepsFieldsPositionToActionTypeId) {
                 if (row[fieldPosition]) {
                   if (row[fieldPosition] === 'Yes' || moment(row[fieldPosition]).isValid()) {
                     const action = {}
@@ -197,11 +222,16 @@
             const data = new Uint8Array(e.target.result)
             const workbook = XLSX.read(data, {type: 'array'})
             this.sheetdata = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header: 1})
-            const headersMatchExpected = Object.keys(EXPECTED_HEADERS)
-              .every(index => this.sheetdata[0][index] === EXPECTED_HEADERS[index])
+            let headersMatchExpected = Object.keys(this.expectedHeaders)
+              .every(index => this.sheetdata[0][index] === this.expectedHeaders[index])
             if (!headersMatchExpected) {
-              this.headersMatch = false
-              this.showError = true
+              this.headersOffset = true
+              headersMatchExpected = Object.keys(this.expectedHeaders)
+                .every(index => this.sheetdata[0][index] === this.expectedHeaders[index])
+              if (!headersMatchExpected) {
+                this.headersMatch = false
+                this.showError = true
+              }
             }
             resolve()
           }
