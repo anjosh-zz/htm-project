@@ -117,12 +117,12 @@
       },
       blessingStepsFieldsPositionToActionTypeId () {
         let result = [
-          [24, 5],
-          [25, 1],
-          [26, 2],
-          [27, 3],
-          [28, 6],
-          [29, 7]
+          [22, 5],
+          [23, 1],
+          [24, 2],
+          [25, 3],
+          [26, 6],
+          [27, 7]
         ]
         if (this.headersOffset) {
           result.forEach(map => map[0]++)
