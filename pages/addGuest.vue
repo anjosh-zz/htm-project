@@ -91,14 +91,13 @@
         }
       },
       async addBlessingSteps () {
-        await this.blessingSteps.filter(step => step.selected)
-          .forEach(async (step) => {
-            await this.$axios.$post('actions', {
-              personIds: [this.objectId, this.subjectId],
-              actionTypeId: step.id,
-              date: step.date
-            })
+        for (const step of this.blessingSteps.filter(step => step.selected)) {
+          await this.$axios.$post('actions', {
+            personIds: [this.objectId, this.subjectId],
+            actionTypeId: step.id,
+            date: step.date
           })
+        }
 
         this.$router.push('/listguests')
       }
