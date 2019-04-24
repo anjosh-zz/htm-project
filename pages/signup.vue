@@ -5,7 +5,7 @@
 
   export default {
     auth: false,
-    async created () {
+    async beforeMount () {
       if (this.$route.query.token) {
         const {
           domain,

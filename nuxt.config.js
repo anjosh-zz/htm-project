@@ -24,7 +24,6 @@ module.exports = {
     '~/plugins/vuetify.js',
     '~/plugins/globals.js',
     '~/plugins/smallplugins.js',
-    { src: '~/plugins/facebook.js', ssr: false },
     { src: '~/plugins/nonssrplugins.js', ssr: false }
   ],
   css: [
