@@ -29,9 +29,15 @@
           <v-card-text>
             <v-layout row>
               <v-flex xs12>
-                <p>Upload your filled out Blessing Tracker Excel Spreadsheet.
+                <p>
+                  Upload your filled out Blessing Tracker Excel Spreadsheet.
                   You can download the Blessing Tracker template
                   <a href="http://dpdojo.com/wp-content/uploads/2016/03/Blessing-Tracker-6-23-17.xlsx">here</a>.
+                </p>
+                <p class="grey--text">
+                  <span class="font-weight-medium">Notice: </span>
+                  If you import existing contacts again, you will see duplicate contacts. You may delete duplicate
+                  contacts manually at any time.
                 </p>
               </v-flex>
             </v-layout>
