@@ -51,15 +51,17 @@
 
 <script>
   const loggedInItems = [
+    { icon: 'apps', title: 'Dashboard', to: '/progress' },
     { icon: 'list', title: 'My Guest List', to: '/listguests' },
     { icon: 'add', title: 'Add Guest', to: '/addguest' },
     { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },
     { icon: 'feedback', title: 'Feedback', to: '/feedback' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
-  const loggedOutItems = []
-  const sidebarItems = [
+  const loggedOutItems = [
     { icon: 'apps', title: 'Welcome', to: '/' }
+  ]
+  const sidebarItems = [
   ]
 
   export default {
