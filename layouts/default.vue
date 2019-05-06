@@ -51,7 +51,7 @@
 
 <script>
   const loggedInItems = [
-    { icon: 'apps', title: 'Dashboard', to: '/progress' },
+    { icon: 'apps', title: 'Dashboard', to: '/dashboard' },
     { icon: 'list', title: 'My Guest List', to: '/listguests' },
     { icon: 'add', title: 'Add Guest', to: '/addguest' },
     { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },

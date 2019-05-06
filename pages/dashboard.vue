@@ -1,6 +1,6 @@
 <template>
   <v-layout row align-center justify-center>
-    <v-flex xs12 sm6>
+    <v-flex xs12 sm5>
     <v-card>
       <v-card-title class="headline pb-0">Dashboard</v-card-title>
       <v-container
@@ -9,9 +9,9 @@
       >
         <v-layout row wrap>
           <v-flex>
-            <v-card color="blue darken-2" class="white--text">
+            <v-card>
               <v-card-title primary-title>
-                <v-icon dark>contacts</v-icon>
+                <v-icon color="blue darken-2">contacts</v-icon>
               </v-card-title>
               <v-card-text>
                 <div class="display-2">{{contacts}}</div>
@@ -24,9 +24,9 @@
           </v-flex>
 
           <v-flex xs12>
-            <v-card color="purple darken-1" class="white--text">
+            <v-card>
               <v-card-title primary-title>
-                <v-icon dark>fa-wine-glass</v-icon>
+                <v-icon color="purple darken-1">fa-wine-glass</v-icon>
               </v-card-title>
               <v-card-text>
                 <div class="display-2">{{oneStepCouples}}</div>
@@ -39,9 +39,9 @@
           </v-flex>
 
           <v-flex xs12>
-            <v-card color="red darken-1" class="white--text">
+            <v-card>
               <v-card-title primary-title>
-                <v-icon dark>fa-magic</v-icon>
+                <v-icon color="red darken-1">fa-magic</v-icon>
               </v-card-title>
               <v-card-text>
                 <v-layout row align-center>
