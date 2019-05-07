@@ -96,7 +96,6 @@
                     mask="date"
                     :placeholder="birthdateFormat"
                     v-model="birthdate"
-                    @input="$v.birthdate.$touch()"
                     @blur="$v.birthdate.$touch()"
                     :error-messages="birthdateErrors"
                     :return-masked-value="true"
@@ -164,7 +163,7 @@
             const number = phoneUtil.parseAndKeepRawInput(person.phoneNumber, 'US')
             person.phoneNumber = number.getNationalNumber()
           }
-          if (person.gender !== undefined) {
+          if (person.gender != null) {
             person.gender = person.gender.toString()
           }
           Object.assign(this, person)
@@ -230,8 +229,9 @@
       email: { email },
       notes: { maxLength: maxLength(1000) },
       birthdate: {
-        isDate: (date) =>
-          date ? moment(date, this.birthdateFormat, true).isValid() : true
+        isDate: function (date) {
+          return date ? moment(date, this.birthdateFormat, true).isValid() : true
+        }
       }
     },
     computed: {

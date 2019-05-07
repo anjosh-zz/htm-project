@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-layout
       align-center
       justify-space-around
@@ -64,6 +64,19 @@
               <span>{{item.tooltip}}</span>
             </v-tooltip>
           </div>
+          <v-divider></v-divider>
+        </v-list>
+        <v-list two-line class="pt-0" v-if="person.notes">
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-layout align-center>
+                <v-icon class="mr-4">subject</v-icon>
+              </v-layout>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>{{person.notes}}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </v-list>
       </v-card>
     </v-dialog>
