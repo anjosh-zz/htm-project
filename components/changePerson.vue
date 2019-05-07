@@ -13,7 +13,11 @@
                   >
                     <img :src="avatarSrc" alt="avatar" v-if="avatarSrc">
                   </v-avatar>
-                  <v-btn color="secondary" @click="showSnapshot">{{avatarSrc ? 'Change picture' : 'Add picture'}}</v-btn>
+                  <Snapshot
+                      :avatarSrc="avatarSrc"
+                      v-on:addImage="addImage"
+                  >
+                  </Snapshot>
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -128,12 +132,6 @@
             {{editing ? 'Save': 'Add'}}
           </v-btn>
         </v-card-actions>
-        <Snapshot
-          :showSnapshot="snapshotIsShowing"
-          v-on:close="hideSnapshot"
-          v-on:addImage="addImage"
-        >
-        </Snapshot>
       </v-card>
     </v-flex>
   </v-layout>
@@ -182,7 +180,6 @@
         birthdateFormat: 'MM/DD/YYYY',
         timeMet: null,
         preferredContactMethod: 'email',
-        snapshotIsShowing: false,
         firstMeetingLocation: '',
         avatarSrc: '',
         gender: ''
@@ -191,12 +188,6 @@
     methods: {
       addImage (avatarSrc) {
         this.avatarSrc = avatarSrc
-      },
-      showSnapshot () {
-        this.snapshotIsShowing = true
-      },
-      hideSnapshot () {
-        this.snapshotIsShowing = false
       },
       submit (event, addAnother) {
         this.$v.$touch()
