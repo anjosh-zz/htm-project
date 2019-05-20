@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-layout row align-center justify-center class="guestPage pa-0">
     <v-flex xs12 sm5>
       <v-btn
@@ -15,11 +15,31 @@
         <v-icon>add</v-icon>
       </v-btn>
       <v-card>
-        <v-card-title class="headline pb-2">Guests</v-card-title>
+        <v-card-title class="headline pb-2">
+          <span>Guests</span>
+          <v-spacer></v-spacer>
+          <v-menu bottom left offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                  left
+                  icon
+                  v-on="on"
+              >
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-tile @click="this.toggleSort">
+                <v-list-tile-title>Sort {{this.sortByDate ? 'Alphabetically' : 'by Date Added'}}</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-card-title>
         <v-card-text class="pa-0">
           <v-container fluid class="pa-0">
             <v-layout row>
-              <v-flex xs-12 class="px-3">
+              <v-flex class="px-3">
                 <v-text-field
                   name="search"
                   label="Search guests..."
@@ -100,25 +120,18 @@
 
   const searchApi = new SearchApi()
 
-  async function getGuests (axios) {
-    const response = await axios.$get('/persons/guests')
-    return { guests: response }
-  }
-
   export default {
     components: {Profile, Avatar},
-    async asyncData ({ $axios }) {
-      return getGuests($axios)
-    },
     created () {
-      this.indexGuests()
+      this.getGuests()
     },
     data () {
       return {
         items: [],
         person: {},
         profileIsShowing: false,
-        deleteDialogIsShowing: false
+        deleteDialogIsShowing: false,
+        sortByDate: false
       }
     },
     methods: {
@@ -157,7 +170,9 @@
           this.items.push({ header: 'No guests to display' })
         }
       },
-      indexGuests () {
+      async getGuests () {
+        const sort = this.sortByDate ? 'date' : 'alpha'
+        this.guests = await this.$axios.$get('/persons/guests', {params: {sort: sort}})
         this.guests.forEach((guest, index) => {
           searchApi.indexDocument(index, guest.fullname)
           if (!guest.avatar) {
@@ -179,9 +194,11 @@
         await this.$axios.$delete('/persons/' + this.person.id)
         this.hideDeleteDialog()
         this.hideProfile()
-        const { guests } = await getGuests(this.$axios)
-        this.guests = guests
-        this.indexGuests()
+        await this.getGuests()
+      },
+      async toggleSort () {
+        this.sortByDate = !this.sortByDate
+        await this.getGuests()
       }
     }
   }
