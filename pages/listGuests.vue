@@ -31,7 +31,9 @@
 
             <v-list>
               <v-list-tile @click="this.toggleSort">
-                <v-list-tile-title>Sort {{this.sortByDate ? 'Alphabetically' : 'by Date Added'}}</v-list-tile-title>
+                <v-list-tile-title>
+                  Sort {{this.$store.state.listGuestsByDateAdded ? 'Alphabetically' : 'by Date Added'}}
+                </v-list-tile-title>
               </v-list-tile>
             </v-list>
           </v-menu>
@@ -113,6 +115,7 @@
 
 
 <script>
+  import { mapMutations } from 'vuex'
   import SearchApi from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
   import Profile from '~/components/personProfile.vue'
@@ -130,8 +133,7 @@
         items: [],
         person: {},
         profileIsShowing: false,
-        deleteDialogIsShowing: false,
-        sortByDate: false
+        deleteDialogIsShowing: false
       }
     },
     methods: {
@@ -171,7 +173,7 @@
         }
       },
       async getGuests () {
-        const sort = this.sortByDate ? 'date' : 'alpha'
+        const sort = this.$store.state.listGuestsByDateAdded ? 'date' : 'alpha'
         this.guests = await this.$axios.$get('/persons/guests', {params: {sort: sort}})
         this.guests.forEach((guest, index) => {
           searchApi.indexDocument(index, guest.fullname)
@@ -197,9 +199,12 @@
         await this.getGuests()
       },
       async toggleSort () {
-        this.sortByDate = !this.sortByDate
+        this.toggleListGuestsSort()
         await this.getGuests()
-      }
+      },
+      ...mapMutations({
+        toggleListGuestsSort: 'toggleListGuestsSort'
+      })
     }
   }
 </script>
