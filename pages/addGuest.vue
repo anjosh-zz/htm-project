@@ -95,7 +95,7 @@
           await this.$axios.$post('actions', {
             personIds: [this.objectId, this.subjectId],
             actionTypeId: step.id,
-            date: step.date
+            date: moment(step.date)
           })
         }
 
