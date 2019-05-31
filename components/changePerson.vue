@@ -152,6 +152,7 @@
     components: {Snapshot},
     mixin: [validationMixin],
     async created () {
+      // TODO move to editGuest
       if (this.$route.params.personId) {
         const response = await this.$axios.$get('/persons/' + this.$route.params.personId)
         if (response) {

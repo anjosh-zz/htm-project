@@ -9,7 +9,7 @@
         <v-container fluid class="full-height">
           <v-layout row>
             <v-flex xs6>
-              <v-btn icon @click.native="hideProfile">
+              <v-btn icon @click="hideProfile">
                 <v-icon class="black--text">arrow_back</v-icon>
               </v-btn>
             </v-flex>
@@ -17,7 +17,7 @@
               <v-btn icon @click="showDeleteDialog">
                 <v-icon color="black--text">delete</v-icon>
               </v-btn>
-              <v-btn icon @click.native="openEditPage">
+              <v-btn icon @click="openEditPage">
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
             </v-flex>
@@ -36,15 +36,15 @@
         </v-layout>
 
         <v-card-title class="justify-center" primary-title>
-          <span v-bind:class="['headline']">{{person.fullname}}</span>
+          <span class="headline">{{person.fullname}}</span>
         </v-card-title>
 
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-tooltip bottom>
+            <v-tooltip bottom :disabled="item.tooltip === undefined">
               <template v-slot:activator="{ on }">
-                <v-list-tile v-on="on" :href="item.href" target="_blank">
+                <v-list-tile v-on="on" :href="item.href" @click="item.handleClick" target="_blank">
                   <v-list-tile-action>
                     <v-layout align-center justify-space-around>
                       <v-icon class="mr-4">{{item.icon}}</v-icon>
@@ -54,7 +54,7 @@
                     <v-list-tile-title>{{item.value}}</v-list-tile-title>
                   </v-list-tile-content>
                   <v-list-tile-action class="grey--text" v-if="item.timestamp">
-                    {{item.timestamp}}
+                    {{item.timestamp.format('MMM Do, YYYY')}}
                   </v-list-tile-action>
                   <v-list-tile-action v-else-if="item.actionIcon">
                     <v-icon>{{item.actionIcon}}</v-icon>
@@ -119,7 +119,8 @@
             icon: 'email',
             actionIcon: 'send',
             href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`,
-            tooltip: 'Click to send a congratulatory email'
+            tooltip: 'Click to send a congratulatory email',
+            handleClick: () => {}
           })
         }
         if (this.person.phoneNumber) {
@@ -128,13 +129,15 @@
             value: phoneUtil.format(number, PNF.NATIONAL),
             icon: 'phone',
             href: `tel:${this.person.phoneNumber}`,
-            tooltip: 'Click to call'
+            tooltip: 'Click to call',
+            handleClick: () => {}
           })
         }
         if (this.person.birthdate) {
           result.push({
             value: moment(this.person.birthdate).format('MM/DD/YYYY'),
-            icon: 'cake'
+            icon: 'cake',
+            handleClick: () => {}
           })
         }
         if (this.person.RelationshipObject || this.person.RelationshipSubject) {
@@ -164,7 +167,16 @@
               icon: this.blessingStepsIconMap[step.ActionTypeId]
             }
             if (step.timestamp) {
-              item.timestamp = moment(step.timestamp).format('MMM Do, YYYY')
+              item.timestamp = moment(step.timestamp)
+            }
+            item.handleClick = () => {
+              this.hideProfile()
+              this.$router.push({
+                name: 'actionDetails',
+                params: {
+                  actionId: step.id
+                }
+              })
             }
             result.push(item)
           })
