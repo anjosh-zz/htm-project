@@ -148,7 +148,7 @@
             result.push({
               value: spouse.fullname,
               icon: 'wc',
-              handleClick: () => (this.person = spouse)
+              handleClick: () => {}
             })
           }
         }
@@ -164,7 +164,8 @@
           .forEach(step => {
             const item = {
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId]
+              icon: this.blessingStepsIconMap[step.ActionTypeId],
+              tooltip: 'Edit Blessing step'
             }
             if (step.timestamp) {
               item.timestamp = moment(step.timestamp)
