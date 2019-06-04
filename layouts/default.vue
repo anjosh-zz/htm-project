@@ -54,6 +54,7 @@
     { icon: 'apps', title: 'Dashboard', to: '/dashboard' },
     { icon: 'list', title: 'My Guest List', to: '/listguests' },
     { icon: 'add', title: 'Add Guest', to: '/addguest' },
+    { icon: 'email', title: 'Email Templates', to: '/emailTemplates' },
     { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },
     { icon: 'feedback', title: 'Feedback', to: '/feedback' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }

@@ -98,7 +98,6 @@
       return {
         dialog: false,
         darkImage: false,
-        emailSubject: 'Congratulations on receiving The Marriage Blessing',
         blessingStepsIconMap: {
           1: 'fa-wine-glass',
           2: 'fa-praying-hands',
@@ -117,10 +116,19 @@
           result.push({
             value: this.person.email,
             icon: 'email',
-            actionIcon: 'send',
-            href: `mailto:${this.person.email}?subject=${this.emailSubject}&body=${this.emailBody}`,
-            tooltip: 'Click to send a congratulatory email',
-            handleClick: () => {}
+            tooltip: 'Click to send an email template',
+            handleClick: () => {
+              this.hideProfile()
+              this.$router.push({
+                name: 'emailTemplates',
+                params: {
+                  person: {
+                    firstName: this.firstName,
+                    email: this.person.email
+                  }
+                }
+              })
+            }
           })
         }
         if (this.person.phoneNumber) {
@@ -185,16 +193,6 @@
       },
       firstName () {
         return this.person.fullname ? this.person.fullname.split(' ')[0] : ''
-      },
-      emailBody () {
-        return encodeURI(`Hello ${this.firstName},\n
-Big congratulations on receiving The Marriage Blessing!\n
-Because this is such an important occasion I wanted to share a very short video series that explains how the
-Blessing can be a foundation for a happy and lasting marriage.\n
-Here is the link:
-https://ym426-617b2e.pages.infusionsoft.net\n
-The videos are only 1-2 minutes and the whole thing can be viewed in 10 minutes.\n
-Sincerely,`)
       },
       profilePic () {
         return this.person.avatar || this.person.avatarURL
