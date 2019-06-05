@@ -34,7 +34,7 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
-      <v-container class="pa-0">
+      <v-container fluid class="pa-0">
         <nuxt />
       </v-container>
     </v-content>

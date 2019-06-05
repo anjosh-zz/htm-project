@@ -80,8 +80,9 @@
     },
     data () {
       let spaceAndFirstName = ''
-      if (this.$route.params.people && this.$route.params.people.length === 1) {
-        spaceAndFirstName = ` ${this.$route.params.people[0].firstName}`
+      const people = this.$route.params.people
+      if (people && people.length === 1 && people[0].fullname) {
+        spaceAndFirstName = ` ${people[0].fullname.split(' ')[0]}`
       }
       return {
         templates: [

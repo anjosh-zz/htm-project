@@ -30,7 +30,8 @@ import {
   VHover,
   VAlert,
   VProgressCircular,
-  VProgressLinear
+  VProgressLinear,
+  VDataTable
 } from 'vuetify'
 
 Vue.use(Vuetify, {
@@ -72,7 +73,8 @@ Vue.use(Vuetify, {
     VHover,
     VAlert,
     VProgressCircular,
-    VProgressLinear
+    VProgressLinear,
+    VDataTable
   },
   iconfont: 'fa'
 })
