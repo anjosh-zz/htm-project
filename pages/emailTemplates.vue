@@ -1,53 +1,51 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <div
-      style="max-width: 400px; margin: auto;"
-      class="grey lighten-3"
-  >
-    <v-card>
-      <v-card-title class="pb-0 headline">Email Templates</v-card-title>
-      <v-container
-          fluid
-          grid-list-lg
-      >
-        <v-layout row wrap>
-          <v-flex
-              v-for="template in templates"
-              :key="template.title"
-              xs12
-          >
-            <v-card v-if="template.img" ripple hover :href="generateMailtoHref(template.email)" target="_blank">
-              <v-layout>
-                <v-flex xs4>
-                  <v-img
-                      :src="template.img"
-                      class="mx-2"
-                      height="80px"
-                      contain
-                  >
-                    <template v-slot:placeholder>
-                      <v-layout
-                          fill-height
-                          align-center
-                          justify-center
-                          ma-0
-                      >
-                        <v-progress-circular
-                            indeterminate
-                            color="grey lighten-2"
+  <v-layout row align-center justify-center>
+    <v-flex xs12 sm5>
+      <v-card>
+        <v-card-title class="pb-0 headline">Email Templates</v-card-title>
+        <v-container
+            fluid
+            grid-list-lg
+        >
+          <v-layout row wrap>
+            <v-flex
+                v-for="template in templates"
+                :key="template.title"
+                xs12
+            >
+              <v-card v-if="template.img" ripple hover :href="generateMailtoHref(template.email)" target="_blank">
+                <v-layout>
+                  <v-flex xs4>
+                    <v-img
+                        :src="template.img"
+                        class="mx-2"
+                        height="80px"
+                        contain
+                    >
+                      <template v-slot:placeholder>
+                        <v-layout
+                            fill-height
+                            align-center
+                            justify-center
+                            ma-0
                         >
-                        </v-progress-circular>
-                      </v-layout>
-                    </template>
-                  </v-img>
-                </v-flex>
-                <v-flex xs8>
+                          <v-progress-circular
+                              indeterminate
+                              color="grey lighten-2"
+                          >
+                          </v-progress-circular>
+                        </v-layout>
+                      </template>
+                    </v-img>
+                  </v-flex>
+                  <v-flex xs8>
                     <div class="pt-2">
                       <div class="font-weight-medium subheading">{{template.title}}</div>
                       <div class="body-1">{{template.type}}</div>
                     </div>
-                </v-flex>
-              </v-layout>
-            </v-card>
+                  </v-flex>
+                </v-layout>
+              </v-card>
               <v-card v-else dark color="blue darken-1">
                 <v-layout
                     align-center
@@ -56,22 +54,23 @@
                 >
                   <v-flex xs1>
                     <div class="text-xs-center">
-                  <v-icon class="mx-3">{{template.icon}}</v-icon>
-                      </div>
+                      <v-icon class="mx-3">{{template.icon}}</v-icon>
+                    </div>
                   </v-flex>
 
                   <v-flex xs11>
-                  <v-card-text class="py-2">
-                  <div class="title">{{template.sectionHeader}}</div>
-                  </v-card-text>
-                    </v-flex>
-                  </v-layout>
-                </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-card>
-  </div>
+                    <v-card-text class="py-2">
+                      <div class="title">{{template.sectionHeader}}</div>
+                    </v-card-text>
+                  </v-flex>
+                </v-layout>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
