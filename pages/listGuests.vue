@@ -122,12 +122,14 @@
 
 <script>
   import { mapMutations } from 'vuex'
-  import SearchApi from 'js-worker-search'
+  import SearchApi, { INDEX_MODES } from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
   import Profile from '~/components/personProfile.vue'
   import Avatar from '~/components/personAvatar.vue'
 
-  const searchApi = new SearchApi()
+  const searchApi = new SearchApi({
+    indexMode: INDEX_MODES.PREFIXES
+  })
 
   export default {
     components: {Profile, Avatar},
