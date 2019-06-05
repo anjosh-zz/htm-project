@@ -18,6 +18,9 @@
         <v-card-title class="headline pb-2">
           <span>Guests</span>
           <v-spacer></v-spacer>
+          <v-btn v-if="items.some((item) => item.selected)" left icon @click="emailGuests">
+            <v-icon>email</v-icon>
+          </v-btn>
           <v-menu bottom left offset-y>
             <template v-slot:activator="{ on }">
               <v-btn
@@ -58,11 +61,14 @@
                     <v-subheader v-if="item.header" v-text="item.header" class="px-3"></v-subheader>
                     <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
                     <v-hover v-else>
-                      <v-list-tile avatar @click="showProfile(item)" slot-scope="{ hover }">
-                        <v-list-tile-avatar :color="item.colorClassName">
+                      <v-list-tile avatar @click="" slot-scope="{ hover }">
+                        <v-list-tile-avatar v-if="hover || item.selected" @click.stop class="pl-2">
+                          <v-checkbox v-model="item.selected"></v-checkbox>
+                        </v-list-tile-avatar>
+                        <v-list-tile-avatar v-else :color="item.colorClassName">
                           <Avatar :person="item"/>
                         </v-list-tile-avatar>
-                        <v-list-tile-content>
+                        <v-list-tile-content @click="showProfile(item)">
                           <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
                           <v-list-tile-sub-title v-html="item.importance"></v-list-tile-sub-title>
                         </v-list-tile-content>
@@ -71,11 +77,11 @@
                             <v-icon color="grey">delete</v-icon>
                           </v-btn>
                         </v-list-tile-action>
-                          <v-list-tile-action v-show="hover">
-                            <v-btn icon @click.stop="editProfile(item.id)">
-                              <v-icon color="grey">edit</v-icon>
-                            </v-btn>
-                          </v-list-tile-action>
+                        <v-list-tile-action v-show="hover">
+                          <v-btn icon @click.stop="editProfile(item.id)">
+                            <v-icon color="grey">edit</v-icon>
+                          </v-btn>
+                        </v-list-tile-action>
                       </v-list-tile>
                     </v-hover>
                   </template>
@@ -201,6 +207,15 @@
       async toggleSort () {
         this.toggleListGuestsSort()
         await this.getGuests()
+      },
+      emailGuests () {
+        const people = this.items.filter(item => item.selected && item.email)
+        this.$router.push({
+          name: 'emailTemplates',
+          params: {
+            people: people
+          }
+        })
       },
       ...mapMutations({
         toggleListGuestsSort: 'toggleListGuestsSort'

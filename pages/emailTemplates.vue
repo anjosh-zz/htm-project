@@ -80,7 +80,10 @@
     created () {
     },
     data () {
-      const firstName = this.$route.params.person ? this.$route.params.person.firstName : ''
+      let spaceAndFirstName = ''
+      if (this.$route.params.people && this.$route.params.people.length === 1) {
+        spaceAndFirstName = ` ${this.$route.params.people[0].firstName}`
+      }
       return {
         templates: [
           {
@@ -93,7 +96,7 @@
             img: 'http://tribenet.co/wp-content/uploads/2016/03/tribalmessiah3.png',
             email: {
               subject: 'Congratulations on receiving The Marriage Blessing',
-              body: `Hello ${firstName},\n
+              body: `Hello${spaceAndFirstName},\n
 Big congratulations on receiving The Marriage Blessing!\n
 Because this is such an important occasion I wanted to share a very short video series that explains how the
 Blessing can be a foundation for a happy and lasting marriage.\n
@@ -113,7 +116,7 @@ Sincerely,`
             img: 'http://tribenet.co/wp-content/uploads/2019/05/blessingameirca.jpg',
             email: {
               subject: 'Build Great Relationship Habits',
-              body: `Hello ${firstName},\n
+              body: `Hello${spaceAndFirstName},\n
 It has been so great getting to know you.\n
 I just wanted to let you know of a really great resource that I hope you can find useful in your relationship. Blessing America is all about how to build great relationship habits. I know that’s important to everyone, so I wanted to share! :-)\n
 If you go to this link you can see a lot of great resources.
@@ -170,7 +173,7 @@ Sincerely,`
             img: 'https://tribenet.co/wp-content/uploads/2019/05/couplemarriage.jpg',
             email: {
               subject: 'What Makes Marriage Work?',
-              body: `Hi ${firstName},
+              body: `Hi${spaceAndFirstName},
 
 How have you been?
 
@@ -193,8 +196,16 @@ Sincerely,`
     },
     methods: {
       generateMailtoHref (emailContent) {
-        const email = this.$route.params.person ? this.$route.params.person.email : ''
-        return `mailto:${email}?subject=${emailContent.subject}&body=${encodeURI(emailContent.body)}`
+        let mailto = '?'
+        if (this.$route.params.people) {
+          const {people} = this.$route.params
+          if (people.length === 1) {
+            mailto = people[0].email + '?'
+          } else if (people.length > 1) {
+            mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
+          }
+        }
+        return `mailto:${mailto}subject=${emailContent.subject}&body=${encodeURI(emailContent.body)}`
       }
     }
   }

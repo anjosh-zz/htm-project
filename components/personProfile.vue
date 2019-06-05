@@ -122,10 +122,10 @@
               this.$router.push({
                 name: 'emailTemplates',
                 params: {
-                  person: {
+                  people: [{
                     firstName: this.firstName,
                     email: this.person.email
-                  }
+                  }]
                 }
               })
             }
