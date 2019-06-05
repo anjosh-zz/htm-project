@@ -183,6 +183,9 @@
         this.guests = await this.$axios.$get('/persons/guests', {params: {sort: sort}})
         this.guests.forEach((guest, index) => {
           searchApi.indexDocument(index, guest.fullname)
+          if (guest.notes) {
+            searchApi.indexDocument(index, guest.notes)
+          }
           if (!guest.avatar) {
             guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
             guest.firstLetter = guest.fullname.charAt(0)
