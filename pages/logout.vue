@@ -1,6 +1,6 @@
 <template>
-  <v-layout row align-center justify-center class="pt-3 mt-3">
-    <v-flex xs12 md4>
+  <v-layout row align-center justify-center>
+    <v-flex xs12 sm5>
       <v-card>
         <v-card-title class="headline">Logout</v-card-title>
         <v-card-text>

@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-layout row align-center justify-center class="guestPage pa-0">
-    <v-flex xs12 sm5>
+  <v-layout row align-center>
+    <v-flex xs12>
       <v-btn
           fixed
           dark
@@ -16,104 +16,95 @@
       </v-btn>
       <v-card>
         <v-card-title class="headline pb-2">
-          <span>Guests</span>
-          <v-spacer></v-spacer>
-          <v-btn v-if="items.some((item) => item.selected)" left icon @click="emailGuests">
-            <v-icon>email</v-icon>
-          </v-btn>
-          <v-menu bottom left offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                  left
-                  icon
-                  v-on="on"
-              >
-                <v-icon>more_vert</v-icon>
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-tile @click="this.toggleSort">
-                <v-list-tile-title>
-                  Sort {{this.$store.state.listGuestsByDateAdded ? 'Alphabetically' : 'by Date Added'}}
-                </v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
-        </v-card-title>
-        <v-card-text class="pa-0">
-          <v-container fluid class="pa-0">
-            <v-layout row>
-              <v-flex class="px-3">
-                <v-text-field
+          <v-layout align-center>
+            <v-flex xs3>
+              <span>Guests</span>
+            </v-flex>
+            <v-flex xs8>
+              <v-text-field
                   name="search"
-                  label="Search guests..."
+                  label="Search"
                   append-icon="search"
-                  @input="search"
+                  v-model="search"
                   single-line
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs-12>
-                <v-list two-line>
-                  <template v-for="item in items">
-                    <v-subheader v-if="item.header" v-text="item.header" class="px-3"></v-subheader>
-                    <v-divider v-else-if="item.divider" v-bind:inset="item.inset"></v-divider>
-                    <v-hover v-else>
-                      <v-list-tile avatar @click="" slot-scope="{ hover }">
-                        <v-list-tile-avatar v-if="hover || item.selected" @click.stop class="pl-2">
-                          <v-checkbox v-model="item.selected"></v-checkbox>
-                        </v-list-tile-avatar>
-                        <v-list-tile-avatar v-else :color="item.colorClassName">
-                          <Avatar :person="item"/>
-                        </v-list-tile-avatar>
-                        <v-list-tile-content @click="showProfile(item)">
-                          <v-list-tile-title v-html="item.fullname"></v-list-tile-title>
-                          <v-list-tile-sub-title v-html="item.importance"></v-list-tile-sub-title>
-                        </v-list-tile-content>
-                        <v-list-tile-action v-show="hover">
-                          <v-btn icon @click.stop="showDeleteDialog(item)">
-                            <v-icon color="grey">delete</v-icon>
-                          </v-btn>
-                        </v-list-tile-action>
-                        <v-list-tile-action v-show="hover">
-                          <v-btn icon @click.stop="editProfile(item.id)">
-                            <v-icon color="grey">edit</v-icon>
-                          </v-btn>
-                        </v-list-tile-action>
-                      </v-list-tile>
-                    </v-hover>
-                  </template>
-                </v-list>
-              </v-flex>
-            </v-layout>
-            <Profile
-              :showProfile="profileIsShowing"
-              :person="person"
-              v-on:close="hideProfile"
-              v-on:edit="editProfile"
-              v-on:delete="showDeleteDialog"
-            >
-            </Profile>
-            <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
-              <v-card>
-                <v-card-title primary-title class="title">
-                  Delete this contact?
-                </v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn @click="hideDeleteDialog" flat>
-                    Cancel
-                  </v-btn>
-                  <v-btn @click="deleteProfile" flat color="red">
-                    Delete
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-container>
-        </v-card-text>
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs1>
+              <v-btn v-if="selected.length > 0" icon @click="emailGuests">
+                <v-icon>email</v-icon>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-title>
+        <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="items"
+            select-all
+            class="mi-datatable elevation-1"
+            :pagination.sync="pagination"
+            hide-actions
+            :search="search"
+        >
+          <template v-slot:items="props">
+            <v-hover>
+              <template v-slot="{ hover }">
+                <tr @click="showProfile(props.item)">
+                  <td @click.stop>
+                    <v-checkbox
+                        v-if="(hover && $vuetify.breakpoint.smAndUp)  || props.selected"
+                        v-model="props.selected"
+                        primary
+                        hide-details
+                    ></v-checkbox>
+                    <v-avatar v-else @click="() => props.selected = !props.selected" :color="props.item.colorClassName" size="40">
+                      <Avatar :person="props.item"/>
+                    </v-avatar>
+                  </td>
+                    <td>{{ props.item.fullname }}</td>
+                    <template v-if="$vuetify.breakpoint.smAndUp">
+                      <td>{{ props.item.email }}</td>
+                      <td>{{ props.item.phoneNumber | phoneNumberFilter }}</td>
+                      <td>{{ props.item.notes }}</td>
+                      <td v-if="hover" class="justify-center align-center layout px-0">
+                        <v-btn icon class="ma-0" @click.stop="showDeleteDialog(props.item)">
+                          <v-icon color="grey">delete</v-icon>
+                        </v-btn>
+                        <v-btn icon class="ma-0" @click.stop="editProfile(props.item.id)">
+                          <v-icon color="grey">edit</v-icon>
+                        </v-btn>
+                      </td>
+                      <td v-else>{{ props.item.createdAt | moment }}</td>
+                    </template>
+                </tr>
+              </template>
+            </v-hover>
+          </template>
+        </v-data-table>
+        <Profile
+            :showProfile="profileIsShowing"
+            :person="person"
+            v-on:close="hideProfile"
+            v-on:edit="editProfile"
+            v-on:delete="showDeleteDialog"
+        >
+        </Profile>
+        <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
+          <v-card>
+            <v-card-title primary-title class="title">
+              Delete this contact?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="hideDeleteDialog" flat>
+                Cancel
+              </v-btn>
+              <v-btn @click="deleteProfile" flat color="red">
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-card>
     </v-flex>
   </v-layout>
@@ -121,15 +112,15 @@
 
 
 <script>
+  import moment from 'moment'
   import { mapMutations } from 'vuex'
-  import SearchApi, { INDEX_MODES } from 'js-worker-search'
   import toMaterialStyle from 'material-color-hash'
+  import googlePhoneNumberLib from 'google-libphonenumber'
   import Profile from '~/components/personProfile.vue'
   import Avatar from '~/components/personAvatar.vue'
 
-  const searchApi = new SearchApi({
-    indexMode: INDEX_MODES.PREFIXES
-  })
+  const phoneUtil = googlePhoneNumberLib.PhoneNumberUtil.getInstance()
+  const PNF = googlePhoneNumberLib.PhoneNumberFormat
 
   export default {
     components: {Profile, Avatar},
@@ -138,10 +129,26 @@
     },
     data () {
       return {
+        search: '',
+        selected: [],
+        pagination: {
+          rowsPerPage: -1
+        },
         items: [],
         person: {},
         profileIsShowing: false,
         deleteDialogIsShowing: false
+      }
+    },
+    computed: {
+      headers () {
+        return [
+          {text: 'Name', value: 'fullname', align: 'left', width: this.$vuetify.breakpoint.xsOnly ? '100%' : '15%'},
+          {text: 'Email', value: 'email', width: '20%'},
+          {text: 'Phone number', value: 'phoneNumber', width: '15%'},
+          {text: 'Notes', value: 'notes', width: '40%'},
+          {text: 'Date Added', value: 'createdAt', width: '10%'}
+        ]
       }
     },
     methods: {
@@ -161,40 +168,14 @@
           }
         })
       },
-      search (input) {
-        return searchApi.search(input)
-          .then((results) => {
-            return this.getItems(results.map(index => this.guests[index]))
-          })
-      },
-      getItems (guestsToDisplay) {
-        this.items = []
-        if (guestsToDisplay.length) {
-          guestsToDisplay.forEach((guest, index) => {
-            if (index > 0) {
-              this.items.push({ divider: true, inset: false })
-            }
-            this.items.push(guest)
-          })
-        } else {
-          this.items.push({ header: 'No guests to display' })
-        }
-      },
       async getGuests () {
-        const sort = this.$store.state.listGuestsByDateAdded ? 'date' : 'alpha'
-        this.guests = await this.$axios.$get('/persons/guests', {params: {sort: sort}})
-        this.guests.forEach((guest, index) => {
-          searchApi.indexDocument(index, guest.fullname)
-          if (guest.notes) {
-            searchApi.indexDocument(index, guest.notes)
-          }
+        this.items = await this.$axios.$get('/persons/guests')
+        this.items.forEach(guest => {
           if (!guest.avatar) {
             guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
             guest.firstLetter = guest.fullname.charAt(0)
           }
         })
-
-        this.getItems(this.guests.slice(0))
       },
       showDeleteDialog (item) {
         this.person = item
@@ -209,22 +190,49 @@
         this.hideProfile()
         await this.getGuests()
       },
-      async toggleSort () {
-        this.toggleListGuestsSort()
-        await this.getGuests()
-      },
       emailGuests () {
-        const people = this.items.filter(item => item.selected && item.email)
         this.$router.push({
           name: 'emailTemplates',
           params: {
-            people: people
+            people: this.selected
           }
         })
       },
       ...mapMutations({
         toggleListGuestsSort: 'toggleListGuestsSort'
       })
+    },
+    filters: {
+      moment: function (date) {
+        return moment(date).format('MM/DD/YYYY')
+      },
+      phoneNumberFilter: function (phoneNumber) {
+        if (phoneNumber) {
+          const number = phoneUtil.parseAndKeepRawInput(phoneNumber, 'US')
+          return phoneUtil.format(number, PNF.NATIONAL)
+        }
+      }
     }
   }
 </script>
+
+<style>
+  table.v-table tbody td {
+    font-size: 15px;
+    height: 60px
+  }
+  .v-datatable .v-input--selection-controls {
+    margin-left: 10px;
+  }
+  table.v-table tbody tr {
+    cursor: pointer;
+  }
+  .theme--light.v-table tbody tr:not(:last-child) {
+    border-bottom: 0
+  }
+  @media screen and (max-width: 600px) {
+    table.v-table thead th:nth-child(n+3) {
+      display: none;
+    }
+  }
+</style>

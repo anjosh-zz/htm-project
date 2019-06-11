@@ -123,7 +123,6 @@
                 name: 'emailTemplates',
                 params: {
                   people: [{
-                    firstName: this.firstName,
                     email: this.person.email
                   }]
                 }
@@ -152,12 +151,19 @@
           const relationships = this.person.RelationshipObject.concat(this.person.RelationshipSubject)
           const spouseRelationship = relationships.find(r => r && r.RelationshipTypeId === 1)
           if (spouseRelationship) {
-            const spouse = spouseRelationship.Object ? spouseRelationship.Object : spouseRelationship.Subject
-            result.push({
-              value: spouse.fullname,
-              icon: 'wc',
-              handleClick: () => {}
-            })
+            let spouse
+            if (spouseRelationship.Object) {
+              spouse = spouseRelationship.Object
+            } else if (spouseRelationship.Subject) {
+              spouse = spouseRelationship.Subject
+            }
+            if (spouse && spouse.fullname) {
+              result.push({
+                value: spouse.fullname,
+                icon: 'wc',
+                handleClick: () => {}
+              })
+            }
           }
         }
 
@@ -190,9 +196,6 @@
             result.push(item)
           })
         return result
-      },
-      firstName () {
-        return this.person.fullname ? this.person.fullname.split(' ')[0] : ''
       },
       profilePic () {
         return this.person.avatar || this.person.avatarURL
