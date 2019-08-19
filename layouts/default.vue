@@ -40,12 +40,16 @@
              alt="JWT Auth for open source projects"
              src="//cdn.auth0.com/oss/badges/a0-badge-light.png"/>
       </a>
+      <no-ssr>
+        <cookie-law></cookie-law>
+      </no-ssr>
     </v-footer>
   </v-app>
 </template>
 
 <script>
   import { mapMutations } from 'vuex'
+  import CookieLaw from 'vue-cookie-law'
 
   const loggedInItems = [
     { icon: 'apps', title: 'Dashboard', to: '/dashboard' },
@@ -63,6 +67,7 @@
   ]
 
   export default {
+    components: { CookieLaw },
     data () {
       return {
         clipped: true,
