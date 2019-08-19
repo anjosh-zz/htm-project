@@ -1,12 +1,11 @@
 <template>
-  <v-layout column justify-center align-center class="pt-3 mt-3">
-    <v-flex xs12 sm4>
+  <v-layout row align-center justify-center>
+    <v-flex xs12 sm5>
       <v-card>
         <div class="text-xs-center pt-3">
-          <img src="/logo1.png" class="mb-1" width="20%"/>
+          <img src="/myTribe_BW_Logo_v1.png" class="my-1" width="60%"/>
         </div>
-        <v-card-title class="headline">Welcome to MyTribe</v-card-title>
-        <v-card-text>
+        <v-card-text class="subheading">
           <p>Making it easier to stay in touch with the people that matter most.</p>
         </v-card-text>
         <v-card-actions>

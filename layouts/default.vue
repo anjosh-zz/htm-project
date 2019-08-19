@@ -26,12 +26,7 @@
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
       <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
-      <v-toolbar-title><v-avatar
-        class="white"
-      >
-        <img src="/logo1.png" alt="avatar">
-      </v-avatar><span class="ml-2">{{title}}</span></v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-img src="/myTribe_BW_Logo_v1.png" height="70%" contain position="left center" class="ml-2 mt-2"/>
     </v-toolbar>
     <v-content>
       <v-container fluid class="pa-0">
