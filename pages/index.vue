@@ -3,7 +3,7 @@
     <v-flex xs12 sm5>
       <v-card>
         <div class="text-xs-center pt-3">
-          <img src="/myTribe_BW_Logo_v1.png" class="my-1" width="60%"/>
+          <img src="/icon.png" class="my-1" width="60%"/>
         </div>
         <v-card-text class="subheading">
           <p>Making it easier to stay in touch with the people that matter most.</p>
