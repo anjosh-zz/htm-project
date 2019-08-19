@@ -8,17 +8,18 @@
           bottom
           right
           color="primary"
-          class="mb-5 mr-2"
+          class="add-contact-btn mb-5 mr-2"
           nuxt
           to="/addguest"
+          @click="exitTutorial"
       >
         <v-icon>add</v-icon>
       </v-btn>
       <v-card>
         <v-card-title class="headline pb-2">
           <v-layout align-center>
-            <v-flex xs3>
-              <span>Guests</span>
+            <v-flex xs3 class="mr-3">
+              <span>Contacts</span>
             </v-flex>
             <v-flex xs8>
               <v-text-field
@@ -137,8 +138,18 @@
         items: [],
         person: {},
         profileIsShowing: false,
-        deleteDialogIsShowing: false
+        deleteDialogIsShowing: false,
+        prevRoute: null,
+        introHighlightOnFeedback: false,
+        intro: null
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        console.log(from)
+        vm.prevRoute = from.name
+        vm.startTutorial()
+      })
     },
     computed: {
       headers () {
@@ -198,9 +209,57 @@
           }
         })
       },
-      ...mapMutations({
-        toggleListGuestsSort: 'toggleListGuestsSort'
-      })
+      startTutorial () {
+        if (this.$store.state.tutorial) {
+          if (this.prevRoute === 'addGuest') {
+            setTimeout(() => {
+              this.intro = this.$intro()
+              this.intro.setOptions({
+                showStepNumbers: false,
+                steps: [
+                  {
+                    intro: 'Congratulations you added your first contact!'
+                  },
+                  {
+                    intro: 'That concludes the MyTribe tutorial.'
+                  },
+                  {
+                    intro: 'Please fill out the Feedback form if you have any questions or feedback.'
+                  },
+                  {
+                    intro: 'Blessings to you and your family throughout your journey as Tribal Messiahs!'
+                  }
+                ]
+              }).onexit(this.endTutorial).oncomplete(this.endTutorial).start()
+            }, 1000)
+          } else {
+            setTimeout(() => {
+              this.intro = this.$intro()
+              this.intro.setOptions({
+                doneLabel: 'Skip',
+                showStepNumbers: false,
+                steps: [
+                  {
+                    intro: 'This is your Contacts page.'
+                  },
+                  {
+                    element: document.querySelector('.add-contact-btn'),
+                    intro: 'Let\'s add a couple to your list of contacts. Click the round purple + button.'
+                  }
+                ]
+              }).start()
+            }, 1000)
+          }
+        }
+      },
+      exitTutorial () {
+        if (this.$store.state.tutorial) this.intro.exit()
+      },
+      ...mapMutations([
+        'endTutorial',
+        'openDrawer',
+        'closeDrawer'
+      ])
     },
     filters: {
       moment: function (date) {

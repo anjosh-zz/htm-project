@@ -25,7 +25,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
-      <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
       <v-toolbar-title><v-avatar
         class="white"
       >
@@ -50,12 +50,14 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
+
   const loggedInItems = [
     { icon: 'apps', title: 'Dashboard', to: '/dashboard' },
-    { icon: 'list', title: 'My Guest List', to: '/listguests' },
-    { icon: 'add', title: 'Add Guest', to: '/addguest' },
+    { icon: 'list', title: 'Contacts', to: '/listguests' },
+    { icon: 'add', title: 'Add Contact', to: '/addguest' },
     { icon: 'email', title: 'Email Templates', to: '/emailTemplates' },
-    { icon: 'file_upload', title: 'Import Guests', to: '/importGuests' },
+    { icon: 'file_upload', title: 'Import Contacts', to: '/importGuests' },
     { icon: 'feedback', title: 'Feedback', to: '/feedback' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
@@ -69,7 +71,6 @@
     data () {
       return {
         clipped: true,
-        drawer: false,
         fixed: false,
         miniVariant: false,
         title: 'MyTribe'
@@ -79,7 +80,21 @@
       items: function () {
         const itemsToAdd = this.$auth.loggedIn ? loggedInItems : loggedOutItems
         return sidebarItems.concat(itemsToAdd)
+      },
+      drawer: {
+        get () {
+          return this.$store.state.drawer
+        },
+        set (value) {
+          this.updateDrawer(value)
+        }
       }
+    },
+    methods: {
+      ...mapMutations([
+        'toggleDrawer',
+        'updateDrawer'
+      ])
     }
   }
 </script>

@@ -1,4 +1,5 @@
 const nodeExternals = require('webpack-node-externals')
+const webpack = require('webpack')
 
 module.exports = {
   env: {
@@ -22,14 +23,17 @@ module.exports = {
   },
   plugins: [
     '~/plugins/vuetify.js',
+    { src: '~/plugins/vue-intro.js', ssr: false },
+    { src: '~/plugins/localStorage.js', ssr: false },
     '~/plugins/globals.js',
     '~/plugins/smallplugins.js',
     { src: '~/plugins/nonssrplugins.js', ssr: false }
   ],
   css: [
     '~/assets/style/app.styl',
-    { src: '@fortawesome/fontawesome-free/css/all.css', lang: 'css' },
-    { src: 'vue-croppa/dist/vue-croppa.css', lange: 'css' }
+    '@fortawesome/fontawesome-free/css/all.css',
+    'vue-croppa/dist/vue-croppa.css',
+    'intro.js/introjs.css'
   ],
   /*
   ** Customize the progress bar color
@@ -78,6 +82,11 @@ module.exports = {
   */
   build: {
     cssSourceMap: false,
+    plugins: [
+      new webpack.ProvidePlugin({
+        'introJs': ['intro.js', 'introJs']
+      })
+    ],
     babel: {
       plugins: [
         ['transform-imports', {

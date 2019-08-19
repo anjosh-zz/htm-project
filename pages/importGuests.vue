@@ -11,7 +11,7 @@
         Please download the Blessing Tracker template and fill it out.
       </v-alert>
       <v-card>
-        <v-card-title class="headline">Import Guests</v-card-title>
+        <v-card-title class="headline">Import Contacts</v-card-title>
         <div v-if="this.headersMatch && this.uploaded">
           <v-card-text>
             <v-layout row>

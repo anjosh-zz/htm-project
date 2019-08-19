@@ -2,10 +2,10 @@
   <v-container>
     <v-layout row wrap mb-3>
       <v-flex xs8>
-        <h4>Select Step Completed</h4>
+        <h4>Blessing Step</h4>
       </v-flex>
       <v-flex xs4 v-if="blessingSteps.some(step => step.selected)">
-        <h4>Set Date Occurred</h4>
+        <h4>Date</h4>
       </v-flex>
     </v-layout>
     <v-divider></v-divider>
@@ -13,6 +13,10 @@
       <v-flex xs8>
         <v-checkbox v-model="step.selected"
                     :label="step.name"
+                    :class="{
+                      'holy-wine-checkbox': step.name === 'Holy Wine',
+                      'introjs-showElement introjs-relativePosition': introHighlightOnCheckbox
+                    }"
                     hide-details>
         </v-checkbox>
       </v-flex>
@@ -31,6 +35,6 @@
 
 <script>
   export default {
-    props: ['blessingSteps']
+    props: ['blessingSteps', 'introHighlightOnCheckbox']
   }
 </script>

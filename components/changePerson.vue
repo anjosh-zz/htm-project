@@ -2,7 +2,7 @@
   <v-layout row align-center justify-center>
     <v-flex xs12 sm5>
       <v-card>
-        <v-card-title class="headline">{{editing ? 'Edit Guest': 'Add Guest'}}</v-card-title>
+        <v-card-title class="headline">{{editing ? 'Edit Contact': 'Add Contact'}}</v-card-title>
         <v-card-text>
           <v-form>
             <v-container fluid class="pt-0">
@@ -23,6 +23,8 @@
               <v-layout row>
                 <v-flex xs12>
                   <v-text-field
+                    class="full-name-text-field"
+                    :class="{ 'introjs-showElement introjs-relativePosition': introHighlightOnFullNameField }"
                     label="Full Name"
                     v-model="fullname"
                     @input="$v.fullname.$touch()"
@@ -125,10 +127,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="!editing && step === 1" color="secondary" @click="addAnotherPerson">
+          <v-btn v-if="!editing && step === 1" class="add-spouse-btn" color="secondary" @click="addAnotherPerson">
             Add Spouse
           </v-btn>
-          <v-btn color="primary" @click="submit">
+          <v-btn class="add-contact-btn" color="primary" @click="submit">
             {{editing ? 'Save': 'Add'}}
           </v-btn>
         </v-card-actions>
@@ -148,7 +150,7 @@
   const phoneUtil = googlePhoneNumberLib.PhoneNumberUtil.getInstance()
 
   export default {
-    props: ['editing', 'step'],
+    props: ['editing', 'step', 'introHighlightOnFullNameField'],
     components: {Snapshot},
     mixin: [validationMixin],
     async created () {
