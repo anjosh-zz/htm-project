@@ -71,7 +71,7 @@
             doneLabel: 'Skip',
             steps: [
               {
-                intro: 'This is your Add Contact page.'
+                intro: 'This "Add Contact" page is where you can enter a new contact.'
               },
               {
                 element: document.querySelector('.full-name-text-field'),

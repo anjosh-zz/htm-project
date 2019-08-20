@@ -240,7 +240,7 @@
                 showStepNumbers: false,
                 steps: [
                   {
-                    intro: 'This is your Contacts page.'
+                    intro: 'This "Contacts" page is where you can view all the contacts in your tribe.'
                   },
                   {
                     element: document.querySelector('.add-contact-btn'),
