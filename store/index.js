@@ -1,6 +1,7 @@
 export const state = () => ({
   tutorial: false,
-  drawer: false
+  drawer: false,
+  introHighlightOnMenuItem: false
 })
 
 export const mutations = {
@@ -13,13 +14,11 @@ export const mutations = {
   toggleDrawer (state) {
     state.drawer = !state.drawer
   },
-  openDrawer (state) {
-    state.drawer = true
-  },
-  closeDrawer (state) {
-    state.drawer = false
-  },
   updateDrawer (state, value) {
     state.drawer = value
+  },
+  updateIntroHighlightOnMenuItem (state, value) {
+    state.drawer = value
+    state.introHighlightOnMenuItem = value
   }
 }

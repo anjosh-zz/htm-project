@@ -146,7 +146,6 @@
     },
     beforeRouteEnter (to, from, next) {
       next(vm => {
-        console.log(from)
         vm.prevRoute = from.name
         vm.startTutorial()
       })
@@ -221,15 +220,26 @@
                     intro: 'Congratulations you added your first contact!'
                   },
                   {
-                    intro: 'That concludes the MyTribe tutorial.'
+                    element: document.querySelector('.v-toolbar__side-icon'),
+                    intro: 'You can find more features of MyTribe by clicking on the menu icon here.'
                   },
                   {
-                    intro: 'Please fill out the Feedback form if you have any questions or feedback.'
+                    element: document.querySelector('.v-navigation-drawer'),
+                    intro: `
+                For instance, you can choose a pre-written email to send to your contacts by going to the "Email Templates" page.<br><br>
+                If you have a spreadsheet of your contacts, you can import them into MyTribe on the "Import Contacts" page.<br><br>
+                And you can provide feedback by filling out the feedback form on the "Feedback" page.
+                `
+                  },
+                  {
+                    intro: 'That concludes the MyTribe tutorial.'
                   },
                   {
                     intro: 'Blessings to you and your family throughout your journey as Tribal Messiahs!'
                   }
                 ]
+              }).onchange((targetElement) => {
+                this.updateIntroHighlightOnMenuItem(targetElement.className.includes('v-navigation-drawer'))
               }).onexit(this.endTutorial).oncomplete(this.endTutorial).start()
             }, 1000)
           } else {
@@ -257,8 +267,7 @@
       },
       ...mapMutations([
         'endTutorial',
-        'openDrawer',
-        'closeDrawer'
+        'updateIntroHighlightOnMenuItem'
       ])
     },
     filters: {

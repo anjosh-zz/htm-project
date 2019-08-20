@@ -6,6 +6,7 @@
       v-model="drawer"
       fixed
       app
+      :class="{ 'introjs-showElement': $store.state.introHighlightOnMenuItem }"
     >
       <v-list>
         <v-list-tile
