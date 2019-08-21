@@ -96,13 +96,17 @@
             img: 'http://tribenet.co/wp-content/uploads/2016/03/tribalmessiah3.png',
             email: {
               subject: 'Congratulations on receiving The Marriage Blessing',
-              body: `Hello${spaceAndFirstName},\n
-Big congratulations on receiving The Marriage Blessing!\n
-Because this is such an important occasion I wanted to share a very short video series that explains how the
-Blessing can be a foundation for a happy and lasting marriage.\n
+              body: `Hello${spaceAndFirstName},
+
+Big congratulations on receiving The Marriage Blessing!
+
+Because this is such an important occasion I wanted to share a very short video series that explains how the Blessing can be a foundation for a happy and lasting marriage.
+
 Here is the link:
-https://ym426-617b2e.pages.infusionsoft.net\n
-The videos are only 1-2 minutes and the whole thing can be viewed in 10 minutes.\n
+https://ym426-617b2e.pages.infusionsoft.net
+
+The videos are only 1-2 minutes and the whole thing can be viewed in 10 minutes.
+
 Sincerely,`
             }
           },
@@ -116,12 +120,17 @@ Sincerely,`
             img: 'http://tribenet.co/wp-content/uploads/2019/05/blessingameirca.jpg',
             email: {
               subject: 'Build Great Relationship Habits',
-              body: `Hello${spaceAndFirstName},\n
-It has been so great getting to know you.\n
-I just wanted to let you know of a really great resource that I hope you can find useful in your relationship. Blessing America is all about how to build great relationship habits. I know that’s important to everyone, so I wanted to share! :-)\n
+              body: `Hello${spaceAndFirstName},
+
+It has been so great getting to know you.
+
+I just wanted to let you know of a really great resource that I hope you can find useful in your relationship. Blessing America is all about how to build great relationship habits. I know that's important to everyone, so I wanted to share! :-)
+
 If you go to this link you can see a lot of great resources.
-https://blessingamerica.org\n
-Let me know when you get a chance to check out the site. I’d love to hear your thoughts.\n
+https://blessingamerica.org
+
+Let me know when you get a chance to check out the site. I'd love to hear your thoughts.
+
 Sincerely,`
             }
           },
@@ -133,11 +142,11 @@ Sincerely,`
               subject: 'Relationship Skills Quiz',
               body: `Hi again
 
-I’ve been thinking of an interesting question: “What is my best relationship skill?”
+I've been thinking of an interesting question: "What is my best relationship skill?"
 
-I found this quiz that reveals your strengths and weaknesses. I thought I’d share because know is really valuable to see how you can improve your relationship. Partners can take an evening to do the quiz together (each does it on their own and compares the results).
+I found this quiz that reveals your strengths and weaknesses. I thought I'd share it because relationship self-awareness is so valuable to see how you can improve and be even happier. Partners can take an evening to do the quiz together as valuable couple time (each does it on their own and compares the results).
 
-Here’s the link to it:
+Here's the link to it:
 https://ym426-ebd3e3.pages.infusionsoft.net/
 
 Let me know what you think.
@@ -153,13 +162,13 @@ Sincerely,`
               subject: 'Relationship Building Challenge',
               body: `Hi again
 
-I’ve heard many times that “love is a verb.” Is it just me...?
+I've heard many times that "love is a verb." Is it just me...?
 
-That got me wondering, what do I do each day to express love for my partner. It’s so easy to get in the habit of the day-to-day and forget to invest in the relationship. I came across this great resource that sends new ideas everyday for 6-weeks.
+That got me wondering, what do I do each day to express love for my partner. It's so easy to get in the habit of the day-to-day and forget to invest in the relationship. I came across this great resource that sends new ideas everyday for 6-weeks.
 
-Hope you don’t mind. I just wanted to share, because I want to wish you the best your relationship. :-)
+Hope you don't mind. I just wanted to share, because I want to wish you the best for your relationship. :-)
 
-Here’s the link:
+Here's the link:
 https://www.blessingamerica.org/challenge
 
 What do you think?
@@ -177,13 +186,11 @@ Sincerely,`
 
 How have you been?
 
-A marriage educator that I know recently wrote a book.
+A marriage educator that I know, Heather Thalheimer, wrote a book called "More Than Marriage".
 
-It’s called “More Than Marriage” by Heather Thalheimer.
+I wanted to share because it has an interesting perspective on why some marriages work and some don't. You could buy the copy, but the digital one is free to download right now. Would you be willing to check out the ebook?
 
-I wanted to share because it has an interesting perspective on why some marriage work and some don’t. You could buy the copy, but the digital one is free to download right now. Would you be willing to check out the ebook?
-
-Here’s the link
+Here's the link
 https://www.blessingamerica.org/ebook-thank-you
 
 Let me know what you think.
