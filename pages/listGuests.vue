@@ -303,4 +303,7 @@
       display: none;
     }
   }
+  .introjs-donebutton {
+    color: black;
+  }
 </style>
