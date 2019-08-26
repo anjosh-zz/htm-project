@@ -58,7 +58,7 @@
     { icon: 'add', title: 'Add Contact', to: '/addguest' },
     { icon: 'email', title: 'Email Templates', to: '/emailTemplates' },
     { icon: 'file_upload', title: 'Import Contacts', to: '/importGuests' },
-    { icon: 'feedback', title: 'Feedback', to: '/feedback' },
+    { icon: 'contact_support', title: 'Contact Us', to: '/contactUs' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
   const loggedOutItems = [

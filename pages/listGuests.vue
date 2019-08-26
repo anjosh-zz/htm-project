@@ -140,7 +140,7 @@
         profileIsShowing: false,
         deleteDialogIsShowing: false,
         prevRoute: null,
-        introHighlightOnFeedback: false,
+        introHighlightOnContactUs: false,
         intro: null
       }
     },
@@ -228,7 +228,7 @@
                     intro: `
                 For instance, you can choose a pre-written email to send to your contacts by going to the "Email Templates" page.<br><br>
                 If you have a spreadsheet of your contacts, you can import them into MyTribe on the "Import Contacts" page.<br><br>
-                And you can provide feedback by filling out the feedback form on the "Feedback" page.
+                And you can contact us on the "Contact Us" page.
                 `
                   },
                   {
