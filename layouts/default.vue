@@ -41,6 +41,8 @@
              alt="JWT Auth for open source projects"
              src="//cdn.auth0.com/oss/badges/a0-badge-light.png"/>
       </a>
+      <v-spacer></v-spacer>
+      <a class="mr-3" href="https://tribenet.co/privacy-policy/" target="_blank">Privacy Policy</a>
       <no-ssr>
         <cookie-law></cookie-law>
       </no-ssr>
@@ -99,3 +101,9 @@
     }
   }
 </script>
+
+<style>
+  .privacy-policy {
+    text-align: right;
+  }
+</style>
