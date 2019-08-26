@@ -10,7 +10,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" @click="startTutorial">tutorial</v-btn>
+          <v-btn color="secondary" @click="startTutorial">How to Use Guide</v-btn>
           <v-btn class="login-btn" color="primary" @click="submit" v-if="!this.$auth.loggedIn">login</v-btn>
         </v-card-actions>
       </v-card>
