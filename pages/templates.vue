@@ -2,7 +2,7 @@
   <v-layout row align-center justify-center>
     <v-flex xs12 sm5>
       <v-card>
-        <v-card-title class="pb-0 headline">Templates</v-card-title>
+        <v-card-title class="pb-0 headline">Share Content</v-card-title>
         <v-container
             fluid
             grid-list-lg

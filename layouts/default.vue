@@ -58,7 +58,7 @@
     { icon: 'apps', title: 'Dashboard', to: '/dashboard' },
     { icon: 'list', title: 'Contacts', to: '/listguests' },
     { icon: 'add', title: 'Add Contact', to: '/addguest' },
-    { icon: 'email', title: 'Email Templates', to: '/emailTemplates' },
+    { icon: 'email', title: 'Share Content', to: '/templates' },
     { icon: 'file_upload', title: 'Import Contacts', to: '/importGuests' },
     { icon: 'contact_support', title: 'Contact Us', to: '/contactUs' },
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
