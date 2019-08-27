@@ -202,7 +202,7 @@
       },
       emailGuests () {
         this.$router.push({
-          name: 'templates',
+          name: 'content',
           params: {
             people: this.selected
           }

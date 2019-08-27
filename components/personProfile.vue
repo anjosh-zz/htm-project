@@ -120,7 +120,7 @@
             handleClick: () => {
               this.hideProfile()
               this.$router.push({
-                name: 'templates',
+                name: 'content',
                 params: {
                   people: [{
                     fullname: this.person.fullname,
@@ -145,7 +145,7 @@
             handleActionClick: () => {
               this.hideProfile()
               this.$router.push({
-                name: 'templates',
+                name: 'content',
                 params: {
                   people: [{
                     fullname: this.person.fullname,
