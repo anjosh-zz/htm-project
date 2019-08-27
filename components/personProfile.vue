@@ -42,27 +42,27 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-tooltip bottom :disabled="item.tooltip === undefined">
-              <template v-slot:activator="{ on }">
-                <v-list-tile v-on="on" :href="item.href" @click="item.handleClick" target="_blank">
-                  <v-list-tile-action>
-                    <v-layout align-center justify-space-around>
-                      <v-icon class="mr-4">{{item.icon}}</v-icon>
-                    </v-layout>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
+            <v-list-tile @click="item.handleClick">
+              <v-list-tile-action>
+                <v-layout align-center justify-space-around>
+                  <v-icon class="mr-4">{{item.icon}}</v-icon>
+                </v-layout>
+              </v-list-tile-action>
+              <v-tooltip bottom :disabled="item.tooltip === undefined">
+                <template v-slot:activator="{ on }">
+                  <v-list-tile-content v-on="on">
                     <v-list-tile-title>{{item.value}}</v-list-tile-title>
                   </v-list-tile-content>
+                </template>
+                <span>{{item.tooltip}}</span>
+              </v-tooltip>
                   <v-list-tile-action class="grey--text" v-if="item.timestamp">
                     {{item.timestamp.format('MMM Do, YYYY')}}
                   </v-list-tile-action>
-                  <v-list-tile-action v-else-if="item.actionIcon">
+                  <v-list-tile-action v-else-if="item.actionIcon" @click.stop="item.handleActionClick">
                     <v-icon>{{item.actionIcon}}</v-icon>
                   </v-list-tile-action>
                 </v-list-tile>
-              </template>
-              <span>{{item.tooltip}}</span>
-            </v-tooltip>
           </div>
           <v-divider></v-divider>
         </v-list>
@@ -120,11 +120,13 @@
             handleClick: () => {
               this.hideProfile()
               this.$router.push({
-                name: 'emailTemplates',
+                name: 'templates',
                 params: {
                   people: [{
+                    fullname: this.person.fullname,
                     email: this.person.email
-                  }]
+                  }],
+                  type: 'email'
                 }
               })
             }
@@ -135,9 +137,24 @@
           result.push({
             value: phoneUtil.format(number, PNF.NATIONAL),
             icon: 'phone',
-            href: `tel:${this.person.phoneNumber}`,
             tooltip: 'Click to call',
-            handleClick: () => {}
+            actionIcon: 'message',
+            handleClick: () => {
+              window.open(`tel:${this.person.phoneNumber}`)
+            },
+            handleActionClick: () => {
+              this.hideProfile()
+              this.$router.push({
+                name: 'templates',
+                params: {
+                  people: [{
+                    fullname: this.person.fullname,
+                    phoneNumber: this.person.phoneNumber
+                  }],
+                  type: 'sms'
+                }
+              })
+            }
           })
         }
         if (this.person.birthdate) {

@@ -3990,6 +3990,14 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
+ios-version@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ios-version/-/ios-version-1.0.1.tgz#3c460caa020f6b22a2430519a6adab7915cd32ba"
+  integrity sha1-PEYMqgIPayKiQwUZpq2reRXNMro=
+  dependencies:
+    global "~4.3.0"
+    parse-int "~1.0.0"
+
 ipaddr.js@1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.8.0.tgz#eaa33d6ddd7ace8f7f6fe0c9ca0440e706738b1e"
@@ -4010,6 +4018,13 @@ is-accessor-descriptor@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-accessor-descriptor/-/is-accessor-descriptor-1.0.0.tgz#169c2f6d3df1f992618072365c9b0ea1f6878656"
   dependencies:
     kind-of "^6.0.0"
+
+is-android@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/is-android/-/is-android-1.0.1.tgz#3f1233f47b3889e7c87ed656d988ec43b167d0cb"
+  integrity sha1-PxIz9Hs4iefIftZW2YjsQ7Fn0Ms=
+  dependencies:
+    global "~4.3.0"
 
 is-arrayish@^0.2.1:
   version "0.2.1"
@@ -4145,11 +4160,25 @@ is-https@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-https/-/is-https-1.0.0.tgz#9c1dde000dc7e7288edb983bef379e498e7cb1bf"
 
+is-integer@^1.0.4:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/is-integer/-/is-integer-1.0.7.tgz#6bde81aacddf78b659b6629d629cadc51a886d5c"
+  integrity sha1-a96Bqs3feLZZtmKdYpytxRqIbVw=
+  dependencies:
+    is-finite "^1.0.0"
+
 is-invalid-path@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/is-invalid-path/-/is-invalid-path-0.1.0.tgz#307a855b3cf1a938b44ea70d2c61106053714f34"
   dependencies:
     is-glob "^2.0.0"
+
+is-ios@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/is-ios/-/is-ios-1.0.0.tgz#3fd1954f6337a80ccb4db6cc24f70b81db329839"
+  integrity sha1-P9GVT2M3qAzLTbbMJPcLgdsymDk=
+  dependencies:
+    global "~4.3.0"
 
 is-number@^3.0.0:
   version "3.0.0"
@@ -5589,6 +5618,13 @@ parse-headers@^2.0.0:
   dependencies:
     for-each "^0.3.3"
     string.prototype.trim "^1.1.2"
+
+parse-int@~1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/parse-int/-/parse-int-1.0.3.tgz#3c5c0a652f188ac76beed9d75e9c41ceb7581d2e"
+  integrity sha512-TfDLnW/E7Hu53nxclRtgCvvjCyA+iRqlzEbpDDRpTFSc1ovRSL/EDpgpRaEhxrGOx2w1k9bkE189FXt6PnOUUQ==
+  dependencies:
+    is-integer "^1.0.4"
 
 parse-json@^2.2.0:
   version "2.2.0"

@@ -2,7 +2,7 @@
   <v-layout row align-center justify-center>
     <v-flex xs12 sm5>
       <v-card>
-        <v-card-title class="pb-0 headline">Email Templates</v-card-title>
+        <v-card-title class="pb-0 headline">Templates</v-card-title>
         <v-container
             fluid
             grid-list-lg
@@ -13,7 +13,7 @@
                 :key="template.title"
                 xs12
             >
-              <v-card v-if="template.img" ripple hover :href="generateMailtoHref(template.email)" target="_blank">
+              <v-card v-if="template.img" ripple hover :href="generateHref(template.message)" target="_blank">
                 <v-layout>
                   <v-flex xs4>
                     <v-img
@@ -74,10 +74,12 @@
 </template>
 
 <script>
+  const isIos = require('is-ios')
+  const isAndroid = require('is-android')
+  const iOsVersion = require('ios-version/current')
+
   export default {
-    name: 'emailTemplates',
-    created () {
-    },
+    name: 'templates',
     data () {
       let spaceAndFirstName = ''
       const people = this.$route.params.people
@@ -85,6 +87,7 @@
         spaceAndFirstName = ` ${people[0].fullname.split(' ')[0]}`
       }
       return {
+        separator: this.detectSmsSeparator(),
         templates: [
           {
             sectionHeader: 'For Your Newly Blessed Guest',
@@ -94,7 +97,7 @@
             title: 'What is the Blessing?',
             type: 'Video Series',
             img: 'http://tribenet.co/wp-content/uploads/2016/03/tribalmessiah3.png',
-            email: {
+            message: {
               subject: 'Congratulations on receiving The Marriage Blessing',
               body: `Hello${spaceAndFirstName},
 
@@ -118,7 +121,7 @@ Sincerely,`
             title: 'Blessing America',
             type: 'Website',
             img: 'http://tribenet.co/wp-content/uploads/2019/05/blessingameirca.jpg',
-            email: {
+            message: {
               subject: 'Build Great Relationship Habits',
               body: `Hello${spaceAndFirstName},
 
@@ -138,7 +141,7 @@ Sincerely,`
             title: 'Relationship Skills',
             type: 'Quiz',
             img: 'https://tribenet.co/wp-content/uploads/2019/05/skillsquizicon.jpg',
-            email: {
+            message: {
               subject: 'Relationship Skills Quiz',
               body: `Hi again
 
@@ -158,7 +161,7 @@ Sincerely,`
             title: 'Blessed Life Challenge',
             type: 'Email Series',
             img: 'https://tribenet.co/wp-content/uploads/2019/05/Artboard-2-copy@3x.png',
-            email: {
+            message: {
               subject: 'Relationship Building Challenge',
               body: `Hi again
 
@@ -180,7 +183,7 @@ Sincerely,`
             title: 'More Than Marriage',
             type: 'EBook',
             img: 'https://tribenet.co/wp-content/uploads/2019/05/couplemarriage.jpg',
-            email: {
+            message: {
               subject: 'What Makes Marriage Work?',
               body: `Hi${spaceAndFirstName},
 
@@ -202,17 +205,37 @@ Sincerely,`
       }
     },
     methods: {
-      generateMailtoHref (emailContent) {
-        let mailto = '?'
-        if (this.$route.params.people) {
-          const {people} = this.$route.params
-          if (people.length === 1) {
-            mailto = people[0].email + '?'
-          } else if (people.length > 1) {
-            mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
-          }
+      detectSmsSeparator () {
+        const defaultSeparator = '?'
+
+        if (isAndroid) return defaultSeparator
+        if (isIos && iOsVersion) {
+          return iOsVersion.major < 8 ? ';' : '&'
         }
-        return `mailto:${mailto}subject=${emailContent.subject}&body=${encodeURI(emailContent.body)}`
+        return defaultSeparator
+      },
+      generateHref (message) {
+        if (this.$route.params.type === 'sms') {
+          let phone = ''
+          if (this.$route.params.people) {
+            const {people} = this.$route.params
+            if (people.length === 1) {
+              phone = people[0].phoneNumber
+            }
+          }
+          return `sms:${phone}${this.separator}body=${encodeURIComponent(message.body)}`
+        } else {
+          let mailto = '?'
+          if (this.$route.params.people) {
+            const {people} = this.$route.params
+            if (people.length === 1) {
+              mailto = people[0].email + '?'
+            } else if (people.length > 1) {
+              mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
+            }
+          }
+          return `mailto:${mailto}subject=${message.subject}&body=${encodeURIComponent(message.body)}`
+        }
       }
     }
   }
