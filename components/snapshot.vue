@@ -25,6 +25,7 @@
                     :disable-drag-and-drop="true"
                     :show-loading="true"
                     :zoom-speed="5"
+                    :accept="'image/*'"
                 >
                 </croppa>
               </no-ssr>
@@ -83,7 +84,7 @@
         this.hideSnapshot()
       },
       addImage () {
-        this.$emit('addImage', this.$refs.croppa.generateDataUrl())
+        this.$emit('addImage', this.$refs.croppa.generateDataUrl('image/jpeg'))
         this.imageSrc = ''
       },
       showSnapshot () {

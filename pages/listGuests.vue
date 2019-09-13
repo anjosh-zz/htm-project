@@ -181,7 +181,7 @@
       async getGuests () {
         this.items = await this.$axios.$get('/persons/guests')
         this.items.forEach(guest => {
-          if (!guest.avatar) {
+          if (!guest.avatarThumbnail && !guest.avatar) {
             guest.colorClassName = toMaterialStyle(guest.fullname).materialColorName.toLowerCase()
             guest.firstLetter = guest.fullname.charAt(0)
           }
