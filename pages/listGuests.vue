@@ -18,8 +18,18 @@
       <v-card>
         <v-card-title class="headline pb-2">
           <v-layout align-center>
-            <v-flex xs3 class="mr-3">
-              <span>Contacts</span>
+            <v-flex xs4>
+              <v-layout align-center justify-content-start>
+                <span class="mr-3">Contacts</span>
+                <span v-if="selected.length > 0">
+                  <v-btn icon @click="emailGuests">
+                    <v-icon>email</v-icon>
+                  </v-btn>
+                  <v-btn icon @click="showMultipleDeleteDialog">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                </span>
+              </v-layout>
             </v-flex>
             <v-flex xs8>
               <v-text-field
@@ -29,11 +39,6 @@
                   v-model="search"
                   single-line
               ></v-text-field>
-            </v-flex>
-            <v-flex xs1>
-              <v-btn v-if="selected.length > 0" icon @click="emailGuests">
-                <v-icon>email</v-icon>
-              </v-btn>
             </v-flex>
           </v-layout>
         </v-card-title>
@@ -106,6 +111,27 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="deleteMultipleDialogIsShowing" max-width="360px">
+          <v-card>
+            <v-card-title primary-title class="title">
+              Delete these contacts?
+            </v-card-title>
+            <v-card-text class="delete-contacts">
+              <v-layout v-for="contact in selected" v-bind:key="contact.id">
+                <span>{{ contact.fullname }}</span>
+              </v-layout>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="hideMultipleDeleteDialog" flat>
+                Cancel
+              </v-btn>
+              <v-btn @click="deleteGuests" flat color="red">
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-card>
     </v-flex>
   </v-layout>
@@ -139,6 +165,7 @@
         person: {},
         profileIsShowing: false,
         deleteDialogIsShowing: false,
+        deleteMultipleDialogIsShowing: false,
         prevRoute: null,
         introHighlightOnContactUs: false,
         intro: null
@@ -207,6 +234,21 @@
             people: this.selected
           }
         })
+      },
+      async deleteGuests () {
+        await this.$axios.$delete('/persons/', {
+          data: {
+            person_ids: this.selected.map(person => person.id)
+          }
+        })
+        this.hideMultipleDeleteDialog()
+        await this.getGuests()
+      },
+      showMultipleDeleteDialog () {
+        this.deleteMultipleDialogIsShowing = true
+      },
+      hideMultipleDeleteDialog () {
+        this.deleteMultipleDialogIsShowing = false
       },
       startTutorial () {
         if (this.$store.state.tutorial) {
@@ -285,6 +327,13 @@
 </script>
 
 <style>
+  .headline.pb-2 .contact-header {
+    width: fit-content;
+  }
+  .delete-contacts {
+    font-size: 16px;
+    padding-left: 32px;
+  }
   table.v-table tbody td {
     font-size: 15px;
     height: 60px
