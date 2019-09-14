@@ -26,8 +26,29 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
-      <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
-      <v-img src="/icon.png" height="70%" contain position="left center" class="ml-2 mt-2"/>
+      <v-layout style="height: 100%; width: 100%; justify-content: space-between;" row align-center>
+        <v-flex style="height: 100%; flex: 0 1 auto;">
+          <v-layout style="height: 100%; width: fit-content;" row align-center>
+            <v-flex>
+              <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
+            </v-flex>
+            <v-flex v-if="logoIsShowing" style="height: 70%;">
+              <img src="/icon.png" height="100%" class="ml-2 mt-1"/>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+        <v-flex style="max-width: 700px;">
+          <v-text-field
+            v-if="$route.path === '/listguests'"
+            name="search"
+            label="Search Contacts"
+            append-icon="search"
+            v-model="search"
+            class="ml-3"
+            single-line
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
     </v-toolbar>
     <v-content>
       <v-container fluid class="pa-0">
@@ -91,12 +112,26 @@
         set (value) {
           this.updateDrawer(value)
         }
+      },
+      search: {
+        get () {
+          return this.$store.state.searchInput
+        },
+        set (value) {
+          this.updateSearchInput(value)
+        }
+      },
+      logoIsShowing () {
+        if (this.$route.path !== '/listguests') return true
+        else if (!this.$vuetify.breakpoint.xs) return true
+        else return this.$store.state.searchInput.length < 20
       }
     },
     methods: {
       ...mapMutations([
         'toggleDrawer',
-        'updateDrawer'
+        'updateDrawer',
+        'updateSearchInput'
       ])
     }
   }

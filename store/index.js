@@ -1,7 +1,8 @@
 export const state = () => ({
   tutorial: false,
   drawer: false,
-  introHighlightOnMenuItem: false
+  introHighlightOnMenuItem: false,
+  searchInput: ''
 })
 
 export const mutations = {
@@ -20,5 +21,8 @@ export const mutations = {
   updateIntroHighlightOnMenuItem (state, value) {
     state.drawer = value
     state.introHighlightOnMenuItem = value
+  },
+  updateSearchInput (state, value) {
+    state.searchInput = value
   }
 }

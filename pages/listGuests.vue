@@ -16,32 +16,29 @@
         <v-icon>add</v-icon>
       </v-btn>
       <v-card>
-        <v-card-title class="headline pb-2">
-          <v-layout align-center>
-            <v-flex xs4>
-              <v-layout align-center justify-content-start>
-                <span class="mr-3">Contacts</span>
-                <span v-if="selected.length > 0">
+        <v-layout>
+          <v-flex
+            class="mr-3"
+            style="max-width: fit-content; min-width: fit-content;">
+            <v-card-title class="headline pb-2 pt-2">
+              <v-layout align-items>
+                <v-flex class="mr-2">
+                  <span class="contact-header">Contacts</span>
+                </v-flex>
+                <v-flex v-if="this.selected.length > 0">
                   <v-btn icon @click="emailGuests">
                     <v-icon>email</v-icon>
                   </v-btn>
+                </v-flex>
+                <v-flex v-if="this.selected.length > 0">
                   <v-btn icon @click="showMultipleDeleteDialog">
                     <v-icon>delete</v-icon>
                   </v-btn>
-                </span>
+                </v-flex>
               </v-layout>
-            </v-flex>
-            <v-flex xs8>
-              <v-text-field
-                  name="search"
-                  label="Search"
-                  append-icon="search"
-                  v-model="search"
-                  single-line
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-title>
+            </v-card-title>
+          </v-flex>
+        </v-layout>
         <v-data-table
             v-model="selected"
             :headers="headers"
@@ -154,9 +151,11 @@
     created () {
       this.getGuests()
     },
+    destroyed () {
+      this.updateSearchInput('')
+    },
     data () {
       return {
-        search: '',
         selected: [],
         pagination: {
           rowsPerPage: -1
@@ -178,6 +177,11 @@
       })
     },
     computed: {
+      search: {
+        get () {
+          return this.$store.state.searchInput
+        }
+      },
       headers () {
         return [
           {text: 'Name', value: 'fullname', align: 'left', width: this.$vuetify.breakpoint.xsOnly ? '100%' : '15%'},
@@ -309,7 +313,8 @@
       },
       ...mapMutations([
         'endTutorial',
-        'updateIntroHighlightOnMenuItem'
+        'updateIntroHighlightOnMenuItem',
+        'updateSearchInput'
       ])
     },
     filters: {
@@ -327,8 +332,10 @@
 </script>
 
 <style>
-  .headline.pb-2 .contact-header {
-    width: fit-content;
+  .contact-header {
+    height: 48px;
+    display: flex;
+    align-items: center;
   }
   .delete-contacts {
     font-size: 16px;
