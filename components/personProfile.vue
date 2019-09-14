@@ -214,26 +214,12 @@
           })
         return result
       },
-      profilePic () {
-        return this.person.avatar || this.person.avatarURL
-      },
       dialogMaxWidth () {
         switch (this.$vuetify.breakpoint.name) {
           case 'xs':
             return null
           default:
             return '360px'
-        }
-      },
-      imageHeight () {
-        if (!this.profilePic) {
-          return 'auto'
-        }
-        switch (this.$vuetify.breakpoint.name) {
-          case 'xs':
-            return '300px'
-          default:
-            return '200px'
         }
       }
     },

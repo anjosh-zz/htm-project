@@ -57,19 +57,7 @@
                   <v-icon color="red darken-1">fa-magic</v-icon>
                 </v-card-title>
                 <v-card-text>
-                  <v-layout row align-center>
-                    <v-flex xs2>
-                      <span class="display-2">{{threeStepCouples}}</span>
-                    </v-flex>
-                    <v-flex xs10 v-if="threeStepCouplesProgress > 10">
-                      <v-progress-circular
-                          :width="20"
-                          :size="40"
-                          color="white"
-                          :value="threeStepCouplesProgress">
-                      </v-progress-circular>
-                    </v-flex>
-                  </v-layout>
+                  <div class="display-2">{{threeStepCouples}}</div>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions class="pa-3">
