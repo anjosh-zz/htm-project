@@ -16,26 +16,54 @@
         <v-icon>add</v-icon>
       </v-btn>
       <v-card>
-        <v-card-text class="pb-2">
-          <v-text-field
-              name="search"
-              label="Search"
-              append-icon="search"
-              v-model="search"
-              single-line
-          ></v-text-field>
-        </v-card-text>
-        <v-card-title class="headline pb-2 pt-2">
-          <span class="mr-3 contact-header">Contacts</span>
-          <span v-if="selected.length > 0">
-            <v-btn icon @click="emailGuests">
-              <v-icon>email</v-icon>
-            </v-btn>
-            <v-btn icon @click="showMultipleDeleteDialog">
-              <v-icon>delete</v-icon>
-            </v-btn>
-          </span>
-        </v-card-title>
+        <v-layout>
+          <v-flex
+            class="mr-3"
+            style="max-width: fit-content; min-width: fit-content;">
+            <v-card-title class="headline pb-2 pt-2">
+              <span class="contact-header">Contacts</span>
+              <v-menu v-if="selected.length > 0">
+                <v-btn slot="activator" icon>
+                  <v-icon>fas fa-ellipsis-v</v-icon>
+                </v-btn>
+                <v-list one-line dense>
+                  <v-list-tile
+                    avatar
+                    @click="emailGuests"
+                  >
+                    <v-list-tile-avatar>
+                      <v-icon>email</v-icon>
+                    </v-list-tile-avatar>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Email Selected</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile
+                    avatar
+                    @click="showMultipleDeleteDialog"
+                  >
+                    <v-list-tile-avatar>
+                      <v-icon>delete</v-icon>
+                    </v-list-tile-avatar>
+
+                    <v-list-tile-content>
+                      <v-list-tile-title>Delete Selected</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </v-card-title>
+          </v-flex>
+          <v-flex class="mr-3">
+            <v-text-field
+                name="search"
+                label="Search"
+                append-icon="search"
+                v-model="search"
+                single-line
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
         <v-data-table
             v-model="selected"
             :headers="headers"
