@@ -39,6 +39,7 @@
         </v-card-title>
         <v-data-table
             v-model="selected"
+            :loading="loadingItems"
             :headers="headers"
             :items="items"
             select-all
@@ -47,6 +48,14 @@
             hide-actions
             :search="search"
         >
+          <template v-slot:no-data>
+            <div v-if="loadingItems" class="text-center">
+              Loading contacts...
+            </div>
+            <div v-else class="text-center">
+              No contacts yet
+            </div>
+          </template>
           <template v-slot:items="props">
             <v-hover>
               <template v-slot="{ hover }">
@@ -141,7 +150,8 @@
         deleteDialogIsShowing: false,
         prevRoute: null,
         introHighlightOnContactUs: false,
-        intro: null
+        intro: null,
+        loadingItems: true
       }
     },
     beforeRouteEnter (to, from, next) {
@@ -186,6 +196,7 @@
             guest.firstLetter = guest.fullname.charAt(0)
           }
         })
+        this.loadingItems = false
       },
       showDeleteDialog (item) {
         this.person = item
