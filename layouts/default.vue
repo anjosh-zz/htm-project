@@ -26,18 +26,18 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
-      <v-layout style="height: 100%; width: 100%; justify-content: space-between;" row align-center>
-        <v-flex style="height: 100%; flex: 0 1 auto;">
-          <v-layout style="height: 100%; width: fit-content;" row align-center>
+      <v-layout class="toolbar" row align-center>
+        <v-flex class="toolbar-right">
+          <v-layout class="header" row align-center>
             <v-flex>
               <v-toolbar-side-icon @click="toggleDrawer"></v-toolbar-side-icon>
             </v-flex>
-            <v-flex v-if="logoIsShowing" style="height: 70%;">
-              <img src="/icon.png" height="100%" class="ml-2 mt-1"/>
+            <v-flex v-if="showLogo" class="ml-2 mt-2 logo">
+              <img src="/icon.png"/>
             </v-flex>
           </v-layout>
         </v-flex>
-        <v-flex style="max-width: 700px;">
+        <v-flex class="toolbar-left">
           <v-text-field
             v-if="$route.path === '/listguests'"
             name="search"
@@ -121,9 +121,9 @@
           this.updateSearchInput(value)
         }
       },
-      logoIsShowing () {
+      showLogo () {
         if (this.$route.path !== '/listguests') return true
-        else if (!this.$vuetify.breakpoint.xs) return true
+        else if (this.$vuetify.breakpoint.smAndUp) return true
         else return this.$store.state.searchInput.length < 20
       }
     },
@@ -140,5 +140,31 @@
 <style>
   .privacy-policy {
     text-align: right;
+  }
+</style>
+
+<style scoped>
+  .toolbar {
+    height: 100%; 
+    width: 100%;
+    justify-content: space-between;
+    margin-left: -12px;
+  }
+  .toolbar-right {
+    height: 100%; 
+    flex: 0 1 auto;
+  }
+  .header {
+    height: 100%; 
+    width: fit-content;
+  }
+  .logo {
+    height: 70%;
+  }
+  .logo img {
+    height: 100%;
+  }
+  .toolbar-left {
+    max-width: 700px;
   }
 </style>
