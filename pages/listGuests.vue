@@ -99,6 +99,7 @@
             v-on:close="hideProfile"
             v-on:edit="editProfile"
             v-on:delete="showDeleteDialog"
+            v-on:editSteps="editBlessingSteps"
         >
         </Profile>
         <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
@@ -213,10 +214,17 @@
       editProfile (personId) {
         this.hideProfile()
         this.$router.push({
-          name: 'editGuest',
+          name: 'editGuest-personId',
           params: {
             personId: personId
           }
+        })
+      },
+      editBlessingSteps (personId) {
+        this.hideProfile()
+        this.$router.push({
+          name: 'editBlessingSteps-personId',
+          params: { personId }
         })
       },
       async getGuests () {

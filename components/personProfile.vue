@@ -20,6 +20,25 @@
               <v-btn icon @click="openEditPage">
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
+              <v-menu
+                left
+                nudge-right="36"
+                bottom
+                offset-y
+                offset-x>
+                <v-btn icon slot="activator">
+                  <v-icon class="black--text">fas fa-ellipsis-v</v-icon>
+                </v-btn>
+                <v-list one-line dense>
+                  <v-list-tile
+                    @click="editBlessingSteps"
+                  >
+                    <v-list-tile-content>
+                      <v-list-tile-title>EDIT BLESSING STEPS</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-flex>
           </v-layout>
         </v-container>
@@ -232,6 +251,9 @@
       },
       showDeleteDialog () {
         this.$emit('delete', this.person)
+      },
+      editBlessingSteps () {
+        this.$emit('editSteps', this.person.id)
       }
     },
     watch: {
