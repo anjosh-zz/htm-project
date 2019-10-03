@@ -72,9 +72,8 @@
       const blessingSteps = await this.$axios.$get('/actionTypes')
       const existingSteps = {}
       if (this.$route.params.personId) {
-        const person = await this.$axios.$get('/persons/' + this.$route.params.personId)
-        this.person = person
-        person.Object.forEach((action) => {
+        this.person = await this.$axios.$get('/persons/' + this.$route.params.personId)
+        this.person.Object.forEach((action) => {
           action.date = moment(action.timestamp).format(this.dateFormat)
           action.selected = true
           action.name = action.ActionType.name
@@ -82,7 +81,7 @@
           action.id = action.ActionType.id
           existingSteps[action.id] = action
         })
-        person.Subject.forEach((action) => {
+        this.person.Subject.forEach((action) => {
           action.date = moment(action.timestamp).format(this.dateFormat)
           action.selected = true
           action.name = action.ActionType.name
@@ -90,6 +89,21 @@
           action.id = action.ActionType.id
           existingSteps[action.id] = action
         })
+      }
+      if (this.person.RelationshipObject || this.person.RelationshipSubject) {
+        const relationships = this.person.RelationshipObject.concat(this.person.RelationshipSubject)
+        const spouseRelationship = relationships.find(r => r && r.RelationshipTypeId === 1)
+        if (spouseRelationship) {
+          let spouse
+          if (spouseRelationship.Object) {
+            spouse = spouseRelationship.Object
+          } else if (spouseRelationship.Subject) {
+            spouse = spouseRelationship.Subject
+          }
+          if (spouse && spouse.fullname) {
+            this.person.spouse = spouse
+          }
+        }
       }
       this.blessingSteps = blessingSteps.map((step, idx) => {
         if (existingSteps[step.id]) {
@@ -122,10 +136,12 @@
       },
       async checkBlessingStep (step) {
         if (step.selected) {
+          const personIds = [this.person.id]
+          if (this.person.spouse) personIds.push(this.person.spouse.id)
           const { data: action } = await this.$axios.post('/actions', {
             date: moment(step.date),
             actionTypeId: step.id,
-            personIds: [this.person.id]
+            personIds
           })
           action.date = moment(action.timestamp).format(this.dateFormat)
           action.selected = true
@@ -156,10 +172,12 @@
       async undoPreviousSave () {
         const step = this.previousSaves.pop()
         if (step.selected && !this.blessingSteps[step.id - 1].selected) {
+          const personIds = [this.person.id]
+          if (this.person.spouse) personIds.push(this.person.spouse.id)
           const { data: action } = await this.$axios.post('/actions', {
             date: moment(step.date),
             actionTypeId: step.id,
-            personIds: [this.person.id]
+            personIds
           })
           action.date = moment(action.timestamp).format(this.dateFormat)
           action.selected = true
