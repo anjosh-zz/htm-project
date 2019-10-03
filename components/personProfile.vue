@@ -20,6 +20,24 @@
               <v-btn icon @click="openEditPage">
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
+              <v-menu
+                v-if="!person.spouse"
+                left
+                nudge-right="36"
+                bottom
+                offset-y
+                offset-x>
+                <v-btn icon slot="activator">
+                  <v-icon class="black--text">fas fa-ellipsis-v</v-icon>
+                </v-btn>
+                <v-list one-line dense>
+                  <v-list-tile v-if="!person.spouse" @click="addSpouse">
+                    <v-list-tile-content>
+                      <v-list-tile-title>ADD SPOUSE</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-flex>
           </v-layout>
         </v-container>
@@ -175,10 +193,11 @@
               spouse = spouseRelationship.Subject
             }
             if (spouse && spouse.fullname) {
+              this.$set(this.person, 'spouse', spouse)
               result.push({
                 value: spouse.fullname,
                 icon: 'wc',
-                handleClick: () => {}
+                handleClick: () => this.changeProfile(spouse.id)
               })
             }
           }
@@ -232,6 +251,12 @@
       },
       showDeleteDialog () {
         this.$emit('delete', this.person)
+      },
+      addSpouse () {
+        this.$emit('addSpouse', this.person.id)
+      },
+      changeProfile (id) {
+        this.$emit('changeProfile', id)
       }
     },
     watch: {
