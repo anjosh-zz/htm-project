@@ -37,6 +37,11 @@
                       <v-list-tile-title>Edit Blessing Steps</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
+                  <v-list-tile v-if="!person.spouse" @click="addSpouse">
+                    <v-list-tile-content>
+                      <v-list-tile-title>Add Spouse</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
                 </v-list>
               </v-menu>
             </v-flex>
@@ -205,10 +210,11 @@
               spouse = spouseRelationship.Subject
             }
             if (spouse && spouse.fullname) {
+              this.$set(this.person, 'spouse', spouse)
               result.push({
                 value: spouse.fullname,
                 icon: 'wc',
-                handleClick: () => {}
+                handleClick: () => this.changeProfile(spouse.id)
               })
             }
           }
@@ -255,6 +261,12 @@
       },
       editBlessingSteps () {
         this.$emit('editSteps', this.person.id)
+      },
+      addSpouse () {
+        this.$emit('addSpouse', this.person.id)
+      },
+      changeProfile (id) {
+        this.$emit('changeProfile', id)
       }
     },
     watch: {

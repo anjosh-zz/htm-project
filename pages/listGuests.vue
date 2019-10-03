@@ -100,8 +100,40 @@
             v-on:edit="editProfile"
             v-on:delete="showDeleteDialog"
             v-on:editSteps="editBlessingSteps"
+            v-on:addSpouse="showAddSpouseDialog"
+            v-on:changeProfile="changeProfile"
         >
         </Profile>
+        <v-dialog v-model="addSpouseDialogIsShowing" max-width="360px">
+          <v-card>
+            <v-card-title primary-title class="title">
+              Connect {{ person.fullname }} with a Spouse
+            </v-card-title>
+            <v-card-text class="spouse-list">
+              <v-layout v-for="contact in singleContacts" v-bind:key="contact.id">
+                <v-flex v-if="!spouseToAdd || spouseToAdd.id !== contact.id">
+                  <v-card class="spouse">
+                    <v-card-text @click="() => selectSpouse(contact)">{{ contact.fullname }}</v-card-text>
+                  </v-card>
+                </v-flex>
+                <v-flex v-else>
+                  <v-card class="spouse selected" color="blue lighten-1">
+                    <v-card-text @click="() => selectSpouse(null)">{{ contact.fullname }}</v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="hideAddSpouseDialog" flat>
+                Cancel
+              </v-btn>
+              <v-btn v-if="spouseToAdd" @click="addSpouse" flat color="blue">
+                Connect
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
           <v-card>
             <v-card-title primary-title class="title">
@@ -175,10 +207,12 @@
         profileIsShowing: false,
         deleteDialogIsShowing: false,
         deleteMultipleDialogIsShowing: false,
+        addSpouseDialogIsShowing: false,
         prevRoute: null,
         introHighlightOnContactUs: false,
         intro: null,
-        loadingItems: true
+        loadingItems: true,
+        spouseToAdd: null
       }
     },
     beforeRouteEnter (to, from, next) {
@@ -201,6 +235,15 @@
           {text: 'Notes', value: 'notes', width: '40%'},
           {text: 'Date Added', value: 'createdAt', width: '10%'}
         ]
+      },
+      singleContacts () {
+        const singlePeople = []
+        this.items.forEach(contact => {
+          if (contact.id !== this.person.id && !contact.RelationshipObject.length && !contact.RelationshipSubject.length) {
+            singlePeople.push(contact)
+          }
+        })
+        return singlePeople
       }
     },
     methods: {
@@ -226,6 +269,95 @@
           name: 'editBlessingSteps-personId',
           params: { personId }
         })
+      },
+      changeProfile (id) {
+        this.person = this.items.find(contact => contact.id === id)
+        this.profileIsShowing = false
+        setTimeout(() => { this.profileIsShowing = true }, 100)
+      },
+      async addSpouse () {
+        const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
+        const data = await this.$axios.$post('relationships', {
+          SubjectId: this.person.id,
+          ObjectId: this.spouseToAdd.id,
+          RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID
+        })
+        data.Subject = this.person
+        data.Object = this.spouseToAdd
+        if (this.person.RelationshipObject) {
+          this.person.RelationshipObject.push(data)
+        } else {
+          this.$set(this.person, 'RelationshipObject', [data])
+        }
+        if (this.spouseToAdd.RelationshipSubject) {
+          this.spouseToAdd.RelationshipSubject.push(data)
+        } else {
+          this.$set(this.spouseToAdd, 'RelationshipSubject', [data])
+        }
+
+        const actions = []
+        if (this.person.Object) {
+          this.person.Object.forEach((action) => actions.push(action))
+        }
+        if (this.person.Subject) {
+          this.person.Subject.forEach((action) => actions.push(action))
+        }
+        actions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
+        const spouseActions = []
+        const spouse = this.items.find(contact => contact.id === this.spouseToAdd.id)
+        if (spouse.Object) {
+          spouse.Object.forEach((action) => spouseActions.push(action))
+        }
+        if (spouse.Subject) {
+          spouse.Subject.forEach((action) => spouseActions.push(action))
+        }
+        spouseActions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
+
+        while (actions.length && spouseActions.length) {
+          let action = {}
+          let personId = null
+          if (actions[0].ActionTypeId === spouseActions[0].ActionTypeId) {
+            const spouseActionToDelete = spouseActions.shift()
+            action = actions.shift()
+            personId = spouse.id
+            await this.$axios.$delete('actions/' + spouseActionToDelete.id)
+          } else if (actions[0].ActionTypeId < spouseActions[0].ActionTypeId) {
+            action = actions.shift()
+            personId = spouse.id
+          } else {
+            action = spouseActions.shift()
+            personId = this.person.id
+          }
+          await this.$axios.$post('actions/' + action.id + '/addObjects', {
+            personIds: [personId]
+          })
+        }
+        while (actions.length) {
+          const action = actions.shift()
+          await this.$axios.$post('actions/' + action.id + '/addObjects', {
+            personIds: [spouse.id]
+          })
+        }
+        while (spouseActions.length) {
+          const action = spouseActions.shift()
+          await this.$axios.$post('actions/' + action.id + '/addObjects', {
+            personIds: [this.person.id]
+          })
+        }
+
+        await this.getGuests()
+        this.hideAddSpouseDialog()
+        this.hideProfile()
+      },
+      showAddSpouseDialog () {
+        console.log(this.person.spouse)
+        this.addSpouseDialogIsShowing = true
+      },
+      hideAddSpouseDialog () {
+        this.addSpouseDialogIsShowing = false
+      },
+      selectSpouse (spouse) {
+        this.spouseToAdd = spouse
       },
       async getGuests () {
         this.items = await this.$axios.$get('/persons/guests')
@@ -380,5 +512,12 @@
   }
   .introjs-donebutton {
     color: black;
+  }
+  .spouse {
+    cursor: pointer;
+  }
+  .spouse-list {
+    max-height: 360px;
+    overflow-y: auto;
   }
 </style>
