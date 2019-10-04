@@ -66,6 +66,35 @@
                 </v-layout>
               </v-card>
             </v-flex>
+            <v-flex xs12>
+              <v-layout align-center row>
+                <v-flex><v-divider></v-divider></v-flex>
+                <v-flex 
+                  class="headline font-italic or-text"
+                  ><span>or</span></v-flex>
+                <v-flex><v-divider></v-divider></v-flex>
+              </v-layout>
+            </v-flex>
+            <v-flex xs12>
+              <v-card ripple hover :href="generateHref(blankEmail.message)" target="_blank">
+                <v-layout>
+                  <v-flex xs4>
+                    <v-layout
+                      class="mx-2 file-icon"
+                      align-center
+                      justify-center>
+                      <v-icon size="36" color="blue darken-1">fas fa-file</v-icon>
+                    </v-layout>
+                  </v-flex>
+                  <v-flex xs8>
+                    <div class="pt-2">
+                      <div class="font-weight-medium subheading">{{blankEmail.title}}</div>
+                      <div class="body-1">{{blankEmail.type}}</div>
+                    </div>
+                  </v-flex>
+                </v-layout>
+              </v-card>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-card>
@@ -88,6 +117,14 @@
       }
       return {
         separator: this.detectSmsSeparator(),
+        blankEmail: {
+          title: 'Write',
+          type: 'your own email',
+          message: {
+            subject: '',
+            body: ''
+          }
+        },
         templates: [
           {
             sectionHeader: 'For Your Newly Blessed Guest',
@@ -229,7 +266,7 @@ Sincerely,`
           if (this.$route.params.people) {
             const {people} = this.$route.params
             if (people.length === 1) {
-              mailto = people[0].email + '?'
+              mailto = people[0].email || '' + '?'
             } else if (people.length > 1) {
               mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
             }
@@ -240,3 +277,13 @@ Sincerely,`
     }
   }
 </script>
+
+<style scoped>
+  .file-icon {
+    height: 80px; 
+    font-size: 36px;
+  }
+  .or-text {
+    max-width: fit-content;
+  }
+</style>
