@@ -295,62 +295,11 @@
           this.$set(this.spouseToAdd, 'RelationshipSubject', [data])
         }
 
-        const actions = []
-        if (this.person.Object) {
-          this.person.Object.forEach((action) => actions.push(action))
-        }
-        if (this.person.Subject) {
-          this.person.Subject.forEach((action) => actions.push(action))
-        }
-        actions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
-        const spouseActions = []
-        const spouse = this.items.find(contact => contact.id === this.spouseToAdd.id)
-        if (spouse.Object) {
-          spouse.Object.forEach((action) => spouseActions.push(action))
-        }
-        if (spouse.Subject) {
-          spouse.Subject.forEach((action) => spouseActions.push(action))
-        }
-        spouseActions.sort((a, b) => a.ActionTypeId - b.ActionTypeId)
-
-        while (actions.length && spouseActions.length) {
-          let action = {}
-          let personId = null
-          if (actions[0].ActionTypeId === spouseActions[0].ActionTypeId) {
-            const spouseActionToDelete = spouseActions.shift()
-            action = actions.shift()
-            personId = spouse.id
-            await this.$axios.$delete('actions/' + spouseActionToDelete.id)
-          } else if (actions[0].ActionTypeId < spouseActions[0].ActionTypeId) {
-            action = actions.shift()
-            personId = spouse.id
-          } else {
-            action = spouseActions.shift()
-            personId = this.person.id
-          }
-          await this.$axios.$post('actions/' + action.id + '/addObjects', {
-            personIds: [personId]
-          })
-        }
-        while (actions.length) {
-          const action = actions.shift()
-          await this.$axios.$post('actions/' + action.id + '/addObjects', {
-            personIds: [spouse.id]
-          })
-        }
-        while (spouseActions.length) {
-          const action = spouseActions.shift()
-          await this.$axios.$post('actions/' + action.id + '/addObjects', {
-            personIds: [this.person.id]
-          })
-        }
-
         await this.getGuests()
         this.hideAddSpouseDialog()
         this.hideProfile()
       },
       showAddSpouseDialog () {
-        console.log(this.person.spouse)
         this.addSpouseDialogIsShowing = true
       },
       hideAddSpouseDialog () {
