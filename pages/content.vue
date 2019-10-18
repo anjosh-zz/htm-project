@@ -69,7 +69,7 @@
             <v-flex xs12>
               <v-layout align-center row>
                 <v-flex><v-divider></v-divider></v-flex>
-                <v-flex 
+                <v-flex
                   class="headline font-italic or-text"
                   ><span>or</span></v-flex>
                 <v-flex><v-divider></v-divider></v-flex>
@@ -266,7 +266,7 @@ Sincerely,`
           if (this.$route.params.people) {
             const {people} = this.$route.params
             if (people.length === 1) {
-              mailto = people[0].email || '' + '?'
+              mailto = people[0].email + '?'
             } else if (people.length > 1) {
               mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
             }
@@ -280,7 +280,7 @@ Sincerely,`
 
 <style scoped>
   .file-icon {
-    height: 80px; 
+    height: 80px;
     font-size: 36px;
   }
   .or-text {
