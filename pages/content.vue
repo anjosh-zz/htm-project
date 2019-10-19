@@ -266,7 +266,7 @@ Sincerely,`
           if (this.$route.params.people) {
             const {people} = this.$route.params
             if (people.length === 1) {
-              mailto = people[0].email || '' + '?'
+              mailto = (people[0].email || '') + '?'
             } else if (people.length > 1) {
               mailto = '?bcc=' + people.map(person => person.email).join(',') + '&'
             }
