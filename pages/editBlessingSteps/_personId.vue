@@ -37,6 +37,7 @@
                       return-masked-value
                       hide-details
                       @change="changeStepDate(step)"
+                      @input="() => saved = false"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -51,6 +52,9 @@
             Undo
           </v-btn>
           <v-spacer></v-spacer>
+          <v-btn v-if="saved" flat :disabled="true">
+            Saved
+          </v-btn>
           <v-btn 
             color="primary" 
             @click="updateBlessingSteps">
@@ -127,7 +131,8 @@
         person: {},
         previousSaves: [],
         loadingSteps: true,
-        previousDates: {}
+        previousDates: {},
+        saved: false
       }
     },
     methods: {
@@ -135,6 +140,7 @@
         this.$router.push('/listguests')
       },
       async checkBlessingStep (step) {
+        this.saved = false
         if (step.selected) {
           const personIds = [this.person.id]
           if (this.person.spouse) personIds.push(this.person.spouse.id)
@@ -156,8 +162,10 @@
         const previousStep = Object.assign({}, step)
         previousStep.selected = !step.selected
         this.previousSaves.push(previousStep)
+        this.saved = true
       },
       async changeStepDate (step) {
+        this.saved = false
         const { data: action } = await this.$axios.post('/actions/' + step.ActionId, {
           date: moment(step.date)
         })
@@ -168,8 +176,10 @@
           this.previousSaves.push(previousStep)
           this.previousDates[step.id - 1] = step.date
         }
+        this.saved = true
       },
       async undoPreviousSave () {
+        this.saved = false
         const step = this.previousSaves.pop()
         if (step.selected && !this.blessingSteps[step.id - 1].selected) {
           const personIds = [this.person.id]
@@ -197,6 +207,7 @@
           this.blessingSteps[step.id - 1].date = moment(action.timestamp).format(this.dateFormat)
           this.$set(this.blessingSteps, step.id - 1, this.blessingSteps[step.id - 1])
         }
+        this.saved = true
       }
     }
   }
