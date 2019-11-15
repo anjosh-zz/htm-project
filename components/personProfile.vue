@@ -27,14 +27,14 @@
                 offset-y
                 offset-x>
                 <v-btn icon slot="activator">
-                  <v-icon class="black--text">fas fa-ellipsis-v</v-icon>
+                  <v-icon class="black--text ellipsis">fas fa-ellipsis-v</v-icon>
                 </v-btn>
                 <v-list one-line dense>
                   <v-list-tile
                     @click="editBlessingSteps"
                   >
                     <v-list-tile-content>
-                      <v-list-tile-title>EDIT BLESSING STEPS</v-list-tile-title>
+                      <v-list-tile-title>Edit Blessing Steps</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
                 </v-list>
@@ -61,20 +61,15 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-list-tile @click="item.handleClick">
+            <v-list-tile>
               <v-list-tile-action>
                 <v-layout align-center justify-space-around>
                   <v-icon class="mr-4">{{item.icon}}</v-icon>
                 </v-layout>
               </v-list-tile-action>
-              <v-tooltip bottom :disabled="item.tooltip === undefined">
-                <template v-slot:activator="{ on }">
-                  <v-list-tile-content v-on="on">
-                    <v-list-tile-title>{{item.value}}</v-list-tile-title>
-                  </v-list-tile-content>
-                </template>
-                <span>{{item.tooltip}}</span>
-              </v-tooltip>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{item.value}}</v-list-tile-title>
+                </v-list-tile-content>
                   <v-list-tile-action class="grey--text" v-if="item.timestamp">
                     {{item.timestamp.format('MMM Do, YYYY')}}
                   </v-list-tile-action>
@@ -101,6 +96,12 @@
     </v-dialog>
   </v-layout>
 </template>
+
+<style scoped>
+  .ellipsis {
+    font-size: 20px;
+  }
+</style>
 
 <script>
   import moment from 'moment'
@@ -214,20 +215,10 @@
           .forEach(step => {
             const item = {
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId],
-              tooltip: 'Edit Blessing step'
+              icon: this.blessingStepsIconMap[step.ActionTypeId]
             }
             if (step.timestamp) {
               item.timestamp = moment(step.timestamp)
-            }
-            item.handleClick = () => {
-              this.hideProfile()
-              this.$router.push({
-                name: 'actionDetails',
-                params: {
-                  actionId: step.id
-                }
-              })
             }
             result.push(item)
           })

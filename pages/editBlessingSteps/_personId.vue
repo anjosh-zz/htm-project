@@ -44,13 +44,13 @@
           </v-form>
         </v-card-text>
         <v-card-actions v-if="!loadingSteps">
-          <v-spacer></v-spacer>
           <v-btn 
             v-if="previousSaves.length" 
             color="secondary" 
             @click="undoPreviousSave">
             Undo
           </v-btn>
+          <v-spacer></v-spacer>
           <v-btn 
             color="primary" 
             @click="updateBlessingSteps">
