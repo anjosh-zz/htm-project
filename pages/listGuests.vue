@@ -110,25 +110,46 @@
               Connect {{ person.fullname }} with a Spouse
             </v-card-title>
             <v-card-text class="spouse-list">
-              <v-layout v-for="contact in singleContacts" v-bind:key="contact.id">
-                <v-flex v-if="!spouseToAdd || spouseToAdd.id !== contact.id">
-                  <v-card class="spouse">
-                    <v-card-text @click="() => selectSpouse(contact)">{{ contact.fullname }}</v-card-text>
-                  </v-card>
-                </v-flex>
-                <v-flex v-else>
-                  <v-card class="spouse selected" color="blue lighten-1">
-                    <v-card-text @click="() => selectSpouse(null)">{{ contact.fullname }}</v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
+              <v-data-table
+                :items="singleContacts"
+                class="elevation-1"
+                hide-actions
+                hide-headers
+                :pagination.sync="connectSpousePagination"
+              >
+                <template v-slot:no-data>
+                  <div class="text-center">
+                    No single contacts
+                  </div>
+                </template>
+                <template v-slot:items="props">
+                  <v-hover>
+                    <template v-slot="{ hover }">
+                      <tr @click="() => selectSpouseToAdd(props.item)">
+                        <td class="spouse-checkbox">
+                          <v-checkbox
+                              v-if="(spouseToAdd && spouseToAdd.id === props.item.id) || hover"
+                              :input-value="(spouseToAdd && spouseToAdd.id === props.item.id)"
+                              primary
+                              hide-details
+                          ></v-checkbox>
+                          <v-avatar v-else :color="props.item.colorClassName" size="40">
+                            <Avatar :person="props.item"/>
+                          </v-avatar>
+                        </td>
+                        <td>{{ props.item.fullname }}</td>
+                      </tr>
+                    </template>
+                  </v-hover>
+                </template>
+              </v-data-table>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click="hideAddSpouseDialog" flat>
                 Cancel
               </v-btn>
-              <v-btn v-if="spouseToAdd" @click="addSpouse" flat color="blue">
+              <v-btn v-if="spouseToAdd" :disabled="connectSpouseDisabled" @click="addSpouse" flat color="blue">
                 Connect
               </v-btn>
             </v-card-actions>
@@ -212,7 +233,13 @@
         introHighlightOnContactUs: false,
         intro: null,
         loadingItems: true,
-        spouseToAdd: null
+        spouseToAdd: null,
+        connectSpouseHeaders: [
+          { value: 'spouseToAdd', sortable: false },
+          { value: 'fullname', sortable: true }
+        ],
+        connectSpousePagination: {'sortBy': 'fullname', 'rowsPerPage': -1},
+        connectSpouseDisabled: false
       }
     },
     beforeRouteEnter (to, from, next) {
@@ -276,6 +303,7 @@
         setTimeout(() => { this.profileIsShowing = true }, 100)
       },
       async addSpouse () {
+        this.connectSpouseDisabled = true
         const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
         const data = await this.$axios.$post('relationships', {
           SubjectId: this.person.id,
@@ -297,7 +325,7 @@
 
         await this.getGuests()
         this.hideAddSpouseDialog()
-        this.hideProfile()
+        this.connectSpouseDisabled = false
       },
       showAddSpouseDialog () {
         this.addSpouseDialogIsShowing = true
@@ -305,8 +333,12 @@
       hideAddSpouseDialog () {
         this.addSpouseDialogIsShowing = false
       },
-      selectSpouse (spouse) {
-        this.spouseToAdd = spouse
+      selectSpouseToAdd (contact) {
+        if (this.spouseToAdd && this.spouseToAdd.id === contact.id) {
+          this.spouseToAdd = null
+        } else {
+          this.spouseToAdd = contact
+        }
       },
       async getGuests () {
         this.items = await this.$axios.$get('/persons/guests')
@@ -468,5 +500,8 @@
   .spouse-list {
     max-height: 360px;
     overflow-y: auto;
+  }
+  .spouse-checkbox {
+    width: 90px;
   }
 </style>

@@ -39,7 +39,7 @@
                   </v-list-tile>
                   <v-list-tile v-if="!person.spouse" @click="addSpouse">
                     <v-list-tile-content>
-                      <v-list-tile-title>Add Spouse</v-list-tile-title>
+                      <v-list-tile-title>Connect To Spouse</v-list-tile-title>
                     </v-list-tile-content>
                   </v-list-tile>
                 </v-list>
@@ -195,8 +195,7 @@
         if (this.person.birthdate) {
           result.push({
             value: moment(this.person.birthdate).format('MM/DD/YYYY'),
-            icon: 'cake',
-            handleClick: () => {}
+            icon: 'cake'
           })
         }
         if (this.person.RelationshipObject || this.person.RelationshipSubject) {
@@ -214,6 +213,7 @@
               result.push({
                 value: spouse.fullname,
                 icon: 'wc',
+                tooltip: 'Click to go to spouse\'s profile page',
                 handleClick: () => this.changeProfile(spouse.id)
               })
             }
