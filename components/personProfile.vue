@@ -61,22 +61,29 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-list-tile>
+            <v-list-tile 
+              v-on:click="() => item.handleClick ? item.handleClick() : null"
+              :class="item.handleClick ? '' : 'unclickable'">
               <v-list-tile-action>
                 <v-layout align-center justify-space-around>
                   <v-icon class="mr-4">{{item.icon}}</v-icon>
                 </v-layout>
               </v-list-tile-action>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{item.value}}</v-list-tile-title>
-                </v-list-tile-content>
-                  <v-list-tile-action class="grey--text" v-if="item.timestamp">
-                    {{item.timestamp.format('MMM Do, YYYY')}}
-                  </v-list-tile-action>
-                  <v-list-tile-action v-else-if="item.actionIcon" @click.stop="item.handleActionClick">
-                    <v-icon>{{item.actionIcon}}</v-icon>
-                  </v-list-tile-action>
-                </v-list-tile>
+              <v-tooltip bottom :disabled="item.tooltip === undefined">
+                <template v-slot:activator="{ on }">
+                  <v-list-tile-content v-on="on">
+                    <v-list-tile-title>{{item.value}}</v-list-tile-title>
+                  </v-list-tile-content>
+                </template>
+                <span>{{item.tooltip}}</span>
+              </v-tooltip>
+              <v-list-tile-action class="grey--text" v-if="item.timestamp">
+                {{item.timestamp.format('MMM Do, YYYY')}}
+              </v-list-tile-action>
+              <v-list-tile-action v-else-if="item.actionIcon" @click.stop="item.handleActionClick">
+                <v-icon>{{item.actionIcon}}</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
           </div>
           <v-divider></v-divider>
         </v-list>
@@ -97,9 +104,12 @@
   </v-layout>
 </template>
 
-<style scoped>
+<style>
   .ellipsis {
     font-size: 20px;
+  }
+  .unclickable > a {
+    cursor: default;
   }
 </style>
 
