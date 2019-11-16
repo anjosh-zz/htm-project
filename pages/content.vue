@@ -108,7 +108,6 @@
   const iOsVersion = require('ios-version/current')
 
   export default {
-    name: 'content',
     data () {
       let spaceAndFirstName = ''
       const people = this.$route.params.people
