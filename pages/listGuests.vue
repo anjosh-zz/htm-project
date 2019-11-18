@@ -73,7 +73,31 @@
                       <Avatar :person="props.item"/>
                     </v-avatar>
                   </td>
-                    <td>{{ props.item.fullname }}</td>
+                  <template v-if="$vuetify.breakpoint.smAndUp">
+                    <v-hover v-slot:default="{ hover: starHover }">
+                      <td>
+                        <v-btn icon class="ma-0" @click.stop="starContact(props.item)">
+                          <v-icon v-if="props.item.Star" color="yellow">star</v-icon>
+                          <v-icon 
+                            v-else
+                            :color="starHover ? 'black' : 'grey'">star_border</v-icon>
+                        </v-btn>
+                      </td>
+                    </v-hover>
+                  </template>
+                  <td class="fullname">
+                    <span>{{ props.item.fullname }}</span>
+                    <span v-if=$vuetify.breakpoint.xs>
+                      <v-hover v-slot:default="{ hover: starHover }">
+                        <v-btn icon class="ma-0" @click.stop="starContact(props.item)">
+                          <v-icon v-if="props.item.Star" color="yellow">star</v-icon>
+                          <v-icon 
+                            v-else
+                            :color="starHover ? 'black' : 'grey'">star_border</v-icon>
+                        </v-btn>
+                      </v-hover>
+                    </span>
+                  </td>
                     <template v-if="$vuetify.breakpoint.smAndUp">
                       <td>{{ props.item.email }}</td>
                       <td>{{ props.item.phoneNumber | phoneNumberFilter }}</td>
@@ -143,7 +167,6 @@
   </v-layout>
 </template>
 
-
 <script>
   import moment from 'moment'
   import { mapMutations } from 'vuex'
@@ -167,7 +190,8 @@
       return {
         selected: [],
         pagination: {
-          rowsPerPage: -1
+          rowsPerPage: -1,
+          sortBy: 'fullname'
         },
         items: [],
         person: {},
@@ -193,13 +217,20 @@
         }
       },
       headers () {
-        return [
-          {text: 'Name', value: 'fullname', align: 'left', width: this.$vuetify.breakpoint.xsOnly ? '100%' : '15%'},
-          {text: 'Email', value: 'email', width: '20%'},
-          {text: 'Phone number', value: 'phoneNumber', width: '15%'},
-          {text: 'Notes', value: 'notes', width: '40%'},
-          {text: 'Date Added', value: 'createdAt', width: '10%'}
-        ]
+        if (!this.loadingItems && this.$vuetify.breakpoint.smAndUp) {
+          return [
+            {text: 'Starred', value: 'Star', align: 'left'},
+            {text: 'Name', value: 'fullname', align: 'left', width: '15%'},
+            {text: 'Email', value: 'email', width: '20%'},
+            {text: 'Phone number', value: 'phoneNumber', width: '15%'},
+            {text: 'Notes', value: 'notes', width: '40%'},
+            {text: 'Date Added', value: 'createdAt', width: '10%'}
+          ]
+        } else {
+          return [
+            {text: 'Name', value: 'fullname', align: 'left', width: '100%'}
+          ]
+        }
       }
     },
     methods: {
@@ -258,6 +289,20 @@
         })
         this.hideMultipleDeleteDialog()
         await this.getGuests()
+      },
+      async starContact (contact) {
+        if (contact.Star) {
+          await this.$axios.$delete(`/filters/${contact.Star}/contacts`, {
+            data: { personIds: [contact.id] }
+          })
+          contact.Star = null
+        } else {
+          const { filter } = await this.$axios.$post('/filters/', {
+            name: 'Star',
+            personId: contact.id
+          })
+          contact.Star = filter.id
+        }
       },
       showMultipleDeleteDialog () {
         this.deleteMultipleDialogIsShowing = true
@@ -368,6 +413,11 @@
   @media screen and (max-width: 600px) {
     table.v-table thead th:nth-child(n+3) {
       display: none;
+    }
+    .fullname {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
   .introjs-donebutton {
