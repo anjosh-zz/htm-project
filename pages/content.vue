@@ -118,7 +118,7 @@
         separator: this.detectSmsSeparator(),
         blankEmail: {
           title: 'Write',
-          type: 'your own email',
+          type: 'your own ' + (this.$route.params.type === 'sms' ? 'text message' : 'email'),
           message: {
             subject: '',
             body: ''
@@ -126,7 +126,32 @@
         },
         templates: [
           {
-            sectionHeader: 'For Your Newly Blessed Guest',
+            sectionHeader: 'To Invite to Peace Starts with Me',
+            icon: 'fa-globe-americas'
+          },
+          {
+            title: 'What the World Needs Now',
+            type: 'Event Invitation',
+            img: 'https://cdn.shopify.com/s/files/1/0260/8880/0355/files/TM_STILL_STORE3_c30c723d-5d7b-483d-b834-b75b3be097c1_540x.jpg?v=1571857537',
+            message: {
+              subject: 'Special Invitation!',
+              body: `Hello${spaceAndFirstName},
+
+Greetings during this holiday season!
+
+I’m excited to invite you to a special event for peace this December. I'm sure it will bring you inspiration and hope! The event is called, “Peace Starts with Me - What the World Needs Now”.
+
+It will be an experience that you don't want to miss! Featuring renowned keynote speaker, Dr. Hak Ja Han Moon, inspirational message by Bishop Noel Jones, Grammy Award-winning singer Bishop Hezekiah Walker, Stellar Award-winning singer Kim Burrell, Joann Rosario, and a 2,000 voice choir directed by Emmy-award winning A. Curtis Farrow and much more!
+
+It's happening on December 28th at 3 PM at the Prudential Center, 25 Lafayette St., Newark, NJ 07102. Please go to https://peacestartswithme.com for more information. Let me know if you’d like to come and how many people you’d like to bring and I’d be happy to get you free tickets!
+
+I hope to see you there!
+
+Blessings`
+            }
+          },
+          {
+            sectionHeader: 'For Your Newly Blessed Contact',
             icon: 'fa-wine-glass'
           },
           {
@@ -150,7 +175,7 @@ Sincerely,`
             }
           },
           {
-            sectionHeader: 'For Your Guest in a Relationship',
+            sectionHeader: 'For Your Contact in a Relationship',
             icon: 'fa-heart'
           },
           {
