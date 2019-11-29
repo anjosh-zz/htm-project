@@ -24,6 +24,15 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+      <div class="auth0-badge">
+        <a width="150" height="50" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss"
+           target="_blank"
+           alt="Single Sign On & Token Based Authentication - Auth0">
+          <img width="150" height="50"
+               alt="JWT Auth for open source projects"
+               src="//cdn.auth0.com/oss/badges/a0-badge-light.png"/>
+        </a>
+      </div>
     </v-navigation-drawer>
     <v-toolbar fixed app :clipped-left="clipped">
       <v-layout class="toolbar" row align-center>
@@ -55,13 +64,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" :height="56" app>
-      <a width="150" height="50" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss" target="_blank"
-         alt="Single Sign On & Token Based Authentication - Auth0">
-        <img width="150" height="50"
-             alt="JWT Auth for open source projects"
-             src="//cdn.auth0.com/oss/badges/a0-badge-light.png"/>
-      </a>
+    <v-footer :fixed="fixed" app>
       <v-spacer></v-spacer>
       <a class="mr-3" href="https://tribenet.co/privacy-policy/" target="_blank">Privacy Policy</a>
       <no-ssr>
@@ -85,7 +88,7 @@
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
   const loggedOutItems = [
-    { icon: 'apps', title: 'Welcome', to: '/' }
+    { icon: 'contact_support', title: 'Contact Us', to: '/contactUs' }
   ]
   const sidebarItems = [
   ]
@@ -145,17 +148,17 @@
 
 <style scoped>
   .toolbar {
-    height: 100%; 
+    height: 100%;
     width: 100%;
     justify-content: space-between;
     margin-left: -12px;
   }
   .toolbar-right {
-    height: 100%; 
+    height: 100%;
     flex: 0 1 auto;
   }
   .header {
-    height: 100%; 
+    height: 100%;
     width: fit-content;
   }
   .logo {
@@ -166,5 +169,12 @@
   }
   .toolbar-left {
     max-width: 700px;
+  }
+  .auth0-badge {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: inherit;
+    background: #f5f5f5;
   }
 </style>
