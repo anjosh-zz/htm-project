@@ -88,6 +88,7 @@
     { icon: 'exit_to_app', title: 'Logout', to: '/logout' }
   ]
   const loggedOutItems = [
+    { icon: 'apps', title: 'Welcome', to: '/' },
     { icon: 'contact_support', title: 'Contact Us', to: '/contactUs' }
   ]
   const sidebarItems = [
