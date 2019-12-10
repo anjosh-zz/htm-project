@@ -99,8 +99,62 @@
             v-on:close="hideProfile"
             v-on:edit="editProfile"
             v-on:delete="showDeleteDialog"
+            v-on:editSteps="editBlessingSteps"
+            v-on:addSpouse="showAddSpouseDialog"
+            v-on:changeProfile="changeProfile"
         >
         </Profile>
+        <v-dialog v-model="addSpouseDialogIsShowing" max-width="360px">
+          <v-card>
+            <v-card-title primary-title class="title">
+              Connect {{ person.fullname }} with a Spouse
+            </v-card-title>
+            <v-card-text class="spouse-list">
+              <v-data-table
+                :items="singleContacts"
+                class="elevation-1"
+                hide-actions
+                hide-headers
+                :pagination.sync="connectSpousePagination"
+              >
+                <template v-slot:no-data>
+                  <div class="text-center">
+                    No single contacts
+                  </div>
+                </template>
+                <template v-slot:items="props">
+                  <v-hover>
+                    <template v-slot="{ hover }">
+                      <tr @click="() => selectSpouseToAdd(props.item)">
+                        <td class="spouse-checkbox">
+                          <v-checkbox
+                              v-if="(spouseToAdd && spouseToAdd.id === props.item.id) || hover"
+                              :input-value="(spouseToAdd && spouseToAdd.id === props.item.id)"
+                              primary
+                              hide-details
+                          ></v-checkbox>
+                          <v-avatar v-else :color="props.item.colorClassName" size="40">
+                            <Avatar :person="props.item"/>
+                          </v-avatar>
+                        </td>
+                        <td>{{ props.item.fullname }}</td>
+                      </tr>
+                    </template>
+                  </v-hover>
+                </template>
+              </v-data-table>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="hideAddSpouseDialog" flat>
+                Cancel
+              </v-btn>
+              <v-btn v-if="spouseToAdd" :disabled="connectSpouseDisabled" @click="addSpouse" flat color="blue">
+                Connect
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="deleteDialogIsShowing" max-width="360px">
           <v-card>
             <v-card-title primary-title class="title">
@@ -174,10 +228,18 @@
         profileIsShowing: false,
         deleteDialogIsShowing: false,
         deleteMultipleDialogIsShowing: false,
+        addSpouseDialogIsShowing: false,
         prevRoute: null,
         introHighlightOnContactUs: false,
         intro: null,
-        loadingItems: true
+        loadingItems: true,
+        spouseToAdd: null,
+        connectSpouseHeaders: [
+          { value: 'spouseToAdd', sortable: false },
+          { value: 'fullname', sortable: true }
+        ],
+        connectSpousePagination: {'sortBy': 'fullname', 'rowsPerPage': -1},
+        connectSpouseDisabled: false
       }
     },
     beforeRouteEnter (to, from, next) {
@@ -200,6 +262,15 @@
           {text: 'Notes', value: 'notes', width: '40%'},
           {text: 'Date Added', value: 'createdAt', width: '10%'}
         ]
+      },
+      singleContacts () {
+        const singlePeople = []
+        this.items.forEach(contact => {
+          if (contact.id !== this.person.id && !contact.RelationshipObject.length && !contact.RelationshipSubject.length) {
+            singlePeople.push(contact)
+          }
+        })
+        return singlePeople
       }
     },
     methods: {
@@ -213,11 +284,61 @@
       editProfile (personId) {
         this.hideProfile()
         this.$router.push({
-          name: 'editGuest',
+          name: 'editGuest-personId',
           params: {
             personId: personId
           }
         })
+      },
+      editBlessingSteps (personId) {
+        this.hideProfile()
+        this.$router.push({
+          name: 'editBlessingSteps-personId',
+          params: { personId }
+        })
+      },
+      changeProfile (id) {
+        this.person = this.items.find(contact => contact.id === id)
+        this.profileIsShowing = false
+        setTimeout(() => { this.profileIsShowing = true }, 100)
+      },
+      async addSpouse () {
+        this.connectSpouseDisabled = true
+        const HUSBAND_WIFE_RELATIONSHIP_TYPE_ID = 1
+        const data = await this.$axios.$post('relationships', {
+          SubjectId: this.person.id,
+          ObjectId: this.spouseToAdd.id,
+          RelationshipTypeId: HUSBAND_WIFE_RELATIONSHIP_TYPE_ID
+        })
+        data.Subject = this.person
+        data.Object = this.spouseToAdd
+        if (this.person.RelationshipObject) {
+          this.person.RelationshipObject.push(data)
+        } else {
+          this.$set(this.person, 'RelationshipObject', [data])
+        }
+        if (this.spouseToAdd.RelationshipSubject) {
+          this.spouseToAdd.RelationshipSubject.push(data)
+        } else {
+          this.$set(this.spouseToAdd, 'RelationshipSubject', [data])
+        }
+
+        await this.getGuests()
+        this.hideAddSpouseDialog()
+        this.connectSpouseDisabled = false
+      },
+      showAddSpouseDialog () {
+        this.addSpouseDialogIsShowing = true
+      },
+      hideAddSpouseDialog () {
+        this.addSpouseDialogIsShowing = false
+      },
+      selectSpouseToAdd (contact) {
+        if (this.spouseToAdd && this.spouseToAdd.id === contact.id) {
+          this.spouseToAdd = null
+        } else {
+          this.spouseToAdd = contact
+        }
       },
       async getGuests () {
         this.items = await this.$axios.$get('/persons/guests')
@@ -372,5 +493,15 @@
   }
   .introjs-donebutton {
     color: black;
+  }
+  .spouse {
+    cursor: pointer;
+  }
+  .spouse-list {
+    max-height: 360px;
+    overflow-y: auto;
+  }
+  .spouse-checkbox {
+    width: 90px;
   }
 </style>

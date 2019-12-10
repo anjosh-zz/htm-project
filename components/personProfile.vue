@@ -20,6 +20,30 @@
               <v-btn icon @click="openEditPage">
                 <v-icon class="black--text">edit</v-icon>
               </v-btn>
+              <v-menu
+                left
+                nudge-right="36"
+                bottom
+                offset-y
+                offset-x>
+                <v-btn icon slot="activator">
+                  <v-icon class="black--text ellipsis">fas fa-ellipsis-v</v-icon>
+                </v-btn>
+                <v-list one-line dense>
+                  <v-list-tile
+                    @click="editBlessingSteps"
+                  >
+                    <v-list-tile-content>
+                      <v-list-tile-title>Edit Blessing Steps</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile v-if="!person.spouse" @click="addSpouse">
+                    <v-list-tile-content>
+                      <v-list-tile-title>Connect To Spouse</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-flex>
           </v-layout>
         </v-container>
@@ -42,7 +66,9 @@
         <v-list>
           <div v-for="item in profileInfo" v-if="item.value">
             <v-divider></v-divider>
-            <v-list-tile @click="item.handleClick">
+            <v-list-tile 
+              v-on:click="() => item.handleClick ? item.handleClick() : null"
+              :class="item.handleClick ? '' : 'unclickable'">
               <v-list-tile-action>
                 <v-layout align-center justify-space-around>
                   <v-icon class="mr-4">{{item.icon}}</v-icon>
@@ -56,13 +82,13 @@
                 </template>
                 <span>{{item.tooltip}}</span>
               </v-tooltip>
-                  <v-list-tile-action class="grey--text" v-if="item.timestamp">
-                    {{item.timestamp.format('MMM Do, YYYY')}}
-                  </v-list-tile-action>
-                  <v-list-tile-action v-else-if="item.actionIcon" @click.stop="item.handleActionClick">
-                    <v-icon>{{item.actionIcon}}</v-icon>
-                  </v-list-tile-action>
-                </v-list-tile>
+              <v-list-tile-action class="grey--text" v-if="item.timestamp">
+                {{item.timestamp.format('MMM Do, YYYY')}}
+              </v-list-tile-action>
+              <v-list-tile-action v-else-if="item.actionIcon" @click.stop="item.handleActionClick">
+                <v-icon>{{item.actionIcon}}</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
           </div>
           <v-divider></v-divider>
         </v-list>
@@ -82,6 +108,15 @@
     </v-dialog>
   </v-layout>
 </template>
+
+<style>
+  .ellipsis {
+    font-size: 20px;
+  }
+  .unclickable > a {
+    cursor: default;
+  }
+</style>
 
 <script>
   import moment from 'moment'
@@ -160,8 +195,7 @@
         if (this.person.birthdate) {
           result.push({
             value: moment(this.person.birthdate).format('MM/DD/YYYY'),
-            icon: 'cake',
-            handleClick: () => {}
+            icon: 'cake'
           })
         }
         if (this.person.RelationshipObject || this.person.RelationshipSubject) {
@@ -175,10 +209,12 @@
               spouse = spouseRelationship.Subject
             }
             if (spouse && spouse.fullname) {
+              this.$set(this.person, 'spouse', spouse)
               result.push({
                 value: spouse.fullname,
                 icon: 'wc',
-                handleClick: () => {}
+                tooltip: 'Click to go to spouse\'s profile page',
+                handleClick: () => this.changeProfile(spouse.id)
               })
             }
           }
@@ -195,20 +231,10 @@
           .forEach(step => {
             const item = {
               value: step.ActionType.name,
-              icon: this.blessingStepsIconMap[step.ActionTypeId],
-              tooltip: 'Edit Blessing step'
+              icon: this.blessingStepsIconMap[step.ActionTypeId]
             }
             if (step.timestamp) {
               item.timestamp = moment(step.timestamp)
-            }
-            item.handleClick = () => {
-              this.hideProfile()
-              this.$router.push({
-                name: 'actionDetails',
-                params: {
-                  actionId: step.id
-                }
-              })
             }
             result.push(item)
           })
@@ -232,6 +258,15 @@
       },
       showDeleteDialog () {
         this.$emit('delete', this.person)
+      },
+      editBlessingSteps () {
+        this.$emit('editSteps', this.person.id)
+      },
+      addSpouse () {
+        this.$emit('addSpouse', this.person.id)
+      },
+      changeProfile (id) {
+        this.$emit('changeProfile', id)
       }
     },
     watch: {
