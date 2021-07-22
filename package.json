@@ -49,7 +49,7 @@
     "vuelidate": "^0.6.1",
     "vuetify": "^1.5.2",
     "vuex-persistedstate": "^2.5.4",
-    "xlsx": "^0.12.10"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
